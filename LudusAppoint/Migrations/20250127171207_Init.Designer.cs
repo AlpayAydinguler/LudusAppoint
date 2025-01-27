@@ -12,7 +12,7 @@ using Repositories;
 namespace LudusAppoint.Migrations
 {
     [DbContext(typeof(RepositoryContext))]
-    [Migration("20250127140148_Init")]
+    [Migration("20250127171207_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -233,7 +233,8 @@ namespace LudusAppoint.Migrations
 
                     b.HasKey("AgeGroupId");
 
-                    b.HasIndex("MinAge", "MaxAge");
+                    b.HasIndex("MinAge", "MaxAge")
+                        .IsUnique();
 
                     b.ToTable("AgeGroups");
 

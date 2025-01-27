@@ -1,70 +1,138 @@
 ﻿@model BranchDtoForInsert
-<div class="card card-dark bg-dark border-black">
-	<div class="card-header">
-		<h6 class="card-title">@Localizer["CreateBranch"]</h6>
-	</div>
-	<div class="card-body text-light">
-		<form method="post" asp-action="Create">
-			<div class="form-group">
-				<label asp-for="BranchName">@Localizer["Name"]</label>
-				<input asp-for="BranchName" class="form-control" />
-				<span asp-validation-for="BranchName" class="text-danger"></span>
-			</div>
-			<div class="form-group">
-				<label asp-for="Country">@Localizer["Country"]</label>
-				<input asp-for="Country" class="form-control" />
-				<span asp-validation-for="Country" class="text-danger"></span>
-			</div>
-			<div class="form-group">
-				<label asp-for="City">@Localizer["City"]</label>
-				<input asp-for="City" class="form-control" />
-				<span asp-validation-for="City" class="text-danger"></span>
-			</div>
-			<div class="form-group">
-				<label asp-for="District">@Localizer["District"]</label>
-				<input asp-for="District" class="form-control" />
-				<span asp-validation-for="District" class="text-danger"></span>
-			</div>
-			<div class="form-group">
-				<label asp-for="District">@Localizer["District"]</label>
-				<input asp-for="District" class="form-control" />
-				<span asp-validation-for="District" class="text-danger"></span>
-			</div>
-			<div class="form-group">
-				<label asp-for="Street">@Localizer["Street"]</label>
-				<input asp-for="Street" class="form-control" />
-				<span asp-validation-for="Street" class="text-danger"></span>
-			</div>
-			<div class="form-group">
-				<label asp-for="Address">@Localizer["Address"]</label>
-				<input asp-for="Address" class="form-control" />
-				<span asp-validation-for="Address" class="text-danger"></span>
-			</div>
-			<div class="form-group">
-				<label asp-for="BranchPhoneNumber">@Localizer["PhoneNumber"]</label>
-				<input asp-for="BranchPhoneNumber" class="form-control" type="tel"/>
-				<span asp-validation-for="BranchPhoneNumber" class="text-danger"></span>
-			</div>
-			<div class="form-group">
-				<label asp-for="BranchEmail">@Localizer["Email"]</label>
-				<input asp-for="BranchEmail" class="form-control" type="email"/>
-				<span asp-validation-for="BranchEmail" class="text-danger"></span>
-			</div>
-			<div class="form-group">
-				<label asp-for="ReservationInAdvanceDayLimit">@Localizer["ReservationInAdvanceDayLimit"]</label>
-				<input asp-for="ReservationInAdvanceDayLimit" class="form-control" type="number"/>
-				<span asp-validation-for="ReservationInAdvanceDayLimit" class="text-danger"></span>
-			</div>
-			<div class="form-group form-check form-switch mb-3 d-flex align-items-center border-bottom" style="max-width: 576px; padding-left: 0">
-				<label asp-for="Status" class="form-check-label me-auto">@Localizer["Status"]</label>
-				<input asp-for="Status" class="form-check-input mb-1" type="checkbox" role="switch" />
-				<span asp-validation-for="Status" class="text-danger ms-2"></span>
-			</div>
-			<div class="text-danger" asp-validation-summary="All"></div>
-			<button type="submit" class="btn btn-primary my-3">
-				<i class="bi bi-floppy"></i>
-				@Localizer["Create"]
-			</button>
-		</form>
-	</div>
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-12 col-lg-8 col-xl-6">
+            <!-- Adjust max-width here -->
+            <div class="card card-dark bg-dark border-black">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">@Localizer["CreateBranch"]</h5> <!-- Changed to h5 for better hierarchy -->
+                </div>
+                <div class="card-body text-light">
+                    <form method="post" asp-action="Create">
+                        <div class="row g-3">
+                            <!-- Added gutter spacing between rows -->
+                            <!-- Main Information -->
+                            <div class="col-12">
+                                <div class="form-floating text-body-tertiary">
+                                    <!-- Using floating labels for better UX -->
+                                    <input asp-for="BranchName" class="form-control" placeholder=" " />
+                                    <label asp-for="BranchName">@Localizer["Name"]</label>
+                                    <span asp-validation-for="BranchName" class="text-danger small"></span>
+                                </div>
+                            </div>
+
+                            <!-- Address Section -->
+                            <div class="col-md-6">
+                                <div class="form-floating text-body-tertiary">
+                                    <input asp-for="Country" class="form-control" placeholder=" " />
+                                    <label asp-for="Country">@Localizer["Country"]</label>
+                                    <span asp-validation-for="Country" class="text-danger small"></span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-floating text-body-tertiary">
+                                    <input asp-for="City" class="form-control" placeholder=" " />
+                                    <label asp-for="City">@Localizer["City"]</label>
+                                    <span asp-validation-for="City" class="text-danger small"></span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-floating text-body-tertiary">
+                                    <input asp-for="District" class="form-control" placeholder=" " />
+                                    <label asp-for="District">@Localizer["District"]</label>
+                                    <span asp-validation-for="District" class="text-danger small"></span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-floating text-body-tertiary">
+                                    <input asp-for="Street" class="form-control" placeholder=" " />
+                                    <label asp-for="Street">@Localizer["Street"]</label>
+                                    <span asp-validation-for="Street" class="text-danger small"></span>
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <div class="form-floating text-body-tertiary">
+                                    <input asp-for="Address" class="form-control" placeholder=" " />
+                                    <label asp-for="Address">@Localizer["Address"]</label>
+                                    <span asp-validation-for="Address" class="text-danger small"></span>
+                                </div>
+                            </div>
+
+                            <!-- Contact Information -->
+                            <div class="col-md-6">
+                                <div class="form-floating text-body-tertiary">
+                                    <input asp-for="BranchPhoneNumber" class="form-control" type="tel"
+                                           pattern="^\+?[0-9\s\-()]*$" placeholder=" " />
+                                    <label asp-for="BranchPhoneNumber">@Localizer["PhoneNumber"]</label>
+                                    <span asp-validation-for="BranchPhoneNumber" class="text-danger small"></span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-floating text-body-tertiary">
+                                    <input asp-for="BranchEmail" class="form-control" type="email" placeholder=" " />
+                                    <label asp-for="BranchEmail">@Localizer["Email"]</label>
+                                    <span asp-validation-for="BranchEmail" class="text-danger small"></span>
+                                </div>
+                            </div>
+
+                            <!-- Reservation Settings -->
+                            <div class="col-md-6">
+                                <div class="form-floating text-body-tertiary">
+                                    <input asp-for="ReservationInAdvanceDayLimit" class="form-control"
+                                           type="number" placeholder=" " />
+                                    <label asp-for="ReservationInAdvanceDayLimit">@Localizer["ReservationInAdvanceDayLimit"]</label>
+                                    <span asp-validation-for="ReservationInAdvanceDayLimit" class="text-danger small"></span>
+                                </div>
+                            </div>
+
+                            <!-- Status Switch -->
+                            <div class="col-12">
+                                <div class="form-check form-switch d-flex align-items-center gap-3 text-white">
+                                    <input asp-for="Status" class="form-check-input flex-shrink-0"
+                                           type="checkbox" role="switch" style="transform: scale(1.3)" />
+                                    <label asp-for="Status" class="form-check-label fs-6">
+                                        @Localizer["Status"]
+                                    </label>
+                                    <span asp-validation-for="Status" class="text-danger small"></span>
+                                </div>
+                            </div>
+
+                            <!-- Validation Summary -->
+                            <div class="col-12">
+                                <div class="text-danger" asp-validation-summary="All"></div>
+                            </div>
+
+                            <!-- Submit Button -->
+                            <div class="col-12">
+                                <button type="submit" class="btn btn-primary w-100 py-2">
+                                    <i class="bi bi-floppy me-2"></i>
+                                    @Localizer["SaveBranch"]
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const phoneInput = document.getElementById("BranchPhoneNumber");
+
+            phoneInput.addEventListener("input", function (e) {
+                // Allow only numbers, +, (, ), -, and spaces
+                const sanitizedValue = e.target.value.replace(/[^0-9+()\-\s]/g, '');
+                e.target.value = sanitizedValue;
+            });
+        });
+    </script>
+}

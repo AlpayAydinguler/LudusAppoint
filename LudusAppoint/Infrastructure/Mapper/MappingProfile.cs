@@ -6,7 +6,7 @@ namespace LudusAppoint.Infrastructure.Mapper
 {
     public class MappingProfile : Profile
     {
-        public MappingProfile() 
+        public MappingProfile()
         {
             CreateMap<AgeGroupDtoForInsert, AgeGroup>();
             CreateMap<AgeGroupDtoForUpdate, AgeGroup>().ReverseMap();

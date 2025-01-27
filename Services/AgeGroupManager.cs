@@ -3,21 +3,19 @@ using Entities.Dtos;
 using Entities.Models;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Localization;
-using Repositories;
 using Repositories.Contracts;
 using Services.Contracts;
 using System.ComponentModel.DataAnnotations;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace Services
 {
     public class AgeGroupManager : IAgeGroupService
     {
         private readonly IRepositoryManager _repositoryManager;
-        private readonly IStringLocalizer<OfferedServiceManager> _localizer;
+        private readonly IStringLocalizer<AgeGroupManager> _localizer;
         private readonly IMapper _mapper;
 
-        public AgeGroupManager(IRepositoryManager repositoryManager, IStringLocalizer<OfferedServiceManager> localizer, IMapper mapper)
+        public AgeGroupManager(IRepositoryManager repositoryManager, IStringLocalizer<AgeGroupManager> localizer, IMapper mapper)
         {
             _repositoryManager = repositoryManager;
             _localizer = localizer;
@@ -92,8 +90,7 @@ namespace Services
         public AgeGroupDtoForUpdate GetAgeGroupForUpdate(int id, bool trackChanges)
         {
             var ageGroup = GetAgeGroup(id, trackChanges);
-            var ageGroupDtoForUpdate = _mapper.Map<AgeGroupDtoForUpdate>(ageGroup);
-            return ageGroupDtoForUpdate;
+            return _mapper.Map<AgeGroupDtoForUpdate>(ageGroup);
         }
 
         public void DeleteAgeGroup(int id)
@@ -112,7 +109,6 @@ namespace Services
                 }
                 throw;
             }
-
         }
     }
 }

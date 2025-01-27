@@ -5,9 +5,10 @@ namespace Services.Contracts
 {
     public interface IBranchService
     {
-        void CreateBranch(Branch branch);
+        void CreateBranch(BranchDtoForInsert branchDtoForInsert);
+        void DeleteAgeGroup(int id);
         public IEnumerable<BranchDto> GetAllBranches(bool trackChanges);
-        public Branch? GetBranch(int id, bool trackChangesv);
+        BranchDtoForUpdate? GetBranchForUpdate(int id, bool trackChanges);
         void UpdateBranch(Branch branch);
     }
 }

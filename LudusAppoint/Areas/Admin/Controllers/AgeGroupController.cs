@@ -1,5 +1,4 @@
 ﻿using Entities.Dtos;
-using Entities.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 using Services.Contracts;

@@ -1,6 +1,7 @@
 ﻿using Entities.Dtos;
 using Entities.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
 using Services.Contracts;
 
 namespace LudusAppoint.Areas.Admin.Controllers
@@ -9,10 +10,12 @@ namespace LudusAppoint.Areas.Admin.Controllers
     public class BranchController : Controller
     {
         private readonly IServiceManager _serviceManager;
+        private readonly IStringLocalizer<BranchController> _localizer;
 
-        public BranchController(IServiceManager serviceManager)
+        public BranchController(IServiceManager serviceManager, IStringLocalizer<BranchController> localizer)
         {
             _serviceManager = serviceManager;
+            _localizer = localizer;
         }
         public IActionResult Index()
         {
@@ -28,15 +31,17 @@ namespace LudusAppoint.Areas.Admin.Controllers
 
         [HttpPost]
         [AutoValidateAntiforgeryToken]
-        public IActionResult Create([FromForm] Branch branch)
+        public IActionResult Create([FromForm] BranchDtoForInsert branchDtoForInsert)
         {
             if (!ModelState.IsValid)
             {
-                return View(branch);
+                return View(branchDtoForInsert);
             }
             try
             {
-                _serviceManager.BranchService.CreateBranch(branch);
+                _serviceManager.BranchService.CreateBranch(branchDtoForInsert);
+                TempData["OperationSuccessfull"] = true;
+                TempData["OperationMessage"] = _localizer["BranchCreatedSuccessfully."].ToString();
                 return RedirectToAction("Index");
             }
             catch (AggregateException exceptions)
@@ -45,13 +50,13 @@ namespace LudusAppoint.Areas.Admin.Controllers
                 {
                     ModelState.AddModelError(exception.InnerException?.Source.ToString(), exception.Message);
                 }
-                return View(branch);
+                return View(branchDtoForInsert);
             }
         }
 
         public IActionResult Update([FromRoute] int id)
         {
-            var model = _serviceManager.BranchService.GetBranch(id, false);
+            var model = _serviceManager.BranchService.GetBranchForUpdate(id, false);
             return View(model);
         }
 
@@ -75,6 +80,24 @@ namespace LudusAppoint.Areas.Admin.Controllers
                     ModelState.AddModelError(exception.InnerException?.Source.ToString(), exception.Message);
                 }
                 return View(branch);
+            }
+        }
+        [HttpGet]
+        [AutoValidateAntiforgeryToken]
+        public IActionResult Delete([FromRoute] int id)
+        {
+            try
+            {
+                _serviceManager.BranchService.DeleteAgeGroup(id);
+                TempData["OperationSuccessfull"] = true;
+                TempData["OperationMessage"] = _localizer["BranchDeletedSuccessfully."].ToString();
+                return RedirectToAction("Index");
+            }
+            catch (Exception exception)
+            {
+                TempData["OperationSuccessfull"] = false;
+                TempData["OperationMessage"] = exception.Message.ToString();
+                return RedirectToAction("Index");
             }
         }
     }

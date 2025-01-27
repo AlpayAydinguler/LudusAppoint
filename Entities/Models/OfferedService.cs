@@ -1,5 +1,5 @@
 ﻿using Entities.Models.Enums;
-using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Entities.Models
 {
@@ -7,8 +7,13 @@ namespace Entities.Models
     {
         public int OfferedServiceId { get; set; }
         public String OfferedServiceName { get; set; }
-        public ICollection<Gender> Genders { get; set; } = new List<Gender>();
-        public TimeSpan ApproximateDuration { get; set; }
+        public List<Gender> Genders { get; set; } = new List<Gender>();
+        public int DurationMinutes { get; set; }
+        public TimeSpan ApproximateDuration
+        {
+            get => TimeSpan.FromMinutes(DurationMinutes);
+            set => DurationMinutes = (int)value.TotalMinutes;
+        }
         public decimal Price { get; set; }
         public bool Status { get; set; } = false;
 

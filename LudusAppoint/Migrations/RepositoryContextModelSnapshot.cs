@@ -230,7 +230,8 @@ namespace LudusAppoint.Migrations
 
                     b.HasKey("AgeGroupId");
 
-                    b.HasIndex("MinAge", "MaxAge");
+                    b.HasIndex("MinAge", "MaxAge")
+                        .IsUnique();
 
                     b.ToTable("AgeGroups");
 

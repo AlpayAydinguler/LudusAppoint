@@ -37,7 +37,7 @@ namespace Repositories.Config
                 BranchEmail = "businessmail@business.com",
                 Status = false
             };
-            builder.HasData(branch,branch2);
+            builder.HasData(branch, branch2);
         }
     }
 }

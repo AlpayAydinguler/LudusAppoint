@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
@@ -460,7 +459,8 @@ namespace LudusAppoint.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_AgeGroups_MinAge_MaxAge",
                 table: "AgeGroups",
-                columns: new[] { "MinAge", "MaxAge" });
+                columns: new[] { "MinAge", "MaxAge" },
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Branches_ShopSettingsId",

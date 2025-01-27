@@ -1,7 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
-using System.ComponentModel.DataAnnotations.Schema;
-
-namespace Entities.Models
+﻿namespace Entities.Models
 {
     public class EmployeeLeave
     {
