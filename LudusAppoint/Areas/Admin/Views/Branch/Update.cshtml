@@ -1,0 +1,54 @@
+﻿@model BranchDtoForUpdate
+
+<div class="card card-dark bg-dark border-black">
+	<div class="card-body text-light">
+		<div class="display-6">@Localizer["UpdateBranch"]</div>
+		<form method="post" asp-action="Update">
+			<input type="hidden" asp-for="BranchId" />
+			<div class="form-group">
+				<label asp-for="BranchName">@Localizer["Name"]</label>
+				<input asp-for="BranchName" class="form-control" />
+				<span asp-validation-for="BranchName" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				<label asp-for="Country">@Localizer["Country"]</label>
+				<input asp-for="Country" class="form-control" />
+				<span asp-validation-for="Country" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				<label asp-for="City">@Localizer["City"]</label>
+				<input asp-for="City" class="form-control" />
+				<span asp-validation-for="City" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				<label asp-for="District">@Localizer["District"]</label>
+				<input asp-for="District" class="form-control" />
+				<span asp-validation-for="District" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				<label asp-for="Street">@Localizer["Street"]</label>
+				<input asp-for="Street" class="form-control" />
+				<span asp-validation-for="Street" class="text-danger"></span>
+			<div class="form-group">
+				<label asp-for="Address">@Localizer["Address"]</label>
+				<input asp-for="Address" class="form-control" />
+				<span asp-validation-for="Address" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+					<label asp-for="BranchPhoneNumber">@Localizer["PhoneNumber"]</label>
+					<input asp-for="BranchPhoneNumber" class="form-control" type="tel"/>
+					<span asp-validation-for="BranchPhoneNumber" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				<label asp-for="BranchEmail">@Localizer["Email"]</label>
+				<input asp-for="BranchEmail" class="form-control" type="email"/>
+				<span asp-validation-for="BranchEmail" class="text-danger"></span>
+			</div>
+			<div class="text-danger" asp-validation-summary="All"></div>
+			<button type="submit" class="btn btn-primary my-3">
+				<i class="fa-solid fa-file-pen"></i>
+				@Localizer["Update"]
+			</button>
+		</form>
+	</div>
+</div>

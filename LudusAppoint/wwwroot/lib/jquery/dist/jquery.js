@@ -7059,9 +7059,9 @@ Tween.prototype = {
 		var eased,
 			hooks = Tween.propHooks[ this.prop ];
 
-		if ( this.options.duration ) {
+		if ( this.options.ApproximateDuration ) {
 			this.pos = eased = jQuery.easing[ this.easing ](
-				percent, this.options.duration * percent, 0, 1, this.options.duration
+				percent, this.options.ApproximateDuration * percent, 0, 1, this.options.ApproximateDuration
 			);
 		} else {
 			this.pos = eased = percent;
@@ -7434,11 +7434,11 @@ function Animation( elem, properties, options ) {
 				return false;
 			}
 			var currentTime = fxNow || createFxNow(),
-				remaining = Math.max( 0, animation.startTime + animation.duration - currentTime ),
+				remaining = Math.max( 0, animation.startTime + animation.ApproximateDuration - currentTime ),
 
 				// Support: Android 2.3 only
 				// Archaic crash bug won't allow us to use `1 - ( 0.5 || 0 )` (trac-12497)
-				temp = remaining / animation.duration || 0,
+				temp = remaining / animation.ApproximateDuration || 0,
 				percent = 1 - temp,
 				index = 0,
 				length = animation.tweens.length;
@@ -7473,7 +7473,7 @@ function Animation( elem, properties, options ) {
 			originalProperties: properties,
 			originalOptions: options,
 			startTime: fxNow || createFxNow(),
-			duration: options.duration,
+			ApproximateDuration: options.ApproximateDuration,
 			tweens: [],
 			createTween: function( prop, end ) {
 				var tween = jQuery.Tween( elem, animation.opts, prop, end,
@@ -7588,21 +7588,21 @@ jQuery.speed = function( speed, easing, fn ) {
 	var opt = speed && typeof speed === "object" ? jQuery.extend( {}, speed ) : {
 		complete: fn || !fn && easing ||
 			isFunction( speed ) && speed,
-		duration: speed,
+		ApproximateDuration: speed,
 		easing: fn && easing || easing && !isFunction( easing ) && easing
 	};
 
 	// Go to the end state if fx are off
 	if ( jQuery.fx.off ) {
-		opt.duration = 0;
+		opt.ApproximateDuration = 0;
 
 	} else {
-		if ( typeof opt.duration !== "number" ) {
-			if ( opt.duration in jQuery.fx.speeds ) {
-				opt.duration = jQuery.fx.speeds[ opt.duration ];
+		if ( typeof opt.ApproximateDuration !== "number" ) {
+			if ( opt.ApproximateDuration in jQuery.fx.speeds ) {
+				opt.ApproximateDuration = jQuery.fx.speeds[ opt.ApproximateDuration ];
 
 			} else {
-				opt.duration = jQuery.fx.speeds._default;
+				opt.ApproximateDuration = jQuery.fx.speeds._default;
 			}
 		}
 	}

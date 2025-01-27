@@ -1,0 +1,83 @@
+﻿@model IEnumerable<Employee>
+<div class="card card-dark bg-dark border-black" data-bs-theme="dark">
+	<div class="display-6 text-light">@Localizer["Employees"]</div>
+	<div class="d-flex justify-content-end">
+		<a asp-action="Create" class="btn btn-success">
+			<i class="bi bi-plus-lg"></i>
+			@Localizer["Create"]
+		</a>
+	</div>
+	<div class="card-body text-light">
+		<table id="employeeTable" class="table table-dark table-hover table-striped align-middle">
+			<thead>
+				<tr>
+					<th class="text-center">@Localizer["Id"]</th>
+					<th>@Localizer["Name"]</th>
+					<th>@Localizer["Surname"]</th>
+					<th>@Localizer["Branch"]</th>
+					<th class="text-center">@Localizer["CanTakeClients"]</th>
+					<th>@Localizer["DayOff"]</th>
+					<th>@Localizer["StartOfWorkingHours"]</th>
+					<th>@Localizer["EndOfWorkingHours"]</th>
+					<th>@Localizer["Operations"]</th>
+				</tr>
+			</thead>
+			<tbody>
+				@foreach (var employee in Model)
+				{
+					<tr>
+						<td class="text-center">@employee.EmployeeId</td>
+						<td>@employee.EmployeeName</td>
+						<td>@employee.EmployeeSurname</td>
+						<td>@employee.Branch.BranchName</td>
+						<td>
+							<span class="d-none">@employee.CanTakeClients</span>
+							<div class="form-check form-switch d-flex justify-content-center">
+								<input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckCheckedDisabled" checked="@employee.CanTakeClients" disabled>
+							</div>
+						</td>
+						<td>@Localizer[employee.DayOff.ToString()]</td>
+						<td>@employee.StartOfWorkingHours</td>
+						<td>@employee.EndOfWorkingHours</td>
+						<td>
+							<div class="btn-group btn-group-sm" role="group">
+								<a asp-action="Update" asp-route-id="@employee.EmployeeId" class="btn btn-warning btn-sm rounded mx-1">
+									<i class="fa-solid fa-pen-to-square"></i>@Localizer["Update"]
+								</a>
+								<a asp-action="Delete" asp-route-id="@employee.EmployeeId" class="btn btn-danger btn-sm rounded mx-1">
+									<i class="bi bi-trash3"></i>@Localizer["Delete"]
+								</a>
+							</div>
+						</td>
+					</tr>
+				}
+			</tbody>
+		</table>
+	</div>
+</div>
+@section Scripts {
+	<script>
+		$(document).ready(function () {
+			$('#employeeTable').DataTable({
+				columnDefs: [ {
+					"orderable": false,
+					"targets": [ 8 ]
+				} ],
+				responsive: true,
+				paging: true,
+				searching: true,
+				ordering: true,
+				lengthChange: true,
+				language: {
+					search: "@Localizer["Search"] : ",
+					lengthMenu: "@Localizer["Show _MENU_ entries"]",
+					info: "@Localizer["Showing _START_ to _END_ of _TOTAL_ entries"]",
+					paginate: {
+						previous: "@Localizer["Previous"]",
+						next: "@Localizer["Next"]"
+					}
+				}
+			});
+		});
+	</script>
+}

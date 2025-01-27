@@ -1,0 +1,45 @@
+﻿@model AgeGroupDtoForInsert
+
+<div class="card card-dark bg-dark border-black">
+	<div class="card-header">
+		<h6 class="card-title">@Localizer["CreateAgeGroup"]</h6>
+	</div>
+	<div class="card-body text-light">
+		<form method="post" asp-action="Create">
+			<!-- MinAge and MaxAge Inputs -->
+			<div class="row mb-3">
+				<div class="col-md-6">
+					<div class="form-group">
+						<label asp-for="MinAge" class="form-label">@Localizer["MinAge"]</label>
+						<input asp-for="MinAge" class="form-control" />
+						<span asp-validation-for="MinAge" class="text-danger"></span>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="form-group">
+						<label asp-for="MaxAge" class="form-label">@Localizer["MaxAge"]</label>
+						<input asp-for="MaxAge" class="form-control" />
+						<span asp-validation-for="MaxAge" class="text-danger"></span>
+					</div>
+				</div>
+			</div>
+
+			<!-- Status Switch -->
+			<div class="form-group form-check form-switch mb-3 d-flex align-items-center border-bottom" style="max-width: 576px; padding-left: 0">
+				<label asp-for="Status" class="form-check-label me-auto">@Localizer["Status"]</label>
+				<input asp-for="Status" class="form-check-input mb-1" type="checkbox" role="switch" />
+				<span asp-validation-for="Status" class="text-danger ms-2"></span>
+			</div>
+
+			<!-- Validation Summary -->
+			<div class="text-danger" asp-validation-summary="All"></div>
+
+			<!-- Submit Button -->
+			<div class="d-flex justify-content-start">
+				<button type="submit" class="btn btn-primary">
+					<i class="bi bi-floppy"></i> @Localizer["SaveAgeGroup"]
+				</button>
+			</div>
+		</form>
+	</div>
+</div>

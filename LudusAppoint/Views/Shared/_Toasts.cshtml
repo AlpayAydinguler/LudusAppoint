@@ -1,0 +1,21 @@
+﻿<div id="successfullToast" class="toast bg-success bg-opacity-75" role="alert" aria-live="assertive" aria-atomic="true">
+	<div class="toast-header">
+		<i class="bi bi-database-fill-check"></i>
+		<strong class="me-auto ps-1">@Localizer["OperationSuccessfull!"]</strong>
+		<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+	</div>
+	<div class="toast-body">
+		@TempData["OperationMessage"]
+	</div>
+</div>
+
+<div id="failureToast" class="toast bg-danger bg-opacity-75" role="alert" aria-live="assertive" aria-atomic="true">
+	<div class="toast-header">
+		<i class="bi bi-database-fill-x"></i>
+		<strong class="me-auto ps-1">@Localizer["OperationFailed!"]</strong>
+		<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+	</div>
+	<div class="toast-body">
+		@TempData["OperationMessage"]
+	</div>
+</div>

@@ -12,8 +12,7 @@
         System.Diagnostics.Debug.WriteLine($"Current culture debug: {currentCulture}");
         System.Diagnostics.Debug.WriteLine($"Localized string for 'Welcome': {localizedString}");
     }
-
-    <p>Current Culture: @System.Threading.Thread.CurrentThread.CurrentUICulture.Name</p>
+    <p> <i class="fa-solid fa-address-book bg-secondary text-white p-3  rounded-5 my-3"></i>Current Culture: @System.Threading.Thread.CurrentThread.CurrentUICulture.Name</p>
     @*@<h1 class="display-4">@((ViewContext.HttpContext.Features.Get<IRequestCultureFeature>()?.RequestCulture.UICulture.Name))</h1>
     <p>Debug: @Localizer.GetAllStrings().FirstOrDefault()?.Name</p>*@
 

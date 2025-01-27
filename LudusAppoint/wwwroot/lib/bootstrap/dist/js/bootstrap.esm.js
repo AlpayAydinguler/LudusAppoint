@@ -95,28 +95,28 @@ const getUID = prefix => {
   } while (document.getElementById(prefix));
   return prefix;
 };
-const getTransitionDurationFromElement = element => {
+const getTransitionApproximateDurationFromElement = element => {
   if (!element) {
     return 0;
   }
 
-  // Get transition-duration of the element
+  // Get transition-ApproximateDuration of the element
   let {
-    transitionDuration,
+    transitionApproximateDuration,
     transitionDelay
   } = window.getComputedStyle(element);
-  const floatTransitionDuration = Number.parseFloat(transitionDuration);
+  const floatTransitionApproximateDuration = Number.parseFloat(transitionApproximateDuration);
   const floatTransitionDelay = Number.parseFloat(transitionDelay);
 
-  // Return 0 if element or transition duration is not found
-  if (!floatTransitionDuration && !floatTransitionDelay) {
+  // Return 0 if element or transition ApproximateDuration is not found
+  if (!floatTransitionApproximateDuration && !floatTransitionDelay) {
     return 0;
   }
 
-  // If multiple durations are defined, take the first
-  transitionDuration = transitionDuration.split(',')[0];
+  // If multiple ApproximateDurations are defined, take the first
+  transitionApproximateDuration = transitionApproximateDuration.split(',')[0];
   transitionDelay = transitionDelay.split(',')[0];
-  return (Number.parseFloat(transitionDuration) + Number.parseFloat(transitionDelay)) * MILLISECONDS_MULTIPLIER;
+  return (Number.parseFloat(transitionApproximateDuration) + Number.parseFloat(transitionDelay)) * MILLISECONDS_MULTIPLIER;
 };
 const triggerTransitionEnd = element => {
   element.dispatchEvent(new Event(TRANSITION_END));
@@ -253,8 +253,8 @@ const executeAfterTransition = (callback, transitionElement, waitForTransition =
     execute(callback);
     return;
   }
-  const durationPadding = 5;
-  const emulatedDuration = getTransitionDurationFromElement(transitionElement) + durationPadding;
+  const ApproximateDurationPadding = 5;
+  const emulatedApproximateDuration = getTransitionApproximateDurationFromElement(transitionElement) + ApproximateDurationPadding;
   let called = false;
   const handler = ({
     target
@@ -271,7 +271,7 @@ const executeAfterTransition = (callback, transitionElement, waitForTransition =
     if (!called) {
       triggerTransitionEnd(transitionElement);
     }
-  }, emulatedDuration);
+  }, emulatedApproximateDuration);
 };
 
 /**

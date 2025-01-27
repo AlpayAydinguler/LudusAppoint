@@ -1,0 +1,35 @@
+﻿@model EmployeeLeave
+
+<div class="card card-dark bg-dark border-black" data-bs-theme="dark">
+	<div class="display-6 text-light">@Localizer["CreateEmployeeLeave"]</div>
+	<div class="card-body text-light">
+		<form asp-action="Create" method="post">
+			<div class="form-group">
+				<label asp-for="EmployeeId" class="form-label">@Localizer["Employee"]</label>
+				<select asp-for="EmployeeId" class="form-select" asp-items="ViewBag.Employees"></select>
+				<span asp-validation-for="EmployeeId" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				<label asp-for="LeaveStartDateTime" class="form-label">@Localizer["StartDateTime"]</label>
+				<input asp-for="LeaveStartDateTime" class="form-control" type="datetime-local" />
+				<span asp-validation-for="LeaveStartDateTime" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				<label asp-for="LeaveEndDateTime" class="form-label">@Localizer["EndDateTime"]</label>
+				<input asp-for="LeaveEndDateTime" class="form-control" type="datetime-local" />
+				<span asp-validation-for="LeaveEndDateTime" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				<label asp-for="Reason" class="form-label">@Localizer["Reason"]</label>
+				<input asp-for="Reason" class="form-control" />
+				<span asp-validation-for="Reason" class="text-danger"></span>
+			</div>
+			<div>
+				<button type="submit" class="btn btn-primary my-3">
+					<i class="bi bi-check-lg"></i>
+					@Localizer["CreateLeave"]
+				</button>
+			</div>
+		</form>
+	</div>
+</div>

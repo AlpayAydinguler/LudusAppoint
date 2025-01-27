@@ -1,5 +1,9 @@
 using Microsoft.AspNetCore.Mvc.Razor;
-using Microsoft.Extensions.Options;
+using Microsoft.EntityFrameworkCore;
+using Repositories;
+using Repositories.Contracts;
+using Services;
+using Services.Contracts;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,11 +16,41 @@ builder.Services.AddMvc()
     .AddDataAnnotationsLocalization();
 builder.Services.Configure<RequestLocalizationOptions>(options =>
 {
-    var supportedCultures = new[] { "en", "tr" };
+    var supportedCultures = new[] { "en-GB", "tr-TR" };
     options.SetDefaultCulture(supportedCultures[1])
         .AddSupportedCultures(supportedCultures)
         .AddSupportedUICultures(supportedCultures);
 });
+
+builder.Services.AddDbContext<RepositoryContext>(options =>
+{
+    /*
+    options.UseSqlite(builder.Configuration.GetConnectionString("sqlconnection"),
+                      b => b.MigrationsAssembly("LudusAppoint"));
+    */
+    options.UseSqlServer(builder.Configuration.GetConnectionString("mssqlconnection"),
+                      b => b.MigrationsAssembly("LudusAppoint"));
+});
+
+builder.Services.AddScoped<IRepositoryManager, RepositoryManager>();
+builder.Services.AddScoped<IAgeGroupRepository, AgeGroupRepository>();
+builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+builder.Services.AddScoped<IOfferedServiceRepository, OfferedServiceRepository>();
+builder.Services.AddScoped<ICustomerAppointmentRepository, CustomerAppointmentRepository>();
+builder.Services.AddScoped<IBranchRepository, BranchRepository>();
+//builder.Services.AddScoped<IShopSettingsRepository, ShopSettingsRepository>();
+builder.Services.AddScoped<IEmployeeLeaveRepository, EmployeeLeaveRepository>();
+
+builder.Services.AddScoped<IServiceManager, ServiceManager>();
+builder.Services.AddScoped<IAgeGroupService, AgeGroupManager>();
+builder.Services.AddScoped<IEmployeeService, EmployeeManager>();
+builder.Services.AddScoped<IOfferedServiceService, OfferedServiceManager>();
+builder.Services.AddScoped<ICustomerAppointmentService, CustomerAppointmentManager>();
+builder.Services.AddScoped<IBranchService, BranchManager>();
+//builder.Services.AddScoped<IShopSettingsService, ShopSettingsManager>();
+builder.Services.AddScoped<IEmployeeLeaveService, EmployeeLeaveManager>();
+
+builder.Services.AddAutoMapper(typeof(Program));
 
 var app = builder.Build();
 
@@ -30,22 +64,26 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-// ADD THIS LINE: UseRequestLocalization middleware
-/*var localizationOptions = app.Services.GetRequiredService<IOptions<RequestLocalizationOptions>>().Value;
-app.UseRequestLocalization(localizationOptions);*/
-app.UseRequestLocalization();
+app.UseStaticFiles();
 
 app.UseRouting();
 
-
 app.UseAuthorization();
 
-app.MapStaticAssets();
+app.UseRequestLocalization();
 
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}")
-    .WithStaticAssets();
+app.UseHttpsRedirection();
+app.UseStaticFiles();
+app.UseRouting();
+app.UseAuthorization();
+app.UseRequestLocalization();
 
+app.MapAreaControllerRoute(
+    name: "Admin",
+    areaName: "Admin",
+    pattern: "Admin/{controller=Dashboard}/{action=Index}/{id?}"
+);
+
+app.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();

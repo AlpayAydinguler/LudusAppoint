@@ -1,0 +1,15 @@
+﻿@model IEnumerable<OfferedService>
+
+<div class="text-center my-3">
+	<h6 class="display-6">Hairdressing Services</h6>
+</div>
+
+<div>
+
+	<ul class="list-group">
+		@foreach (var offeredService in Model)
+		{
+			<li class="list-group-item">@offeredService.OfferedServiceName</li>
+		}
+	</ul>
+</div>

@@ -1,0 +1,102 @@
+﻿@model IEnumerable<BranchDto>
+
+<div class="card card-dark bg-dark border-black" data-bs-theme="dark">
+	<div class="card-header">
+		<h6 class="card-title">@Localizer["Branches"]</h6>
+		<div class="d-flex justify-content-end">
+			<a asp-action="Create" class="btn btn-success">
+				<i class="bi bi-plus-lg"></i>
+				@Localizer["Create"]
+			</a>
+		</div>
+	</div>
+	<div class="card-body text-light">
+		<div class="table-responsive">
+			<table id="branchesTable" class="table table-dark table-hover table-striped align-middle">
+				<thead>
+					<tr>
+						<th class="text-center">@Localizer["Id"]</th>
+						<th>@Localizer["Name"]</th>
+						<th>@Localizer["Country"]</th>
+						<th>@Localizer["City"]</th>
+						<th>@Localizer["District"]</th>
+						<th>@Localizer["Neighbourhood"]</th>
+						<th>@Localizer["Street"]</th>
+						<th>@Localizer["Address"]</th>
+						<th>@Localizer["PhoneNumber"]</th>
+						<th>@Localizer["Email"]</th>
+						<th class="text-end">@Localizer["ReservationInAdvanceDayLimit"]</th>
+						<th class="text-center">@Localizer["Status"]</th>
+						<th class="text-center">@Localizer["Operations"]</th>
+					</tr>
+				</thead>
+				<tbody>
+					@foreach (var branch in Model)
+					{
+						<tr>
+							<td class="text-center">@branch.BranchId</td>
+							<td>@branch.BranchName</td>
+							<td>@branch.Country</td>
+							<td>@branch.City</td>
+							<td>@branch.District</td>
+							<td>@branch.Neighbourhood</td>
+							<td>@branch.Street</td>
+							<td>@branch.Address</td>
+							<td>@branch.BranchPhoneNumber</td>
+							<td>@branch.BranchEmail</td>
+							<td class="text-end">@branch.ReservationInAdvanceDayLimit</td>
+							<td class="text-center">
+								@if (branch.Status)
+								{
+									<span class="badge bg-success">@Localizer["Active"]</span>
+								}
+								else
+								{
+									<span class="badge bg-danger">@Localizer["Inactive"]</span>
+								}
+							</td>
+							<td class="text-center align-content-center">
+								<div class="btn-group btn-group-sm" role="group">
+									<a asp-action="Update" asp-route-id="@branch.BranchId" class="btn btn-warning btn-sm rounded mx-1">
+										<i class="fa-solid fa-pen-to-square"></i>
+										@Localizer["Update"]
+									</a>
+									<a asp-action="Delete" asp-route-id="@branch.BranchId" class="btn btn-danger btn-sm rounded mx-1">
+										<i class="bi bi-trash3"></i>
+										@Localizer["Delete"]
+									</a>
+								</div>
+							</td>
+						</tr>
+					}
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+@section Scripts {
+	<script>
+		$(document).ready(function () {
+			$('#branchesTable').DataTable({
+				columnDefs: [ {
+					"orderable": false,
+					"targets": [ 12 ]
+				} ],
+				responsive: true,
+				paging: true,
+				searching: true,
+				ordering: true,
+				lengthChange: true,
+				language: {
+					search: "@Localizer["Search"] : ",
+					lengthMenu: "@Localizer["Show _MENU_ entries"]",
+					info: "@Localizer["Showing _START_ to _END_ of _TOTAL_ entries"]",
+					paginate: {
+						previous: "@Localizer["Previous"]",
+						next: "@Localizer["Next"]"
+					}
+				}
+			});
+		});
+	</script>
+}

@@ -8,7 +8,7 @@
 
 <div class="btn-group">
 	<button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-		<img src="Images/CountryFlags/@String.Concat(@System.Threading.Thread.CurrentThread.CurrentUICulture.Name.Substring(0,2), ".svg")"
+		<img src="/assets/img/countryFlags/@String.Concat(@System.Threading.Thread.CurrentThread.CurrentUICulture.Name.Substring(0,2), ".svg")"
 			 class="me-2"
 			 style="width: 16px; height: 16px;"
 			 alt="flag" />
@@ -18,8 +18,8 @@
 		@foreach (var cultureItem in cultureItems)
 		{
 			<li>
-				<a class="dropdown-item d-flex align-items-center" href="/Language?language=@cultureItem.Value&returnUrl=@returnUrl">
-					<img src="Images/CountryFlags/@String.Concat(cultureItem.Value.Substring(0,2), ".svg")"
+				<a class="dropdown-item d-flex align-items-center" asp-controller="Language" asp-action="Index" asp-route-culture="@cultureItem.Value" asp-route-returnUrl="@returnUrl">					
+					<img src="/assets/img/countryFlags/@String.Concat(cultureItem.Value.Substring(0,2), ".svg")"
 						 class="me-2"
 						 style="width: 16px; height: 16px;"
 						 alt="flag" />

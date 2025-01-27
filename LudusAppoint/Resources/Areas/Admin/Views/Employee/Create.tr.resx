@@ -1,0 +1,93 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>1.3</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral</value>
+  </resheader>
+  <data name="CreateEmployee" xml:space="preserve">
+    <value>Yeni ¡ oluşturmak</value>
+  </data>
+  <data name="Name" xml:space="preserve">
+    <value>Adı</value>
+  </data>
+  <data name="Surname" xml:space="preserve">
+    <value>Soyadı</value>
+  </data>
+  <data name="Branch" xml:space="preserve">
+    <value>Branch</value>
+  </data>
+  <data name="SelectBranch" xml:space="preserve">
+    <value>Şube seçin</value>
+  </data>
+  <data name="CanTakeClients" xml:space="preserve">
+    <value>Müşterileri alabilir</value>
+  </data>
+  <data name="DayOff" xml:space="preserve">
+    <value>Bugun izinliyim</value>
+  </data>
+  <data name="SelectDayOff" xml:space="preserve">
+    <value>Gün Seç</value>
+  </data>
+  <data name="StartWorkingTime" xml:space="preserve">
+    <value>çalışmaya başlayın.</value>
+  </data>
+  <data name="EndWorkingTime" xml:space="preserve">
+    <value>işleme süresi</value>
+  </data>
+  <data name="OfferedServices" xml:space="preserve">
+    <value>SUNULAN HİZMETLER</value>
+  </data>
+  <data name="CanProvideService" xml:space="preserve">
+    <value>Hizmet verebilir</value>
+  </data>
+  <data name="Genders" xml:space="preserve">
+    <value>Cinsiyetler</value>
+  </data>
+  <data name="ApproximateDuration(Minutes)" xml:space="preserve">
+    <value>Yaklaşık süre( dakika)</value>
+  </data>
+  <data name="AgeGroups" xml:space="preserve">
+    <value>Yaş grubu</value>
+  </data>
+  <data name="Male" xml:space="preserve">
+    <value>Erkek</value>
+  </data>
+  <data name="Female" xml:space="preserve">
+    <value>Kadın</value>
+  </data>
+</root>

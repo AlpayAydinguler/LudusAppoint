@@ -1,0 +1,211 @@
+﻿@functions {
+	public string IsActive(string controller, string action = "")
+	{
+		var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
+		var currentAction = ViewContext.RouteData.Values["action"]?.ToString();
+		if (string.IsNullOrEmpty(action))
+		{
+			return currentController == controller ? "menu-open" : "";
+		}
+		else
+			return currentController == controller && currentAction == action ? "active" : "";
+	}
+}
+<li class="nav-item">
+	<a class="nav-link @IsActive("Dashboard", "Index")" asp-controller="Dashboard" asp-action="Index">
+		<i class="nav-icon bi bi-speedometer"></i>
+		<p>
+			@Localizer["Dashboard"]
+		</p>
+	</a>
+</li>
+
+<li class="nav-item @IsActive("CustomerAppointment")">
+	<a href="#" class="nav-link">
+		<i class="nav-icon bi bi-calendar-week"></i>
+		<p>
+			@Localizer["CustomerAppointments"]
+			<i class="nav-arrow bi bi-chevron-right"></i>
+		</p>
+	</a>
+	<ul class="nav nav-treeview">
+		<li class="nav-item">
+			<a class="nav-link @IsActive("CustomerAppointment", "PendingConfirmationList")" asp-controller="CustomerAppointment" asp-action="PendingConfirmationList">
+				<i class="bi bi-list-check"></i>
+				<p>
+					@Localizer["PendingConfirmationList"]
+				</p>
+			</a>
+		</li>
+		<li class="nav-item">
+			<a class="nav-link @IsActive("CustomerAppointment", "Index")" asp-controller="CustomerAppointment" asp-action="Index">
+				<i class="bi bi-list-ol"></i>
+				<p>
+					@Localizer["CustomerAppointmenstList"]
+				</p>
+			</a>
+		</li>
+		<li class="nav-item">
+			<a asp-controller="CustomerAppointment" asp-action="Create" class="nav-link @IsActive("CustomerAppointment", "Create")">
+				<i class="bi bi-plus-lg"></i>
+				<p>
+					@Localizer["CreateCustomerAppointment"]
+				</p>
+			</a>
+		</li>
+	</ul>
+</li>
+<li class="nav-item @IsActive("offeredService")">
+	<a href="#" class="nav-link">
+		<i class="nav-icon bi bi-scissors"></i>
+		<p>
+			@Localizer["OfferedServices"]
+			<i class="nav-arrow bi bi-chevron-right"></i>
+		</p>
+	</a>
+	<ul class="nav nav-treeview">
+		<li class="nav-item">
+			<a class="nav-link @IsActive("offeredService", "Index")" aria-current="page" asp-controller="offeredService" asp-action="Index">
+				<i class="bi bi-list-ol"></i>
+				<p>
+					@Localizer["OfferedServicesList"]
+				</p>
+			</a>
+		</li>
+		<li class="nav-item">
+			<a asp-controller="offeredService" asp-action="Create" class="nav-link @IsActive("offeredService", "Create")">
+				<i class="bi bi-plus-lg"></i>
+				<p>
+					@Localizer["CreateofferedService"]
+				</p>
+			</a>
+		</li>
+	</ul>
+</li>
+<li class="nav-item @IsActive("Employee")">
+	<a href="#" class="nav-link">
+		<i class="nav-icon fa-solid fa-hand-scissors"></i>
+		<p>
+			@Localizer["Employees"]
+			<i class="nav-arrow bi bi-chevron-right"></i>
+		</p>
+	</a>
+	<ul class="nav nav-treeview">
+		<li class="nav-item">
+			<a class="nav-link @IsActive("Employee", "Index")" aria-current="page" asp-controller="Employee" asp-action="Index">
+				<i class="bi bi-list-ol"></i>
+				<p>
+					@Localizer["EmployeesList"]
+				</p>
+			</a>
+		</li>
+		<li class="nav-item">
+			<a asp-controller="Employee" asp-action="Create" class="nav-link @IsActive("Employee", "Create")">
+				<i class="bi bi-plus-lg"></i>
+				<p>
+					@Localizer["CreateEmployee"]
+				</p>
+			</a>
+		</li>
+	</ul>
+</li>
+<li class="nav-item @IsActive("EmployeeLeave")">
+	<a href="#" class="nav-link">
+		<i class="nav-icon bi bi-calendar-x"></i>
+		<p>
+			@Localizer["EmployeeLeaves"]
+			<i class="nav-arrow bi bi-chevron-right"></i>
+		</p>
+	</a>
+	<ul class="nav nav-treeview">
+		<li class="nav-item">
+			<a class="nav-link @IsActive("EmployeeLeave", "Index")" aria-current="page" asp-controller="EmployeeLeave" asp-action="Index">
+				<i class="bi bi-list-ol"></i>
+				<p>
+					@Localizer["EmployeeLeavesList"]
+				</p>
+			</a>
+		</li>
+		<li class="nav-item">
+			<a asp-controller="EmployeeLeave" asp-action="Create" class="nav-link @IsActive("EmployeeLeave", "Create")">
+				<i class="bi bi-plus-lg"></i>
+				<p>
+					@Localizer["CreateEmployeeLeave"]
+				</p>
+			</a>
+		</li>
+	</ul>
+</li>
+<li class="nav-item @IsActive("AgeGroup")">
+	<a href="#" class="nav-link">
+		<i class="nav-icon fa-solid fa-arrows-down-to-people"></i>
+		<p>
+			@Localizer["AgeGroups"]
+			<i class="nav-arrow bi bi-chevron-right"></i>
+		</p>
+	</a>
+	<ul class="nav nav-treeview">
+		<li class="nav-item">
+			<a class="nav-link @IsActive("AgeGroup", "Index")" aria-current="page" asp-controller="AgeGroup" asp-action="Index">
+				<i class="bi bi-list-ol"></i>
+				<p>
+					@Localizer["AgeGroupsList"]
+				</p>
+			</a>
+		</li>
+		<li class="nav-item">
+			<a asp-controller="AgeGroup" asp-action="Create" class="nav-link @IsActive("AgeGroup", "Create")">
+				<i class="bi bi-plus-lg"></i>
+				<p>
+					@Localizer["CreateAgeGroup"]
+				</p>
+			</a>
+		</li>
+	</ul>
+</li>
+<li class="nav-item @IsActive("Branch")">
+	<a href="#" class="nav-link">
+		<i class="nav-icon bi bi-shop"></i>
+		<p>
+			@Localizer["Branches"]
+			<i class="nav-arrow bi bi-chevron-right"></i>
+		</p>
+	</a>
+	<ul class="nav nav-treeview">
+		<li class="nav-item">
+			<a class="nav-link @IsActive("Branch", "Index")" aria-current="page" asp-controller="Branch" asp-action="Index">
+				<i class="bi bi-list-ol"></i>
+				<p>
+					@Localizer["BranchesList"]
+				</p>
+			</a>
+		</li>
+		<li class="nav-item">
+			<a asp-controller="Branch" asp-action="Create" class="nav-link @IsActive("Branch", "Create")">
+				<i class="bi bi-plus-lg"></i>
+				<p>
+					@Localizer["CreateBranch"]
+				</p>
+			</a>
+		</li>
+	</ul>
+</li>
+<li class="nav-item @IsActive("SiteSettings")">
+	<a href="#" class="nav-link">
+		<i class="nav-icon bi bi-gear"></i>
+		<p>
+			@Localizer["SiteSettings"]
+			<i class="nav-arrow bi bi-chevron-right"></i>
+		</p>
+	</a>
+	<ul class="nav nav-treeview">
+		<li class="nav-item">
+			<a class="nav-link @IsActive("SiteSettings", "Index")" aria-current="page" asp-controller="SiteSettings" asp-action="Index">
+				<i class="bi bi-list-ol"></i>
+				<p>
+					@Localizer["SiteSettingsList"]
+				</p>
+			</a>
+		</li>
+	</ul>
+</li>
