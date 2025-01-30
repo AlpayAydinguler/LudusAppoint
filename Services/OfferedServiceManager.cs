@@ -26,7 +26,7 @@ namespace Services
 
         public void CreateofferedService(OfferedService offeredService)
         {
-            ValidateofferedService(offeredService);
+            //ValidateofferedService(offeredService);
             _repositoryManager.OfferedServiceRepository.CreateofferedService(offeredService);
             _repositoryManager.Save();
         }

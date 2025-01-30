@@ -103,14 +103,12 @@
                                             }
                                             @foreach (var ageGroup in allAgeGroups)
                                             {
-                                                var isChecked = Model?.AgeGroups.Any(ag => ag.AgeGroupId == ageGroup.AgeGroupId) ?? false;
                                                 <div class="form-check">
                                                     <input class="form-check-input" type="checkbox"
                                                            name="AgeGroupIds"
                                                            value="@ageGroup.AgeGroupId"
-                                                           id="ageGroup-@ageGroup.AgeGroupId"
-                                                           checked="@isChecked" />
-                                                    <label class="form-check-label" for="ageGroup-@ageGroup.AgeGroupId">
+                                                           checked="@Model.AgeGroupIds.Contains(ageGroup.AgeGroupId)" />
+                                                    <label class="form-check-label">
                                                         @ageGroup.Name
                                                     </label>
                                                 </div>

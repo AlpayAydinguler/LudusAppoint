@@ -30,7 +30,7 @@ namespace LudusAppoint.Infrastructure.Mapper
 
             CreateMap<OfferedServiceDtoForInsert, OfferedService>();
             CreateMap<OfferedServiceDtoForUpdate, OfferedService>().ReverseMap()
-                                                                   .ForMember(dest => dest.AgeGroups, opt => opt.MapFrom(src => src.AgeGroups));
+                                                                   .ForMember(dest => dest.AgeGroupIds, opt => opt.MapFrom(src => src.AgeGroups.Select(ag => ag.AgeGroupId)));
             CreateMap<OfferedService, OfferedServiceDto>();
 
             CreateMap<OfferedServiceLocalizationDtoForInsert, OfferedServiceLocalization>();

@@ -1,6 +1,7 @@
 ﻿using Entities.Models;
 using Entities.Models.Enums;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Repositories.Contracts;
 
 namespace Repositories
@@ -132,23 +133,15 @@ namespace Repositories
 
         public void Update(OfferedService offeredService, List<int> ageGroupIds)
         {
-            // Clear existing relationships
             offeredService.AgeGroups.Clear();
 
-            // Add new relationships
-            /*
-            var ageGroups = _repositoryContext.AgeGroups
-                .Where(ag => ageGroupIds.Contains(ag.AgeGroupId))
-                .AsNoTracking()
-                .ToList();
-            */
             foreach (var id in ageGroupIds)
             {
-                var ageGroup = new AgeGroup { AgeGroupId = id };
-                _repositoryContext.Attach(ageGroup);
+                var ageGroup = _repositoryContext.AgeGroups
+                    .FirstOrDefault(ag => ag.AgeGroupId == id);
+
                 offeredService.AgeGroups.Add(ageGroup);
             }
-            Update(offeredService);
         }
     }
 }
