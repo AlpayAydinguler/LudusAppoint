@@ -17,7 +17,7 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>AgeGroup.resx</DependentUpon>
     </Compile>
-    <Compile Update="Resources\AgeGroupDto.Designer.cs">
+    <Compile Update="Resources\Dtos\AgeGroupDto.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>AgeGroupDto.resx</DependentUpon>
@@ -27,10 +27,15 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Branch.resx</DependentUpon>
     </Compile>
-    <Compile Update="Resources\BranchDto.Designer.cs">
+    <Compile Update="Resources\Dtos\BranchDto.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>BranchDto.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\Dtos\OfferedServiceDto.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>OfferedServiceDto.resx</DependentUpon>
     </Compile>
     <Compile Update="Resources\SharedResources.Designer.cs">
       <DesignTime>True</DesignTime>
@@ -49,7 +54,7 @@
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>AgeGroup.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Update="Resources\AgeGroupDto.resx">
+    <EmbeddedResource Update="Resources\Dtos\AgeGroupDto.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>AgeGroupDto.Designer.cs</LastGenOutput>
     </EmbeddedResource>
@@ -57,9 +62,13 @@
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Branch.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Update="Resources\BranchDto.resx">
+    <EmbeddedResource Update="Resources\Dtos\BranchDto.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>BranchDto.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Dtos\OfferedServiceDto.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>OfferedServiceDto.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Update="Resources\SharedResources.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>

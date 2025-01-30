@@ -75,4 +75,7 @@
   <data name="Create" xml:space="preserve">
     <value>Oluşturun</value>
   </data>
+  <data name="SaveBranch" xml:space="preserve">
+    <value>Şubeyi kaydet</value>
+  </data>
 </root>

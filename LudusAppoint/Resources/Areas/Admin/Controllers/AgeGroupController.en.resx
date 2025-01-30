@@ -48,4 +48,13 @@
   <data name="AgeGroupDeletedSuccessfully." xml:space="preserve">
     <value>Age group deleted successfully.</value>
   </data>
+  <data name="AgeGroupCreatedSuccessfully" xml:space="preserve">
+    <value>Age group created successfully</value>
+  </data>
+  <data name="AgeGroupUpdatedSuccessfully" xml:space="preserve">
+    <value>Age group updated successfully</value>
+  </data>
+  <data name="AgeGroupDeletedSuccessfully" xml:space="preserve">
+    <value>Age group deleted successfully</value>
+  </data>
 </root>

@@ -38,20 +38,20 @@ namespace Services
                 var employee = _repositoryManager.EmployeeRepository.FindByCondition(h => h.EmployeeId.Equals(model.EmployeeId), false);
                 if (employee == null)
                 {
-                    validationException.Add(new ValidationException(_localizer["EmployeeCouldNotBeFound."], new Exception() { Source = "EmployeeId" }));
+                    validationException.Add(new ValidationException(_localizer["EmployeeCouldNotBeFound"] + ".", new Exception() { Source = "EmployeeId" }));
                 }
                 else
                 {
-                    validationException.Add(new ValidationException(_localizer["{0} HaveAppointmentsAtTheseDates.", employee.EmployeeFullName], new Exception() { Source = "EmployeeId" }));
+                    validationException.Add(new ValidationException(_localizer["{0} HaveAppointmentsAtTheseDates" + ".", employee.EmployeeFullName], new Exception() { Source = "EmployeeId" }));
                 }
             }
             if (model.LeaveStartDateTime > model.LeaveEndDateTime)
             {
-                validationException.Add(new ValidationException(_localizer["StartDateCannotBeGreaterThanEndDate."], new Exception() { Source = "StartDateTime" }));
+                validationException.Add(new ValidationException(_localizer["StartDateCannotBeGreaterThanEndDate"] + ".", new Exception() { Source = "StartDateTime" }));
             }
             if (model.LeaveStartDateTime < DateTime.Now)
             {
-                validationException.Add(new ValidationException(_localizer["StartDateCannotBeLessThanNow."], new Exception() { Source = "StartDateTime" }));
+                validationException.Add(new ValidationException(_localizer["StartDateCannotBeLessThanNow"] + ".", new Exception() { Source = "StartDateTime" }));
             }
             if (validationException.Count != 0)
             {

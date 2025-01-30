@@ -2,5 +2,6 @@
 {
     public record OfferedServiceDtoForUpdate : OfferedServiceDto
     {
+        public List<int> AgeGroupIds { get; init; } = new();
     }
 }

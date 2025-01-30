@@ -54,4 +54,16 @@
   <data name="PleaseTryWithDiffrentBranchOrOfferedServices." xml:space="preserve">
     <value>Please try with diffrent branch or offered services.</value>
   </data>
+  <data name="NoOfferedServicesAvailable" xml:space="preserve">
+    <value>No offered services available</value>
+  </data>
+  <data name="PleaseTryWithDiffrentAgeGroupOrGender" xml:space="preserve">
+    <value>Please try with diffrent age group or gender</value>
+  </data>
+  <data name="NoEmployeesAvailable" xml:space="preserve">
+    <value>No employees available</value>
+  </data>
+  <data name="PleaseTryWithDiffrentBranchOrOfferedServices" xml:space="preserve">
+    <value>Please try with diffrent branch or offered services</value>
+  </data>
 </root>

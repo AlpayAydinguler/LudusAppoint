@@ -41,7 +41,7 @@ namespace LudusAppoint.Areas.Admin.Controllers
             {
                 _serviceManager.BranchService.CreateBranch(branchDtoForInsert);
                 TempData["OperationSuccessfull"] = true;
-                TempData["OperationMessage"] = _localizer["BranchCreatedSuccessfully."].ToString();
+                TempData["OperationMessage"] = _localizer["BranchCreatedSuccessfully"].ToString() + ".";
                 return RedirectToAction("Index");
             }
             catch (AggregateException exceptions)
@@ -62,15 +62,15 @@ namespace LudusAppoint.Areas.Admin.Controllers
 
         [HttpPost]
         [AutoValidateAntiforgeryToken]
-        public IActionResult Update([FromForm] Branch branch)
+        public IActionResult Update([FromForm] BranchDtoForUpdate branchDtoForUpdate)
         {
             if (!ModelState.IsValid)
             {
-                return View(branch);
+                return View(branchDtoForUpdate);
             }
             try
             {
-                _serviceManager.BranchService.UpdateBranch(branch);
+                _serviceManager.BranchService.UpdateBranch(branchDtoForUpdate);
                 return RedirectToAction("Index");
             }
             catch (AggregateException exceptions)
@@ -79,7 +79,7 @@ namespace LudusAppoint.Areas.Admin.Controllers
                 {
                     ModelState.AddModelError(exception.InnerException?.Source.ToString(), exception.Message);
                 }
-                return View(branch);
+                return View(branchDtoForUpdate);
             }
         }
         [HttpGet]
@@ -90,7 +90,7 @@ namespace LudusAppoint.Areas.Admin.Controllers
             {
                 _serviceManager.BranchService.DeleteAgeGroup(id);
                 TempData["OperationSuccessfull"] = true;
-                TempData["OperationMessage"] = _localizer["BranchDeletedSuccessfully."].ToString();
+                TempData["OperationMessage"] = _localizer["BranchDeletedSuccessfully"].ToString() + ".";
                 return RedirectToAction("Index");
             }
             catch (Exception exception)

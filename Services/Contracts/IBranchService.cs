@@ -9,6 +9,6 @@ namespace Services.Contracts
         void DeleteAgeGroup(int id);
         public IEnumerable<BranchDto> GetAllBranches(bool trackChanges);
         BranchDtoForUpdate? GetBranchForUpdate(int id, bool trackChanges);
-        void UpdateBranch(Branch branch);
+        public void UpdateBranch(BranchDtoForUpdate branchDtoForUpdate);
     }
 }

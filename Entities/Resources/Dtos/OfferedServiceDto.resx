@@ -39,22 +39,13 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral</value>
   </resheader>
-  <data name="AgeGroupCreatedSuccessfully." xml:space="preserve">
-    <value>Yaş grubu başarıyla oluşturuldu.</value>
+  <data name="ServiceNameIsRequired" xml:space="preserve">
+    <value>Service name ıs required</value>
   </data>
-  <data name="AgeGroupUpdatedSuccessfully." xml:space="preserve">
-    <value>Yaş grubu başarıyla güncellendi.</value>
+  <data name="TheDurationMustBeBetween1MinuteAnd24Hours" xml:space="preserve">
+    <value>The duration must be between1 minute and24 hours</value>
   </data>
-  <data name="AgeGroupDeletedSuccessfully." xml:space="preserve">
-    <value>Grup başarıyla silindi</value>
-  </data>
-  <data name="AgeGroupCreatedSuccessfully" xml:space="preserve">
-    <value>Yaş grubu başarıyla oluşturuldu</value>
-  </data>
-  <data name="AgeGroupUpdatedSuccessfully" xml:space="preserve">
-    <value>Yaş grubu başarıyla güncellendi</value>
-  </data>
-  <data name="AgeGroupDeletedSuccessfully" xml:space="preserve">
-    <value>Grup başarıyla silindi</value>
+  <data name="TheDurationMustBeBetween1And10000" xml:space="preserve">
+    <value>The duration must be between1 and10000</value>
   </data>
 </root>

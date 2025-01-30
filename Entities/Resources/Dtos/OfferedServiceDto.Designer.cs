@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Entities.Resources {
+namespace Entities.Resources.Dtos {
     using System;
     
     
@@ -22,14 +22,14 @@ namespace Entities.Resources {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    public class AgeGroupDto {
+    public class OfferedServiceDto {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal AgeGroupDto() {
+        internal OfferedServiceDto() {
         }
         
         /// <summary>
@@ -39,7 +39,7 @@ namespace Entities.Resources {
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Entities.Resources.AgeGroupDto", typeof(AgeGroupDto).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Entities.Resources.Dtos.OfferedServiceDto", typeof(OfferedServiceDto).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -61,11 +61,29 @@ namespace Entities.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Age must be between0 and125.
+        ///   Looks up a localized string similar to Service name ıs required.
         /// </summary>
-        public static string AgeMustBeBetween0And125 {
+        public static string ServiceNameIsRequired {
             get {
-                return ResourceManager.GetString("AgeMustBeBetween0And125", resourceCulture);
+                return ResourceManager.GetString("ServiceNameIsRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The duration must be between1 and10000.
+        /// </summary>
+        public static string TheDurationMustBeBetween1And10000 {
+            get {
+                return ResourceManager.GetString("TheDurationMustBeBetween1And10000", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The duration must be between1 minute and24 hours.
+        /// </summary>
+        public static string TheDurationMustBeBetween1MinuteAnd24Hours {
+            get {
+                return ResourceManager.GetString("TheDurationMustBeBetween1MinuteAnd24Hours", resourceCulture);
             }
         }
     }

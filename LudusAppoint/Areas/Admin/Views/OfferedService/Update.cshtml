@@ -1,14 +1,15 @@
-﻿@model OfferedServiceDtoForInsert
+﻿@model OfferedServiceDtoForUpdate
 
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-12 col-xl-10">
             <div class="card card-dark bg-dark border-black">
                 <div class="card-header">
-                    <h4 class="card-title mb-0">@Localizer["CreateOfferedService"]</h4>
+                    <h4 class="card-title mb-0">@Localizer["UpdateOfferedService"]</h4>
                 </div>
                 <div class="card-body text-light">
-                    <form method="post" asp-action="Create">
+                    <form method="post" asp-action="Update">
+                        <input type="hidden" asp-for="OfferedServiceId" />
                         <div class="row g-3">
                             <!-- Left Column -->
                             <div class="col-12 col-lg-6">
@@ -127,7 +128,7 @@
                             <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                                 <button type="submit" class="btn btn-primary px-4 py-2">
                                     <i class="bi bi-floppy me-2"></i>
-                                    @Localizer["CreateService"]
+                                    @Localizer["SaveChanges"]
                                 </button>
                             </div>
                         </div>

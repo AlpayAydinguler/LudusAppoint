@@ -48,4 +48,13 @@
   <data name="StartDateCannotBeLessThanNow." xml:space="preserve">
     <value>Başlangıç tarihi şu andan önce olamaz.</value>
   </data>
+  <data name="EmployeeCouldNotBeFound" xml:space="preserve">
+    <value>Çalışan bulunamadı</value>
+  </data>
+  <data name="StartDateCannotBeGreaterThanEndDate" xml:space="preserve">
+    <value>Başlangıç tarihi bitiş tarihinden daha büyük olamaz.</value>
+  </data>
+  <data name="StartDateCannotBeLessThanNow" xml:space="preserve">
+    <value>Başlangıç tarihi şu andan önce olamaz</value>
+  </data>
 </root>

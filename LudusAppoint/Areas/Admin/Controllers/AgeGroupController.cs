@@ -41,7 +41,7 @@ namespace LudusAppoint.Areas.Admin.Controllers
             {
                 _serviceManager.AgeGroupService.CreateAgeGroup(ageGroupDtoForInsert);
                 TempData["OperationSuccessfull"] = true;
-                TempData["OperationMessage"] = _localizer["AgeGroupCreatedSuccessfully."].ToString();
+                TempData["OperationMessage"] = _localizer["AgeGroupCreatedSuccessfully"].ToString() + ".";
                 return RedirectToAction("Index");
             }
             catch (AggregateException exceptions)
@@ -72,7 +72,7 @@ namespace LudusAppoint.Areas.Admin.Controllers
             {
                 _serviceManager.AgeGroupService.UpdateAgeGroup(ageGroupDtoForUpdate);
                 TempData["OperationSuccessfull"] = true;
-                TempData["OperationMessage"] = _localizer["AgeGroupUpdatedSuccessfully."].ToString();
+                TempData["OperationMessage"] = _localizer["AgeGroupUpdatedSuccessfully"].ToString() + ".";
                 return RedirectToAction("Index");
             }
             catch (AggregateException exceptions)
@@ -92,7 +92,7 @@ namespace LudusAppoint.Areas.Admin.Controllers
             {
                 _serviceManager.AgeGroupService.DeleteAgeGroup(id);
                 TempData["OperationSuccessfull"] = true;
-                TempData["OperationMessage"] = _localizer["AgeGroupDeletedSuccessfully."].ToString();
+                TempData["OperationMessage"] = _localizer["AgeGroupDeletedSuccessfully"].ToString() + ".";
                 return RedirectToAction("Index");
             }
             catch (Exception exception)

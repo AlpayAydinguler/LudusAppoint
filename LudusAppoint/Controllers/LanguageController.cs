@@ -1,11 +1,11 @@
 ﻿using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Ludus_Appoint.Controllers
+namespace LudusAppoint.Controllers
 {
     public class LanguageController : Controller
     {
-        public IActionResult Index(string culture, string returnUrl)
+        public IActionResult Change(string culture, string returnUrl)
         {
             Response.Cookies.Append(
                 CookieRequestCultureProvider.DefaultCookieName,

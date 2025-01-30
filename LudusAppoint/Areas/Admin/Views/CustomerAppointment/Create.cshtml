@@ -77,7 +77,7 @@
 								<div id="offeredServicesTableContainer">
 									<div class="d-flex justify-content-center">
 										<div class="spinner-border" role="status" id="offeredServicesloadingSpinner" style="display: none;">
-											<span class="visually-hidden">@Localizer["Loading..."]</span>
+											<span class="visually-hidden">@Localizer["Loading"]...</span>
 										</div>
 									</div>
 									<div class="card-body text-light table-responsive" id="offeredServicesCard" style="display: none;">
@@ -140,7 +140,7 @@
 
 								<label asp-for="EmployeeId">@Localizer["Employee"]</label>
 								<div class="spinner-border" role="status" id="EmployeeLoadingSpinner" style="display: none;">
-									<span class="visually-hidden">@Localizer["Loading..."]</span>
+									<span class="visually-hidden">@Localizer["Loading"]...</span>
 								</div>
 								<div id="EmployeeSelect">
 									<select asp-for="EmployeeId" class="form-control form-select" id="employeeSelect">
@@ -408,7 +408,7 @@
 								document.getElementById('approximateDurationInputDiv').style.display = 'none';
 								offeredServicesTableBody.innerHTML = `
 									<tr>
-										<td colspan="4" class="text-center">@Localizer["NoOfferedServicesAvailable."] @Localizer["PleaseTryWithDiffrentAgeGroupOrGender."]</td>
+										<td colspan="4" class="text-center">@Localizer["NoOfferedServicesAvailable"] @Localizer["PleaseTryWithDiffrentAgeGroupOrGender"]</td>
 									</tr>
 								`;
 							}

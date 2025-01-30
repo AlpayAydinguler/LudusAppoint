@@ -72,4 +72,16 @@
   <data name="Update" xml:space="preserve">
     <value>Update</value>
   </data>
+  <data name="CreateBranch" xml:space="preserve">
+    <value>Create branch</value>
+  </data>
+  <data name="ReservationInAdvanceDayLimit" xml:space="preserve">
+    <value>Reservation ın advance day limit</value>
+  </data>
+  <data name="Status" xml:space="preserve">
+    <value>Status</value>
+  </data>
+  <data name="SaveChanges" xml:space="preserve">
+    <value>Save changes</value>
+  </data>
 </root>

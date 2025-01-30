@@ -1,4 +1,5 @@
-﻿using Entities.Models;
+﻿using Entities.Dtos;
+using Entities.Models;
 using Entities.Models.Enums;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -27,7 +28,7 @@ namespace LudusAppoint.Areas.Admin.Controllers
         {
             PopulateAgeGroups();
             PopulateSupportedCultures();
-            var model = new OfferedService(); // Ensure a valid model is created
+            var model = new OfferedServiceDtoForInsert(); // Ensure a valid model is created
             return View(model);
         }
 
@@ -89,6 +90,41 @@ namespace LudusAppoint.Areas.Admin.Controllers
                 PopulateAgeGroups();
                 PopulateSupportedCultures();
                 return View(offeredService);
+            }
+        }
+
+        public IActionResult Update([FromRoute] int id)
+        {
+            var model = _serviceManager.OfferedServiceService.GetOfferedServiceForUpdate(id, false);
+            PopulateAgeGroups();
+            PopulateSupportedCultures();
+            return View(model);
+        }
+
+        [HttpPost]
+        [AutoValidateAntiforgeryToken]
+        public IActionResult Update([FromForm] OfferedServiceDtoForUpdate offeredServiceDtoForUpdate)
+        {
+            if (!ModelState.IsValid)
+            {
+                PopulateAgeGroups();
+                PopulateSupportedCultures();
+                return View(offeredServiceDtoForUpdate);
+            }
+            try
+            {
+                _serviceManager.OfferedServiceService.UpdateOfferedService(offeredServiceDtoForUpdate);
+                return RedirectToAction("Index");
+            }
+            catch (AggregateException exceptions)
+            {
+                foreach (var exception in exceptions.InnerExceptions)
+                {
+                    ModelState.AddModelError(exception.InnerException?.Source.ToString(), exception.Message);
+                }
+                PopulateAgeGroups();
+                PopulateSupportedCultures();
+                return View(offeredServiceDtoForUpdate);
             }
         }
 

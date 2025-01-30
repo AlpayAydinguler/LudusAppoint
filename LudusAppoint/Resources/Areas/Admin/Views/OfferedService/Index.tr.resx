@@ -102,4 +102,10 @@
   <data name="Next" xml:space="preserve">
     <value>Sonraki</value>
   </data>
+  <data name="ConfirmDeletion" xml:space="preserve">
+    <value>Silme işlemini onayla</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>İptal</value>
+  </data>
 </root>

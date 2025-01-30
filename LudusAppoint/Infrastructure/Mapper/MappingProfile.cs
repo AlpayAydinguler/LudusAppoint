@@ -29,7 +29,8 @@ namespace LudusAppoint.Infrastructure.Mapper
             CreateMap<EmployeeLeave, EmployeeLeaveDto>();
 
             CreateMap<OfferedServiceDtoForInsert, OfferedService>();
-            CreateMap<OfferedServiceDtoForUpdate, OfferedService>().ReverseMap();
+            CreateMap<OfferedServiceDtoForUpdate, OfferedService>().ReverseMap()
+                                                                   .ForMember(dest => dest.AgeGroups, opt => opt.MapFrom(src => src.AgeGroups));
             CreateMap<OfferedService, OfferedServiceDto>();
 
             CreateMap<OfferedServiceLocalizationDtoForInsert, OfferedServiceLocalization>();

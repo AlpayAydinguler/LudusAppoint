@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
@@ -67,6 +68,7 @@ namespace LudusAppoint.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_OfferedServices", x => x.OfferedServiceId);
+                    table.CheckConstraint("CK_OfferedService_ApproximateDuration", "ApproximateDuration >= '00:01:00' AND ApproximateDuration <= '24:00:00'");
                 });
 
             migrationBuilder.CreateTable(

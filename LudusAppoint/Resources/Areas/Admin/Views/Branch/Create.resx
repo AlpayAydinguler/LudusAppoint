@@ -78,4 +78,7 @@
   <data name="Create" xml:space="preserve">
     <value>Create</value>
   </data>
+  <data name="SaveBranch" xml:space="preserve">
+    <value>Save branch</value>
+  </data>
 </root>

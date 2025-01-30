@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Entities.Resources {
+namespace Entities.Resources.Dtos {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace Entities.Resources {
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Entities.Resources.BranchDto", typeof(BranchDto).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Entities.Resources.Dtos.BranchDto", typeof(BranchDto).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;

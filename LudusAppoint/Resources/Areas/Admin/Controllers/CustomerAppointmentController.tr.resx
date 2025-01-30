@@ -51,4 +51,16 @@
   <data name="PleaseTryWithDiffrentBranchOrOfferedServices." xml:space="preserve">
     <value>Lütfen farklı bir şubeyle veya sunulan hizmetlerle deneyin.</value>
   </data>
+  <data name="NoOfferedServicesAvailable" xml:space="preserve">
+    <value>Sunulan hizmet yok</value>
+  </data>
+  <data name="PleaseTryWithDiffrentAgeGroupOrGender" xml:space="preserve">
+    <value>Lütfen farklı yaş grubu veya cinsiyetle deneyin</value>
+  </data>
+  <data name="NoEmployeesAvailable" xml:space="preserve">
+    <value>Çalışan yok</value>
+  </data>
+  <data name="PleaseTryWithDiffrentBranchOrOfferedServices" xml:space="preserve">
+    <value>Lütfen farklı bir şubeyle veya sunulan hizmetlerle deneyin</value>
+  </data>
 </root>

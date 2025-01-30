@@ -1,4 +1,4 @@
-﻿@model IEnumerable<OfferedService>
+﻿@model IEnumerable<OfferedServiceDto>
 
 @{
 	var cultureInfo = new CultureInfo("tr-TR");
@@ -12,94 +12,118 @@
 }
 
 <div class="card card-dark bg-dark border-black" data-bs-theme="dark">
-	<div class="display-6 text-light">@Localizer["OfferedServices"]</div>
-	<div class="d-flex justify-content-end">
-		<a asp-action="Create" class="btn btn-success">
-			<i class="bi bi-plus-lg"></i>
-			@Localizer["Create"]
-		</a>
+	<div class="card-header">
+		<h6 class="card-title">@Localizer["OfferedServices"]</h6>
+		<div class="d-flex justify-content-end">
+			<a asp-action="Create" class="btn btn-success">
+				<i class="bi bi-plus-lg"></i>
+				@Localizer["Create"]
+			</a>
+		</div>
 	</div>
-	<div class="card-body text-light table-responsive">
-		<table id="offeredServicesTable" class="table table-dark table-hover table-striped align-middle">
-			<thead>
-				<tr>
-					<th class="text-center">@Localizer["Id"]</th>
-					<th>@Localizer["Name"]</th>
-					<th class="text-center">@Localizer["Genders"]</th>
-					<th class="text-end pe-5">@Localizer["ApproximateDuration(Minutes)"]</th>
-					<th class="text-end pe-5">@Localizer["Price"] @NumberFormatInfo.CurrentInfo.CurrencySymbol</th>
-					<th>@Localizer["AgeGroups"]</th>
-					<th class="text-center">@Localizer["Status"]</th>
-					<th class="text-center">@Localizer["Operations"]</th>
-				</tr>
-			</thead>
-			<tbody>
-				@foreach (var offeredService in Model)
-				{
+	<div class="card-body text-light">
+		<div class="table-responsive">
+			<table id="offeredServicesTable" class="table table-dark table-hover table-striped align-middle">
+				<thead>
 					<tr>
-						<td class="text-center">@offeredService.OfferedServiceId</td>
-						<td>@offeredService.OfferedServiceName</td>
-						<td class="text-center align-content-center">
-							<span class="d-none">flexCheckCheckedDisabled" checked="@offeredService.Genders.Contains(Entities.Models.Enums.Gender.m) flexCheckCheckedDisabled" checked="@offeredService.Genders.Contains(Entities.Models.Enums.Gender.f)</span>
-							<div class="form-check form-check-inline">
-								<input class="form-check-input" type="checkbox" value="" id="flexCheckCheckedDisabled" checked="@offeredService.Genders.Contains(Entities.Models.Enums.Gender.m)" disabled>
-								<label class="form-check-label" for="flexCheckCheckedDisabled">
-									<i class="bi bi-gender-male	"></i>
-									@Localizer["Male"]
-								</label>
-							</div>
-							<div class="form-check form-check-inline">
-								<input class="form-check-input" type="checkbox" value="" id="flexCheckCheckedDisabled" checked="@offeredService.Genders.Contains(Entities.Models.Enums.Gender.f)" disabled>
-								<label class="form-check-label" for="flexCheckCheckedDisabled">
-									<i class="bi bi-gender-female"></i>
-									@Localizer["Female"]
-								</label>
-							</div>
-						</td>
-						<td class="text-end pe-5">@offeredService.ApproximateDuration.TotalMinutes</td>
-						<td class="pe-5 text-end">
-							@offeredService.Price
-							</td>
-						<td>
-							<div class="vstack gap-1">
-								@foreach (var ageGroup in @offeredService.AgeGroups)
-								{
-									<div class="p-2 text-center rounded-4 border border-success border-opacity-25 col-form-label-sm">
-										@*@ageGroup.Name*@...:::!!!FIX HERE!!!:::...
-									</div>
-								}
-							</div>
-						</td>
-						<td class="text-center align-content-center">
-							@if (offeredService.Status == true)
-							{
-								<span class="badge text-bg-success">
-									@Localizer["Active"]
-								</span>
-							}
-							else
-							{
-								<span class="badge text-bg-danger">
-									@Localizer["Passive"]
-								</span>
-							}
-						</td>
-						<td class="text-center align-content-center">
-							<div class="btn-group btn-group-sm" role="group">
-								<a asp-action="Update" asp-route-id="@offeredService.OfferedServiceId" class="btn btn-warning btn-sm rounded mx-1">
-									<i class="fa-solid fa-pen-to-square"></i>
-									@Localizer["Update"]
-								</a>
-								<a asp-action="Delete" asp-route-id="@offeredService.OfferedServiceId" class="btn btn-danger btn-sm rounded mx-1">
-									<i class="bi bi-trash3"></i>
-									@Localizer["Delete"]
-								</a>
-							</div>
-						</td>
+						<th class="text-center">@Localizer["Id"]</th>
+						<th>@Localizer["Name"]</th>
+						<th class="text-center">@Localizer["Genders"]</th>
+						<th class="text-end pe-5">@Localizer["ApproximateDuration(Minutes)"]</th>
+						<th class="text-end pe-5">@Localizer["Price"] @NumberFormatInfo.CurrentInfo.CurrencySymbol</th>
+						<th>@Localizer["AgeGroups"]</th>
+						<th class="text-center">@Localizer["Status"]</th>
+						<th class="text-center">@Localizer["Operations"]</th>
 					</tr>
-				}
-			</tbody>
-		</table>
+				</thead>
+				<tbody>
+					@foreach (var offeredService in Model)
+					{
+						<tr>
+							<td class="text-center">@offeredService.OfferedServiceId</td>
+							<td>@offeredService.OfferedServiceName</td>
+							<td class="text-center align-content-center">
+								<span class="d-none">flexCheckCheckedDisabled" checked="@offeredService.Genders.Contains(Entities.Models.Enums.Gender.m) flexCheckCheckedDisabled" checked="@offeredService.Genders.Contains(Entities.Models.Enums.Gender.f)</span>
+								<div class="form-check form-check-inline">
+									<input class="form-check-input" type="checkbox" value="" id="flexCheckCheckedDisabled" checked="@offeredService.Genders.Contains(Entities.Models.Enums.Gender.m)" disabled>
+									<label class="form-check-label" for="flexCheckCheckedDisabled">
+										<i class="bi bi-gender-male	"></i>
+										@Localizer["Male"]
+									</label>
+								</div>
+								<div class="form-check form-check-inline">
+									<input class="form-check-input" type="checkbox" value="" id="flexCheckCheckedDisabled" checked="@offeredService.Genders.Contains(Entities.Models.Enums.Gender.f)" disabled>
+									<label class="form-check-label" for="flexCheckCheckedDisabled">
+										<i class="bi bi-gender-female"></i>
+										@Localizer["Female"]
+									</label>
+								</div>
+							</td>
+							<td class="text-end pe-5">@offeredService.ApproximateDuration.TotalMinutes</td>
+							<td class="pe-5 text-end">
+								@offeredService.Price
+							</td>
+							<td>
+								<div class="vstack gap-1">
+									@foreach (var ageGroup in @offeredService.AgeGroups)
+									{
+										<div class="p-2 text-center rounded-4 border border-success border-opacity-25 col-form-label-sm">
+											@ageGroup.Name
+										</div>
+									}
+								</div>
+							</td>
+							<td class="text-center align-content-center">
+								@if (offeredService.Status == true)
+								{
+									<span class="badge text-bg-success">
+										@Localizer["Active"]
+									</span>
+								}
+								else
+								{
+									<span class="badge text-bg-danger">
+										@Localizer["Passive"]
+									</span>
+								}
+							</td>
+							<td class="text-center align-content-center">
+								<div class="btn-group btn-group-sm" role="group">
+									<a asp-action="Update" asp-route-id="@offeredService.OfferedServiceId" class="btn btn-warning btn-sm rounded mx-1">
+										<i class="fa-solid fa-pen-to-square"></i>
+										@Localizer["Update"]
+									</a>
+									<button type="button" class="btn btn-danger btn-sm rounded mx-1" data-bs-toggle="modal" data-bs-target="#deleteModal-@offeredService.OfferedServiceId">
+										<i class="bi bi-trash3"></i>
+										@Localizer["Delete"]
+									</button>
+									<div class="modal fade" id="deleteModal-@offeredService.OfferedServiceId" tabindex="-1" aria-labelledby="deleteModalLabel-@offeredService.OfferedServiceId" aria-hidden="true">
+										<div class="modal-dialog modal-dialog-centered">
+											<div class="modal-content">
+												<div class="modal-header">
+													<h5 class="modal-title" id="deleteModalLabel-@offeredService.OfferedServiceId">@Localizer["ConfirmDeletion"]</h5>
+													<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+												</div>
+												<div class="modal-body">
+													<p>@Localizer["AreYouSureYouWantToDeleteThis{0}Service", offeredService.OfferedServiceName]?</p>
+												</div>
+												<div class="modal-footer">
+													<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">@Localizer["Cancel"]</button>
+													<a asp-action="Delete" asp-route-id="@offeredService.OfferedServiceId" class="btn btn-danger rounded mx-1">
+														<i class="bi bi-trash3"></i>
+														@Localizer["Delete"]
+													</a>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</td>
+						</tr>
+					}
+				</tbody>
+			</table>
+		</div>
 	</div>
 </div>
 @section Scripts {

@@ -51,4 +51,16 @@
   <data name="AgeGroupCannotBeDeletedBecauseItIsUsedInAnotherEntity." xml:space="preserve">
     <value>Başka bir varlıkta kullanıldığı için yaş grubu silinemez.</value>
   </data>
+  <data name="DtoCannotBeNull" xml:space="preserve">
+    <value>boş olamaz.</value>
+  </data>
+  <data name="AgeCannotBeNegative" xml:space="preserve">
+    <value>Yaş negatif olamaz</value>
+  </data>
+  <data name="MinimumAgeCannotBeGreaterThanMaximumAge" xml:space="preserve">
+    <value>Minimum yaş, maksimum yaştan büyük olamaz</value>
+  </data>
+  <data name="AgeGroupCannotBeDeletedBecauseItIsUsedInAnotherEntity" xml:space="preserve">
+    <value>Başka bir kuruluşta kullanıldığı için yaş grubu silinemiyor</value>
+  </data>
 </root>

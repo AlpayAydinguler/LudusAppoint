@@ -51,4 +51,16 @@
   <data name="AgeGroupCannotBeDeletedBecauseItIsUsedInAnotherEntity." xml:space="preserve">
     <value>Age group cannot be deleted because ıt ıs used ın another entity.</value>
   </data>
+  <data name="DtoCannotBeNull" xml:space="preserve">
+    <value>Dto cannot be null</value>
+  </data>
+  <data name="AgeCannotBeNegative" xml:space="preserve">
+    <value>Age cannot be negative</value>
+  </data>
+  <data name="MinimumAgeCannotBeGreaterThanMaximumAge" xml:space="preserve">
+    <value>Minimum age cannot be greater than maximum age</value>
+  </data>
+  <data name="AgeGroupCannotBeDeletedBecauseItIsUsedInAnotherEntity" xml:space="preserve">
+    <value>Age group cannot be deleted because ıt ıs used ın another entity</value>
+  </data>
 </root>

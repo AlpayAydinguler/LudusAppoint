@@ -12,7 +12,7 @@ using Repositories;
 namespace LudusAppoint.Migrations
 {
     [DbContext(typeof(RepositoryContext))]
-    [Migration("20250127171207_Init")]
+    [Migration("20250128125455_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -707,7 +707,10 @@ namespace LudusAppoint.Migrations
 
                     b.HasKey("OfferedServiceId");
 
-                    b.ToTable("OfferedServices");
+                    b.ToTable("OfferedServices", t =>
+                        {
+                            t.HasCheckConstraint("CK_OfferedService_ApproximateDuration", "ApproximateDuration >= '00:01:00' AND ApproximateDuration <= '24:00:00'");
+                        });
 
                     b.HasData(
                         new

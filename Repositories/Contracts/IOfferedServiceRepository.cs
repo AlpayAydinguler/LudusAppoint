@@ -12,5 +12,7 @@ namespace Repositories.Contracts
         IEnumerable<OfferedService> GetAllForCustomerAppointment(Gender gender, int ageGroupId, bool trackChanges, string language);
         int GetMinApproximateDuration();
         void AttachAsUnchanged(OfferedService offeredService);
+        OfferedService GetOfferedServiceForUpdate(int id, bool trackChanges);
+        void Update(OfferedService offeredService, List<int> ageGroupIds);
     }
 }

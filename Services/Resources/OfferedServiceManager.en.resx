@@ -48,4 +48,13 @@
   <data name="ApproximateDurationMustBeBiggerThan0Minutes." xml:space="preserve">
     <value>Approximate duration must be bigger than0 minutes.</value>
   </data>
+  <data name="PleaseSelectAtLeastOneAgeGroup" xml:space="preserve">
+    <value>Please select at least one age group</value>
+  </data>
+  <data name="PleaseSelectAtLeastOneGender" xml:space="preserve">
+    <value>Please select at least one gender</value>
+  </data>
+  <data name="ApproximateDurationMustBeBiggerThan0Minutes" xml:space="preserve">
+    <value>Approximate duration must be bigger than0 minutes</value>
+  </data>
 </root>

@@ -1,46 +1,74 @@
 ﻿@model AgeGroupDtoForUpdate
 
-<div class="card card-dark bg-dark border-black">
-	<div class="card-header">
-		<h6 class="card-title">@Localizer["UpdateAgeGroup"]</h6>
-	</div>
-	<div class="card-body text-light">
-		<form method="post" asp-action="Update">
-			<input type="hidden" asp-for="AgeGroupId" />
-			<!-- MinAge and MaxAge Inputs -->
-			<div class="row mb-3">
-				<div class="col-md-6">
-					<div class="form-group">
-						<label asp-for="MinAge" class="form-label">@Localizer["MinAge"]</label>
-						<input asp-for="MinAge" class="form-control" />
-						<span asp-validation-for="MinAge" class="text-danger"></span>
-					</div>
+<div class="container">
+	<div class="row justify-content-center my-5">
+		<div class="col-12 col-md-8 col-lg-6">
+			<!-- Responsive width constraints -->
+			<div class="card card-dark bg-dark border-black">
+				<div class="card-header">
+					<h6 class="card-title">@Localizer["UpdateAgeGroup"]</h6>
 				</div>
-				<div class="col-md-6">
-					<div class="form-group">
-						<label asp-for="MaxAge" class="form-label">@Localizer["MaxAge"]</label>
-						<input asp-for="MaxAge" class="form-control" />
-						<span asp-validation-for="MaxAge" class="text-danger"></span>
-					</div>
+				<div class="card-body text-light">
+					<form method="post" asp-action="Update">
+						<input type="hidden" asp-for="AgeGroupId" />
+						<!-- Min/Max Age Inputs -->
+						<div class="row g-3 mb-4">
+							<!-- Added gutter spacing -->
+							<div class="col-12 col-sm-6">
+								<div class="form-floating text-body-tertiary">
+									<!-- Floating labels for better UX -->
+									<input asp-for="MinAge"
+										   class="form-control"
+										   type="number"
+										   min="0"
+										   max="125"
+										   placeholder=" "
+										   required />
+									<label asp-for="MinAge" class="ms-2">@Localizer["MinAge"]</label>
+									<span asp-validation-for="MinAge" class="text-danger small"></span>
+								</div>
+							</div>
+							<div class="col-12 col-sm-6">
+								<div class="form-floating text-body-tertiary">
+									<input asp-for="MaxAge"
+										   class="form-control"
+										   type="number"
+										   min="0"
+										   max="125"
+										   placeholder=" "
+										   required />
+									<label asp-for="MaxAge" class="ms-2">@Localizer["MaxAge"]</label>
+									<span asp-validation-for="MaxAge" class="text-danger small"></span>
+								</div>
+							</div>
+						</div>
+
+						<!-- Status Switch -->
+						<div class="form-check form-switch d-flex align-items-center gap-3 mb-4">
+							<input asp-for="Status"
+								   class="form-check-input flex-shrink-0"
+								   type="checkbox"
+								   role="switch"
+								   style="transform: scale(1.3)" /> <!-- Larger switch -->
+							<label asp-for="Status" class="form-check-label fs-6">
+								@Localizer["Status"]
+							</label>
+							<span asp-validation-for="Status" class="text-danger small"></span>
+						</div>
+
+						<!-- Validation Summary -->
+						<div class="text-danger small mb-3" asp-validation-summary="All"></div>
+
+						<!-- Submit Button -->
+						<div class="d-grid gap-2 d-md-flex justify-content-md-end mt-3">
+							<button type="submit" class="btn btn-primary w-100 w-sm-auto px-4 py-2">
+								<i class="bi bi-floppy me-2"></i>
+								@Localizer["SaveChanges"]
+							</button>
+						</div>
+					</form>
 				</div>
 			</div>
-
-			<!-- Status Switch -->
-			<div class="form-group form-check form-switch mb-3 d-flex align-items-center border-bottom" style="max-width: 576px; padding-left: 0">
-				<label asp-for="Status" class="form-check-label me-auto">@Localizer["Status"]</label>
-				<input asp-for="Status" class="form-check-input mb-1" type="checkbox" role="switch" />
-				<span asp-validation-for="Status" class="text-danger ms-2"></span>
-			</div>
-
-			<!-- Validation Summary -->
-			<div class="text-danger" asp-validation-summary="All"></div>
-
-			<!-- Submit Button -->
-			<div class="d-flex justify-content-start">
-				<button type="submit" class="btn btn-primary">
-					<i class="bi bi-floppy"></i> @Localizer["SaveChanges"]
-				</button>
-			</div>
-		</form>
+		</div>
 	</div>
 </div>

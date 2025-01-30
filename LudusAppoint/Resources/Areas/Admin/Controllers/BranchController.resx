@@ -39,22 +39,19 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral</value>
   </resheader>
-  <data name="AgeGroupCreatedSuccessfully." xml:space="preserve">
-    <value>Yaş grubu başarıyla oluşturuldu.</value>
+  <metadata name="ResXFileCodeGenerator" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>PublicResXFileCodeGenerator</value>
+  </metadata>
+  <data name="BranchCreatedSuccessfully." xml:space="preserve">
+    <value>Branch created successfully.</value>
   </data>
-  <data name="AgeGroupUpdatedSuccessfully." xml:space="preserve">
-    <value>Yaş grubu başarıyla güncellendi.</value>
+  <data name="BranchDeletedSuccessfully." xml:space="preserve">
+    <value>Branch deleted successfully.</value>
   </data>
-  <data name="AgeGroupDeletedSuccessfully." xml:space="preserve">
-    <value>Grup başarıyla silindi</value>
+  <data name="BranchCreatedSuccessfully" xml:space="preserve">
+    <value>Branch created successfully</value>
   </data>
-  <data name="AgeGroupCreatedSuccessfully" xml:space="preserve">
-    <value>Yaş grubu başarıyla oluşturuldu</value>
-  </data>
-  <data name="AgeGroupUpdatedSuccessfully" xml:space="preserve">
-    <value>Yaş grubu başarıyla güncellendi</value>
-  </data>
-  <data name="AgeGroupDeletedSuccessfully" xml:space="preserve">
-    <value>Grup başarıyla silindi</value>
+  <data name="BranchDeletedSuccessfully" xml:space="preserve">
+    <value>Branch deleted successfully</value>
   </data>
 </root>

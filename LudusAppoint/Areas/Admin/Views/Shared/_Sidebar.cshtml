@@ -55,7 +55,7 @@
 		</li>
 	</ul>
 </li>
-<li class="nav-item @IsActive("offeredService")">
+<li class="nav-item @IsActive("OfferedService")">
 	<a href="#" class="nav-link">
 		<i class="nav-icon bi bi-scissors"></i>
 		<p>
@@ -65,7 +65,7 @@
 	</a>
 	<ul class="nav nav-treeview">
 		<li class="nav-item">
-			<a class="nav-link @IsActive("offeredService", "Index")" aria-current="page" asp-controller="offeredService" asp-action="Index">
+			<a class="nav-link @IsActive("OfferedService", "Index")" aria-current="page" asp-controller="OfferedService" asp-action="Index">
 				<i class="bi bi-list-ol"></i>
 				<p>
 					@Localizer["OfferedServicesList"]
@@ -73,7 +73,7 @@
 			</a>
 		</li>
 		<li class="nav-item">
-			<a asp-controller="offeredService" asp-action="Create" class="nav-link @IsActive("offeredService", "Create")">
+			<a asp-controller="OfferedService" asp-action="Create" class="nav-link @IsActive("OfferedService", "Create")">
 				<i class="bi bi-plus-lg"></i>
 				<p>
 					@Localizer["CreateofferedService"]

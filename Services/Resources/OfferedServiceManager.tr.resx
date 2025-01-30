@@ -48,4 +48,13 @@
   <data name="ApproximateDurationMustBeBiggerThan0Minutes." xml:space="preserve">
     <value>Yaklaşık süre 0 dakikadan büyük olmalıdır.</value>
   </data>
+  <data name="PleaseSelectAtLeastOneAgeGroup" xml:space="preserve">
+    <value>Lütfen en az bir menü grubu seçin.</value>
+  </data>
+  <data name="PleaseSelectAtLeastOneGender" xml:space="preserve">
+    <value>Lütfen en az bir cinsiyet seçin</value>
+  </data>
+  <data name="ApproximateDurationMustBeBiggerThan0Minutes" xml:space="preserve">
+    <value>Yaklaşık süre 0 dakikadan büyük olmalıdır</value>
+  </data>
 </root>

@@ -47,17 +47,10 @@ namespace Services
             return _mapper.Map<BranchDtoForUpdate>(branch);
         }
 
-        public void UpdateBranch(Branch branch)
+        public void UpdateBranch(BranchDtoForUpdate branchDtoForUpdate)
         {
-            var model = _repositoryManager.BranchRepository.FindByCondition(x => x.BranchId.Equals(branch.BranchId), true);
-            model.BranchName = branch.BranchName;
-            model.Country = branch.Country;
-            model.City = branch.City;
-            model.District = branch.District;
-            model.Street = branch.Street;
-            model.Address = branch.Address;
-            model.BranchPhoneNumber = branch.BranchPhoneNumber;
-            model.BranchEmail = branch.BranchEmail;
+            var model = _mapper.Map<Branch>(branchDtoForUpdate);
+            _repositoryManager.BranchRepository.Update(model);
             _repositoryManager.Save();
         }
 
@@ -73,7 +66,7 @@ namespace Services
             {
                 if (exception.InnerException is SqlException sqlEx && sqlEx.Number == 547)
                 {
-                    throw new ValidationException(_localizer["BranchCannotBeDeletedBecauseItIsUsedInAnotherEntity."], new Exception() { Source = "Model" });
+                    throw new ValidationException(_localizer["BranchCannotBeDeletedBecauseItIsUsedInAnotherEntity"] + ".", new Exception() { Source = "Model" });
                 }
                 throw;
             }

@@ -74,7 +74,7 @@ namespace LudusAppoint.Areas.Admin.Controllers
             }
             else
             {
-                return Json(new { Result = false, Message = _localizer["NoOfferedServicesAvailable."] + " " + _localizer["PleaseTryWithDiffrentAgeGroupOrGender."] });
+                return Json(new { Result = false, Message = _localizer["NoOfferedServicesAvailable"] + ". " + _localizer["PleaseTryWithDiffrentAgeGroupOrGender"] + "." });
             }
         }
 
@@ -93,7 +93,7 @@ namespace LudusAppoint.Areas.Admin.Controllers
             }
             else
             {
-                return Json(new { Result = false, Message = _localizer["NoEmployeesAvailable."] + " " + _localizer["PleaseTryWithDiffrentBranchOrOfferedServices."] });
+                return Json(new { Result = false, Message = _localizer["NoEmployeesAvailable"] + ". " + _localizer["PleaseTryWithDiffrentBranchOrOfferedServices"] + "." });
             }
         }
 

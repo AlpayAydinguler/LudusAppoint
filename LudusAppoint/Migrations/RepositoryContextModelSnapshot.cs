@@ -704,7 +704,10 @@ namespace LudusAppoint.Migrations
 
                     b.HasKey("OfferedServiceId");
 
-                    b.ToTable("OfferedServices");
+                    b.ToTable("OfferedServices", t =>
+                        {
+                            t.HasCheckConstraint("CK_OfferedService_ApproximateDuration", "ApproximateDuration >= '00:01:00' AND ApproximateDuration <= '24:00:00'");
+                        });
 
                     b.HasData(
                         new

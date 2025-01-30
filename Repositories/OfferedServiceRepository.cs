@@ -114,5 +114,41 @@ namespace Repositories
                                                                      .First();
             return (int)minDuration;
         }
+
+        public OfferedService GetOfferedServiceForUpdate(int id, bool trackChanges)
+        {
+            var offeredServices = _repositoryContext.OfferedServices.Include(h => h.AgeGroups)
+                                                          .Include(h => h.OfferedServiceLocalizations)
+                                                          .Where(h => h.OfferedServiceId == id);  // Add filter by ID
+        
+
+            if (!trackChanges)
+            {
+                offeredServices = offeredServices.AsNoTracking();
+            }
+
+            return offeredServices.FirstOrDefault();
+        }
+
+        public void Update(OfferedService offeredService, List<int> ageGroupIds)
+        {
+            // Clear existing relationships
+            offeredService.AgeGroups.Clear();
+
+            // Add new relationships
+            /*
+            var ageGroups = _repositoryContext.AgeGroups
+                .Where(ag => ageGroupIds.Contains(ag.AgeGroupId))
+                .AsNoTracking()
+                .ToList();
+            */
+            foreach (var id in ageGroupIds)
+            {
+                var ageGroup = new AgeGroup { AgeGroupId = id };
+                _repositoryContext.Attach(ageGroup);
+                offeredService.AgeGroups.Add(ageGroup);
+            }
+            Update(offeredService);
+        }
     }
 }

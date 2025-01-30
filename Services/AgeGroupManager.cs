@@ -54,7 +54,7 @@ namespace Services
         {
             var dtoToValidate = (object?)ageGroupDtoForInsert ?? ageGroupDtoForUpdate;
             if (dtoToValidate == null)
-                throw new ArgumentNullException(nameof(dtoToValidate), _localizer["DtoCannotBeNull."]);
+                throw new ArgumentNullException(nameof(dtoToValidate), _localizer["DtoCannotBeNull"] + ".");
 
             var validationException = new List<ValidationException>();
 
@@ -66,20 +66,20 @@ namespace Services
 
             if (existingAgeGroup != null && existingAgeGroup.AgeGroupId != ageGroupId)
             {
-                validationException.Add(new ValidationException("AnAgeGroupWithTheSameMinAgeAndMaxAgeAlreadyExists.", new Exception() { Source = "Model" }));
+                validationException.Add(new ValidationException("AnAgeGroupWithTheSameMinAgeAndMaxAgeAlreadyExists" + ".", new Exception() { Source = "Model" }));
             }
 
             if (minAge < 0)
             {
-                validationException.Add(new ValidationException(_localizer["AgeCannotBeNegative."], new Exception() { Source = "MinAge" }));
+                validationException.Add(new ValidationException(_localizer["AgeCannotBeNegative"] + ".", new Exception() { Source = "MinAge" }));
             }
             if (maxAge < 0)
             {
-                validationException.Add(new ValidationException(_localizer["AgeCannotBeNegative."], new Exception() { Source = "MaxAge" }));
+                validationException.Add(new ValidationException(_localizer["AgeCannotBeNegative"] + ".", new Exception() { Source = "MaxAge" }));
             }
             if (minAge > maxAge)
             {
-                validationException.Add(new ValidationException(_localizer["MinimumAgeCannotBeGreaterThanMaximumAge."], new Exception() { Source = "MaxAge" }));
+                validationException.Add(new ValidationException(_localizer["MinimumAgeCannotBeGreaterThanMaximumAge"] + ".", new Exception() { Source = "MaxAge" }));
             }
             if (validationException.Count != 0)
             {
@@ -105,7 +105,7 @@ namespace Services
             {
                 if (exception.InnerException is SqlException sqlEx && sqlEx.Number == 547)
                 {
-                    throw new ValidationException(_localizer["AgeGroupCannotBeDeletedBecauseItIsUsedInAnotherEntity."], new Exception() { Source = "Model" });
+                    throw new ValidationException(_localizer["AgeGroupCannotBeDeletedBecauseItIsUsedInAnotherEntity"] + ".", new Exception() { Source = "Model" });
                 }
                 throw;
             }
