@@ -2,6 +2,7 @@
 using Entities.Models;
 using Entities.Models.Enums;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Options;
 using Services.Contracts;
 
@@ -12,16 +13,17 @@ namespace LudusAppoint.Areas.Admin.Controllers
     {
         private readonly IServiceManager _serviceManager;
         private readonly RequestLocalizationOptions _localizationOptions;
+        private readonly IStringLocalizer<OfferedServiceController> _localizer;
 
-        public OfferedServiceController(IServiceManager serviceManager, IOptions<RequestLocalizationOptions> localizationOptions)
+        public OfferedServiceController(IServiceManager serviceManager, IOptions<RequestLocalizationOptions> localizationOptions, IStringLocalizer<OfferedServiceController> localizer)
         {
             _serviceManager = serviceManager;
             _localizationOptions = localizationOptions.Value;
+            _localizer = localizer;
         }
         public IActionResult Index()
         {
             var model = _serviceManager.OfferedServiceService.GetAllOfferedServices(false, System.Globalization.CultureInfo.CurrentCulture.Name);
-
             return View(model);
         }
         public IActionResult Create()
@@ -34,62 +36,33 @@ namespace LudusAppoint.Areas.Admin.Controllers
 
         [HttpPost]
         [AutoValidateAntiforgeryToken]
-        public IActionResult Create([FromForm] OfferedService offeredService, int[] AgeGroupIds, string[] Genders, Dictionary<string, string> Translations)
+        public IActionResult Create([FromForm] OfferedServiceDtoForInsert offeredServiceDtoForInsert)
         {
-            // Initialize collections
-            offeredService.AgeGroups = new List<AgeGroup>();
-            offeredService.Genders = new List<Gender>();
-
-            // Associate selected age groups
-            foreach (var ageGroupId in AgeGroupIds)
-            {
-                var ageGroup = _serviceManager.AgeGroupService.GetAgeGroup(ageGroupId, true);
-                if (ageGroup != null)
-                {
-                    offeredService.AgeGroups.Add(ageGroup);
-                }
-            }
-
-            // Associate selected genders
-            foreach (var gender in Genders)
-            {
-                if (Enum.TryParse(typeof(Gender), gender, out var parsedGender) && parsedGender is Gender validGender)
-                {
-                    offeredService.Genders.Add(validGender);
-                }
-            }
-
-            // Handle translations
-            offeredService.OfferedServiceLocalizations = Translations
-                .Select(t => new OfferedServiceLocalization
-                {
-                    Language = t.Key,
-                    OfferedServiceLocalizationName = t.Value,
-                    OfferedServiceId = offeredService.OfferedServiceId
-                })
-                .ToList();
-
             if (!ModelState.IsValid)
             {
+                // Repopulate dropdowns/ViewBag data for the form
                 PopulateAgeGroups();
                 PopulateSupportedCultures();
-                return View(offeredService);
+                return View(offeredServiceDtoForInsert);
             }
 
             try
             {
-                _serviceManager.OfferedServiceService.CreateofferedService(offeredService);
+                _serviceManager.OfferedServiceService.CreateOfferedService(offeredServiceDtoForInsert);
+                TempData["OperationSuccessfull"] = true;
+                TempData["OperationMessage"] = _localizer["OfferedServiceCreatedSuccessfully"].ToString() + ".";
                 return RedirectToAction("Index");
             }
             catch (AggregateException exceptions)
             {
+                // Handle validation/domain errors
                 foreach (var exception in exceptions.InnerExceptions)
                 {
-                    ModelState.AddModelError(exception.InnerException?.Source.ToString(), exception.Message);
+                    ModelState.AddModelError(exception.InnerException?.Source ?? "General", exception.Message);
                 }
                 PopulateAgeGroups();
                 PopulateSupportedCultures();
-                return View(offeredService);
+                return View(offeredServiceDtoForInsert);
             }
         }
 
@@ -114,17 +87,37 @@ namespace LudusAppoint.Areas.Admin.Controllers
             try
             {
                 _serviceManager.OfferedServiceService.UpdateOfferedService(offeredServiceDtoForUpdate);
+                TempData["OperationSuccessfull"] = true;
+                TempData["OperationMessage"] = _localizer["OfferedServiceUpdatedSuccessfully"].ToString() + ".";
                 return RedirectToAction("Index");
             }
             catch (AggregateException exceptions)
             {
                 foreach (var exception in exceptions.InnerExceptions)
                 {
-                    ModelState.AddModelError(exception.InnerException?.Source.ToString(), exception.Message);
+                    ModelState.AddModelError(exception?.InnerException?.Source?.ToString() ?? string.Empty, exception?.Message ?? string.Empty);
                 }
                 PopulateAgeGroups();
                 PopulateSupportedCultures();
                 return View(offeredServiceDtoForUpdate);
+            }
+        }
+        [HttpGet]
+        [AutoValidateAntiforgeryToken]
+        public IActionResult Delete([FromRoute] int id)
+        {
+            try
+            {
+                _serviceManager.OfferedServiceService.DeleteOfferedService(id);
+                TempData["OperationSuccessfull"] = true;
+                TempData["OperationMessage"] = _localizer["OfferedServiceDeletedSuccessfully"].ToString() + ".";
+                return RedirectToAction("Index");
+            }
+            catch (Exception exception)
+            {
+                TempData["OperationSuccessfull"] = false;
+                TempData["OperationMessage"] = exception.Message.ToString();
+                return RedirectToAction("Index");
             }
         }
 

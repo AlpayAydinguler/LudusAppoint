@@ -63,4 +63,7 @@
   <data name="PleaseTryWithDiffrentBranchOrOfferedServices" xml:space="preserve">
     <value>Please try with diffrent branch or offered services</value>
   </data>
+  <data name="PleaseTryWithDifferentBranchOrOfferedServices" xml:space="preserve">
+    <value>Please try with different branch or offered services</value>
+  </data>
 </root>

@@ -27,10 +27,30 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Branch.resx</DependentUpon>
     </Compile>
+    <Compile Update="Resources\Dtos\ApplicationSettingDto.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ApplicationSettingDto.resx</DependentUpon>
+    </Compile>
     <Compile Update="Resources\Dtos\BranchDto.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>BranchDto.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\Dtos\CustomerAppointmentDto.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>CustomerAppointmentDto.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\Dtos\EmployeeDto.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>EmployeeDto.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\Dtos\EmployeeLeaveDto.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>EmployeeLeaveDto.resx</DependentUpon>
     </Compile>
     <Compile Update="Resources\Dtos\OfferedServiceDto.Designer.cs">
       <DesignTime>True</DesignTime>
@@ -62,9 +82,25 @@
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Branch.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Dtos\ApplicationSettingDto.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>ApplicationSettingDto.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Update="Resources\Dtos\BranchDto.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>BranchDto.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Dtos\CustomerAppointmentDto.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>CustomerAppointmentDto.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Dtos\EmployeeDto.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>EmployeeDto.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Dtos\EmployeeLeaveDto.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>EmployeeLeaveDto.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Update="Resources\Dtos\OfferedServiceDto.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>

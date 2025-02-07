@@ -48,7 +48,7 @@ namespace LudusAppoint.Areas.Admin.Controllers
             {
                 foreach (var exception in exceptions.InnerExceptions)
                 {
-                    ModelState.AddModelError(exception?.InnerException?.Source?.ToString(), exception.Message);
+                    ModelState.AddModelError(exception?.InnerException?.Source?.ToString() ?? string.Empty, exception?.Message ?? string.Empty);
                 }
                 return View(ageGroupDtoForInsert);
             }
@@ -79,11 +79,12 @@ namespace LudusAppoint.Areas.Admin.Controllers
             {
                 foreach (var exception in exceptions.InnerExceptions)
                 {
-                    ModelState.AddModelError(exception?.InnerException?.Source?.ToString(), exception.Message);
+                    ModelState.AddModelError(exception?.InnerException?.Source?.ToString() ?? string.Empty, exception?.Message ?? string.Empty);
                 }
                 return View(ageGroupDtoForUpdate);
             }
         }
+
         [HttpGet]
         [AutoValidateAntiforgeryToken]
         public IActionResult Delete([FromRoute] int id)

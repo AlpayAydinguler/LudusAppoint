@@ -45,7 +45,7 @@
   <data name="TheDurationMustBeBetween1MinuteAnd24Hours" xml:space="preserve">
     <value>Süre 1 dakika ile 24 saat arasında olmalıdır</value>
   </data>
-  <data name="TheDurationMustBeBetween1And10000" xml:space="preserve">
-    <value>Süre 1 ile 10000 arasında olmalıdır</value>
+  <data name="ThePriceMustBeBetween1And10000" xml:space="preserve">
+    <value>Fiyat 1 ile 10000 arasında olmalıdır</value>
   </data>
 </root>

@@ -24,7 +24,7 @@
 	<div class="card-body text-light">
 		<div class="table-responsive">
 			<table id="offeredServicesTable" class="table table-dark table-hover table-striped align-middle">
-				<thead>
+				<thead class="table-secondary">
 					<tr>
 						<th class="text-center">@Localizer["Id"]</th>
 						<th>@Localizer["Name"]</th>
@@ -43,16 +43,16 @@
 							<td class="text-center">@offeredService.OfferedServiceId</td>
 							<td>@offeredService.OfferedServiceName</td>
 							<td class="text-center align-content-center">
-								<span class="d-none">flexCheckCheckedDisabled" checked="@offeredService.Genders.Contains(Entities.Models.Enums.Gender.m) flexCheckCheckedDisabled" checked="@offeredService.Genders.Contains(Entities.Models.Enums.Gender.f)</span>
+								<span class="d-none">flexCheckCheckedDisabled" checked="@offeredService.Genders.Contains(Entities.Models.Enums.Gender.Male) flexCheckCheckedDisabled" checked="@offeredService.Genders.Contains(Entities.Models.Enums.Gender.Female)</span>
 								<div class="form-check form-check-inline">
-									<input class="form-check-input" type="checkbox" value="" id="flexCheckCheckedDisabled" checked="@offeredService.Genders.Contains(Entities.Models.Enums.Gender.m)" disabled>
+									<input class="form-check-input" type="checkbox" value="" id="flexCheckCheckedDisabled" checked="@offeredService.Genders.Contains(Entities.Models.Enums.Gender.Male)" disabled>
 									<label class="form-check-label" for="flexCheckCheckedDisabled">
 										<i class="bi bi-gender-male	"></i>
 										@Localizer["Male"]
 									</label>
 								</div>
 								<div class="form-check form-check-inline">
-									<input class="form-check-input" type="checkbox" value="" id="flexCheckCheckedDisabled" checked="@offeredService.Genders.Contains(Entities.Models.Enums.Gender.f)" disabled>
+									<input class="form-check-input" type="checkbox" value="" id="flexCheckCheckedDisabled" checked="@offeredService.Genders.Contains(Entities.Models.Enums.Gender.Female)" disabled>
 									<label class="form-check-label" for="flexCheckCheckedDisabled">
 										<i class="bi bi-gender-female"></i>
 										@Localizer["Female"]
@@ -60,8 +60,8 @@
 								</div>
 							</td>
 							<td class="text-end pe-5">@offeredService.ApproximateDuration.TotalMinutes</td>
-							<td class="pe-5 text-end">
-								@offeredService.Price
+							<td class="pe-5 text-end" data-order="@offeredService.Price">
+							@offeredService.Price.ToString("C", CultureInfo.CurrentCulture)
 							</td>
 							<td>
 								<div class="vstack gap-1">
@@ -126,6 +126,9 @@
 		</div>
 	</div>
 </div>
+<div class="toast-container position-fixed bottom-0 end-0 p-3" data-bs-theme="dark">
+	@await Html.PartialAsync("_Toasts")
+</div>
 @section Scripts {
 	<script>
 		$(document).ready(function () {
@@ -150,5 +153,29 @@
 				}
 			});
 		});
+	</script>
+	<script>
+		$(document).ready(function ()
+		{
+			const successfullToast = document.getElementById('successfullToast')
+			const failureToast = document.getElementById('failureToast')
+			if(@(@TempData["OperationSuccessfull"] != null ? "true" : "false"))
+			{
+				if (@(@TempData["OperationMessage"] != null ? "true" : "false") && @Html.Raw(Json.Serialize(@TempData["OperationMessage"])) != "")
+				{
+					if(@Html.Raw(Json.Serialize(@TempData["OperationSuccessfull"])) == true)
+					{
+						const toastBootstrap = bootstrap.Toast.getOrCreateInstance(successfullToast)
+						toastBootstrap.show()
+					}
+					else
+					{
+						const toastBootstrap = bootstrap.Toast.getOrCreateInstance(failureToast)
+						toastBootstrap.show()
+					}
+				}
+			}
+
+		})
 	</script>
 }

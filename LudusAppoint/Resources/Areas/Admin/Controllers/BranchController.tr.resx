@@ -51,4 +51,7 @@
   <data name="BranchDeletedSuccessfully" xml:space="preserve">
     <value>Şube başarıyla silindi</value>
   </data>
+  <data name="BranchUpdatedSuccessfully" xml:space="preserve">
+    <value>Şube başarıyla güncellendi</value>
+  </data>
 </root>

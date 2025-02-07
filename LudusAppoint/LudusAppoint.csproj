@@ -29,6 +29,11 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>CustomerAppointmentController.resx</DependentUpon>
     </Compile>
+    <Compile Update="Resources\Areas\Admin\Controllers\EmployeeLeaveController.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>EmployeeLeaveController.resx</DependentUpon>
+    </Compile>
     <Compile Update="Resources\Areas\Admin\Views\AgeGroup\Create.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -88,6 +93,10 @@
     <EmbeddedResource Update="Resources\Areas\Admin\Controllers\CustomerAppointmentController.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>CustomerAppointmentController.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Areas\Admin\Controllers\EmployeeLeaveController.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>EmployeeLeaveController.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Update="Resources\Areas\Admin\Views\AgeGroup\Create.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>

@@ -1,871 +1,918 @@
-﻿@model CustomerAppointment
+﻿@model CustomerAppointmentDtoForInsert
 
 @{
-	var cultureInfo = new CultureInfo("tr-TR");
-	var numberFormat = (NumberFormatInfo)cultureInfo.NumberFormat.Clone();
-	numberFormat.CurrencyPositivePattern = 3; // 3 means symbol after the number with a space
-	numberFormat.CurrencyNegativePattern = 8; // 8 means symbol after the number with a space and negative sign before the number
-	cultureInfo.NumberFormat = numberFormat;
-
-	CultureInfo.CurrentCulture = cultureInfo;
-	CultureInfo.CurrentUICulture = cultureInfo;
+	// Retrieve supported genders (expected to be a comma-separated string)
+	// Default to both genders if the setting is missing.
+	var supportedGenders = (ViewBag.SupportedGenders as string) ?? "Male,Female";
+	// Split the supported genders
+	var genders = supportedGenders.Split(',', StringSplitOptions.RemoveEmptyEntries).Select(g => g.Trim()).ToArray();
+	// Determine if only one gender is allowed
+	bool isSingleGender = genders.Length == 1;
+	// Determine default value:
+	string defaultGenderValue = "0";
+	if (isSingleGender)
+	{
+		defaultGenderValue = genders[0].Equals("Male", StringComparison.OrdinalIgnoreCase) ? "0" : "1";
+	}
 }
 
-<div class="card card-dark bg-dark border-black">
-	<div class="card-body text-light">
-		<div class="display-6">@Localizer["CreateCustomerAppointment"]</div>
-		<form method="post" asp-controller="CustomerAppointment" asp-area="Admin" asp-action="Create">
-			<div class="accordion" data-bs-theme="dark" id="accordion">
-				<div class="accordion-item" id="preliminaryInformationAccordion">
-					<h2 class="accordion-header">
-						<button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#preliminaryInformationCollapse" aria-expanded="true" aria-controls="preliminaryInformationCollapse" id="preliminaryInformationButton">
-							@Localizer["PreliminaryInformation"]
-						</button>
-					</h2>
-					<div id="preliminaryInformationCollapse" class="accordion-collapse collapse show" data-bs-parent="#accordion">
-						<div class="accordion-body">
-							<div class="form-group">
-								<label asp-for="BranchId">@Localizer["Branch"]</label>
-								<select asp-for="BranchId" class="form-control form-select" id="branchSelect">
-									<option selected hidden value="">@Localizer["SelectBranch"]</option>
-									@foreach (var branch in ViewBag.AllBranches as List<Branch>)
-									{
-										var isBranchChecked = branch.BranchId == Model.BranchId;
-										<option value="@branch.BranchId" checked="@isBranchChecked">@branch.BranchName</option>
-									}
-								</select>
-								<span asp-validation-for="BranchId" class="text-danger"></span>
-							</div>
-							<div class="form-group">
-								@{
-									var isMaleChecked = Model.Gender == Gender.m;
-									var isFemaleChecked = Model.Gender == Gender.f;
-								}
-								<label asp-for="Gender">@Localizer["Gender"]</label>
-								<select asp-for="Gender" class="form-control form-select" id="genderSelect">
-									<option selected hidden value="">@Localizer["SelectGender"]</option>
-									<option value="0" selected="@isMaleChecked" )>@Localizer["Male"]</option>
-									<option value="1" selected="@isFemaleChecked" )>@Localizer["Female"]</option>
-								</select>
-							</div>
-							<div class="form-group">
-								<label asp-for="AgeGroup">@Localizer["AgeGroup"]</label>
-								<select asp-for="AgeGroupId" class="form-control form-select" id="ageGroupSelect">
-									<option selected hidden value="">@Localizer["SelectAgeGroup"]</option>
-									@foreach (var ageGroup in ViewBag.AllAgeGroups as List<AgeGroupDto>)
-									{
-										var isAgeGroupSelected = ageGroup.AgeGroupId == Model.AgeGroupId;
-										<option value="@ageGroup.AgeGroupId" checked="@isAgeGroupSelected" )>@ageGroup.Name</option>
-									}
-								</select>
-							</div>
-							<button type="button" class="btn btn-secondary my-3" id="preliminaryInformationNextButton" disabled>
-								@Localizer["Next"]
-							</button>
-						</div>
-					</div>
+<div class="container-fluid">
+	<div class="row justify-content-center">
+		<div class="col-12 col-xl-10">
+			<div class="card card-dark bg-dark border-black">
+				<div class="card-header">
+					<h2 class="h4 text-light mb-0">@Localizer["CreateCustomerAppointment"]</h2>
 				</div>
-				<div class="accordion-item disabled" id="offeredServicesAccordion">
-					<h2 class="accordion-header">
-						<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#offeredServicesCollapse" aria-expanded="false" aria-controls="offeredServicesCollapse" id="offeredServicesButton">
-							@Localizer["OfferedServices"]
-						</button>
-					</h2>
-					<div id="offeredServicesCollapse" class="accordion-collapse collapse" data-bs-parent="#accordion">
-						<div class="accordion-body">
-							<div class="form-group">
-								<div id="offeredServicesTableContainer">
-									<div class="d-flex justify-content-center">
-										<div class="spinner-border" role="status" id="offeredServicesloadingSpinner" style="display: none;">
+				<div class="card-body text-light">
+					<form method="post" class="multi-step-form" asp-action="Create">
+						<!-- Step 1: Preliminary Information -->
+						<div class="step active" data-step="1">
+							<div class="row g-3">
+								<div class="col-12">
+									<h4 class="text-primary mb-3">@Localizer["PreliminaryInformation"]</h4>
+								</div>
+
+								<div class="col-12 col-md-6">
+									<div class="form-floating">
+										@{
+											var branches = ViewBag.AllBranches as List<BranchDto>;
+											var isSingleBranch = branches?.Count == 1;
+										}
+
+										@if (isSingleBranch)
+										{
+											<input type="hidden" asp-for="BranchId" value="@branches[0].BranchId" />
+										}
+
+										<select asp-for="BranchId"
+												class="form-select"
+												id="branchSelect"
+												disabled="@(isSingleBranch ? "disabled" : null)">
+											@if (isSingleBranch)
+											{
+												<option value="@branches[0].BranchId" selected>@branches[0].BranchName</option>
+											}
+											else
+											{
+												<option value="" selected hidden>@Localizer["SelectBranch"]</option>
+												@foreach (var branch in branches)
+												{
+													<option value="@branch.BranchId">@branch.BranchName</option>
+												}
+											}
+										</select>
+										<label asp-for="BranchId">@Localizer["Branch"]</label>
+										<span asp-validation-for="BranchId" class="text-danger small"></span>
+									</div>
+								</div>
+
+								<div class="col-12 col-md-6">
+									<div class="form-floating">
+										<select asp-for="Gender" class="form-select" id="genderSelect" disabled="@(isSingleGender ? "disabled" : null)">
+											@if (!isSingleGender)
+											{
+												<option value="" selected hidden>@Localizer["SelectGender"]</option>
+											}
+											@if (genders.Contains("Male", StringComparer.OrdinalIgnoreCase))
+											{
+												<option value="0" selected="@(defaultGenderValue == "0" ? "selected" : null)">@Localizer["Male"]</option>
+											}
+											@if (genders.Contains("Female", StringComparer.OrdinalIgnoreCase))
+											{
+												<option value="1" selected="@(defaultGenderValue == "1" ? "selected" : null)">@Localizer["Female"]</option>
+											}
+										</select>
+										<label asp-for="Gender">@Localizer["Gender"]</label>
+										<span asp-validation-for="Gender" class="text-danger small"></span>
+									</div>
+								</div>
+
+								<div class="col-12 col-md-6">
+									<div class="form-floating">
+										@{
+											var ageGroups = ViewBag.AllAgeGroups as List<AgeGroupDto>;
+											var isSingleAgeGroup = ageGroups?.Count == 1;
+										}
+										@if (isSingleAgeGroup)
+										{
+											<input type="hidden" asp-for="AgeGroupId" value="@ageGroups[0].AgeGroupId" />
+										}
+
+										<select asp-for="AgeGroupId"
+												class="form-select"
+												id="ageGroupSelect"
+												disabled="@(isSingleAgeGroup ? "disabled" : null)">
+											@if (isSingleAgeGroup)
+											{
+												<option value="@ageGroups[0].AgeGroupId" selected>@ageGroups[0].Name</option>
+											}
+											else
+											{
+												<option value="" selected hidden>@Localizer["SelectAgeGroup"]</option>
+												@foreach (var ageGroup in ageGroups)
+												{
+													<option value="@ageGroup.AgeGroupId">@ageGroup.Name</option>
+												}
+											}
+										</select>
+										<label asp-for="AgeGroupId">@Localizer["AgeGroup"]</label>
+										<span asp-validation-for="AgeGroupId" class="text-danger small"></span>
+									</div>
+								</div>
+
+								<div class="col-12">
+									<button type="button" class="btn btn-primary next-step" disabled>
+										@Localizer["Next"] <i class="bi bi-arrow-right"></i>
+									</button>
+								</div>
+							</div>
+						</div>
+
+						<!-- Step 2: Services Selection -->
+						<div class="step" data-step="2">
+							<div class="row g-3">
+								<div class="col-12">
+									<h4 class="text-primary mb-3">@Localizer["OfferedServices"]</h4>
+									<div id="offeredServicesContainer" class="d-none">
+										<div class="table-responsive">
+											<table id="offeredServicesTable" class="table table-dark">
+												<!-- Table content will be populated via JS -->
+											</table>
+										</div>
+										<div class="row mt-3">
+											<div class="col-md-6">
+												<div class="form-floating">
+													<input asp-for="ApproximateDuration" class="form-control"
+														   type="time" readonly />
+													<label asp-for="ApproximateDuration">@Localizer["TotalDuration"]</label>
+												</div>
+											</div>
+											<div class="col-md-6">
+												<div class="form-floating">
+													<input asp-for="Price" class="form-control"
+														   type="number" step="0.01" readonly />
+													<label asp-for="Price">@Localizer["TotalPrice"]</label>
+												</div>
+											</div>
+										</div>
+										<div class="mt-3">
+											<button type="button" class="btn btn-secondary prev-step">
+												<i class="bi bi-arrow-left"></i> @Localizer["Back"]
+											</button>
+											<button type="button" class="btn btn-primary next-step" disabled>
+												@Localizer["Next"] <i class="bi bi-arrow-right"></i>
+											</button>
+										</div>
+									</div>
+									<div id="servicesLoading" class="text-center d-none">
+										<div class="spinner-border text-primary" role="status">
 											<span class="visually-hidden">@Localizer["Loading"]...</span>
 										</div>
 									</div>
-									<div class="card-body text-light table-responsive" id="offeredServicesCard" style="display: none;">
-										<table id="offeredServicesTable" class="table table-dark table-hover table-striped align-middle">
-											<thead>
-												<tr>
-													<th class="text-center">@Localizer["Select"]</th>
-													<th>@Localizer["Name"]</th>
-													<th class="text-end pe-5">@Localizer["ApproximateDuration (Hours:Minutes)"]</th>
-													<th class="text-end pe-5">@Localizer["Price"] @NumberFormatInfo.CurrentInfo.CurrencySymbol</th>
-												</tr>
-											</thead>
-											<tbody>
-												@*function fetchOfferedServices() populates here*@
-											</tbody>
-										</table>
-									</div>
-									<div id="approximateDurationInputDiv">
-										<label asp-for="ApproximateDuration">@Localizer["ApproximateDuration (Hours:Minutes)"]</label>
-										<input asp-for="ApproximateDuration" class="form-control" type="time" />
-										<span asp-validation-for="ApproximateDuration" class="text-danger"></span>
-									</div>
-									<div id="priceInputDiv">
-										<label asp-for="Price">@Localizer["Price"] @NumberFormatInfo.CurrentInfo.CurrencySymbol</label>
-										<input asp-for="Price" class="form-control" type="number" step="0.01" />
-										<span asp-validation-for="Price" class="text-danger"></span>
-									</div>
 								</div>
 							</div>
-							<button type="button" class="btn btn-secondary my-3" id="offeredServicesNextButton" disabled>
-								@Localizer["Next"]
-							</button>
 						</div>
-					</div>
-				</div>
-				<div class="accordion-item disabled" id="appointmentInfoAccordion">
-					<h2 class="accordion-header">
-						<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseAppointmentInfo" aria-expanded="false" aria-controls="collapseAppointmentInfo" id="appointmentInfoButton">
-							@Localizer["AppointmentInfo"]
-						</button>
-					</h2>
-					<div id="collapseAppointmentInfo" class="accordion-collapse collapse" data-bs-parent="#accordion">
-						<div class="accordion-body">
-							<div class="form-group">
-								<label asp-for="Name">@Localizer["Name"]</label>
-								<input asp-for="Name" class="form-control" />
-								<span asp-validation-for="Name" class="text-danger"></span>
 
-								<label asp-for="Surname">@Localizer["Surname"]</label>
-								<input asp-for="Surname" class="form-control" />
-								<span asp-validation-for="Surname" class="text-danger"></span>
-
-								<label asp-for="PhoneNumber">@Localizer["PhoneNumber"]</label>
-								<input asp-for="PhoneNumber" class="form-control" type="tel" />
-								<span asp-validation-for="PhoneNumber" class="text-danger"></span>
-
-								<label asp-for="EMail">@Localizer["Email"]</label>
-								<input asp-for="EMail" class="form-control" type="email" />
-								<span asp-validation-for="EMail" class="text-danger"></span>
-
-								<label asp-for="EmployeeId">@Localizer["Employee"]</label>
-								<div class="spinner-border" role="status" id="EmployeeLoadingSpinner" style="display: none;">
-									<span class="visually-hidden">@Localizer["Loading"]...</span>
+						<!-- Step 3: Customer Information -->
+						<div class="step" data-step="3">
+							<div class="row g-3">
+								<div class="col-12">
+									<h4 class="text-primary mb-3">@Localizer["CustomerDetails"]</h4>
 								</div>
-								<div id="EmployeeSelect">
-									<select asp-for="EmployeeId" class="form-control form-select" id="employeeSelect">
-										<div id="EmployeeOptions">
-											@*Employees will be populated here*@ 
+
+								<div class="col-md-6">
+									<div class="form-floating">
+										<input asp-for="Name" class="form-control" />
+										<label asp-for="Name">@Localizer["Name"]</label>
+										<span asp-validation-for="Name" class="text-danger small"></span>
+									</div>
+								</div>
+
+								<div class="col-md-6">
+									<div class="form-floating">
+										<input asp-for="Surname" class="form-control" />
+										<label asp-for="Surname">@Localizer["Surname"]</label>
+										<span asp-validation-for="Surname" class="text-danger small"></span>
+									</div>
+								</div>
+
+								<div class="col-md-6">
+									<div class="form-floating">
+										<input asp-for="PhoneNumber" class="form-control" type="tel" />
+										<label asp-for="PhoneNumber">@Localizer["PhoneNumber"]</label>
+										<span asp-validation-for="PhoneNumber" class="text-danger small"></span>
+									</div>
+								</div>
+
+								<div class="col-md-6">
+									<div class="form-floating">
+										<input asp-for="EMail" class="form-control" type="email" />
+										<label asp-for="EMail">@Localizer["Email"]</label>
+										<span asp-validation-for="EMail" class="text-danger small"></span>
+									</div>
+								</div>
+
+								<div class="col-12">
+									<button type="button" class="btn btn-secondary prev-step">
+										<i class="bi bi-arrow-left"></i> @Localizer["Back"]
+									</button>
+									<button type="button" class="btn btn-primary next-step" disabled>
+										@Localizer["Next"] <i class="bi bi-arrow-right"></i>
+									</button>
+								</div>
+							</div>
+						</div>
+
+						<!-- Step 4: Employee Selection -->
+						<div class="step" data-step="4">
+							<div class="row g-3">
+								<div class="col-12">
+									<h4 class="text-primary mb-3">@Localizer["SelectEmployee"]</h4>
+									<div id="employeeLoading" class="text-center d-none">
+										<div class="spinner-border text-primary" role="status">
+											<span class="visually-hidden">@Localizer["Loading"]...</span>
 										</div>
-									</select>
+									</div>
+									<div class="form-floating">
+										<select asp-for="EmployeeId" class="form-select" id="employeeSelect" disabled>
+											<option value="">@Localizer["LoadingEmployees"]...</option>
+										</select>
+										<label asp-for="EmployeeId">@Localizer["Employee"]</label>
+										<span asp-validation-for="EmployeeId" class="text-danger small"></span>
+									</div>
+									<div class="mt-3">
+										<button type="button" class="btn btn-secondary prev-step">
+											<i class="bi bi-arrow-left"></i> @Localizer["Back"]
+										</button>
+										<button type="button" class="btn btn-primary next-step" disabled>
+											@Localizer["Next"] <i class="bi bi-arrow-right"></i>
+										</button>
+									</div>
 								</div>
-								<span asp-validation-for="EmployeeId" class="text-danger"></span>
 							</div>
-							<button type="button" class="btn btn-secondary my-3" id="appointmentInfoNextButton" disabled>
-								@Localizer["Next"]
-							</button>
 						</div>
-					</div>
-				</div>
-				<div class="accordion-item disabled" id="appointmentDateTimeAccordion">
-					<h2 class="accordion-header">
-						<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseAppointmentDateTime" aria-expanded="false" aria-controls="collapseAppointmentDateTime" id="appointmentDateTimeButton">
-							@Localizer["AppointmentDateTime"]
-						</button>
-					</h2>
-					<div id="collapseAppointmentDateTime" class="accordion-collapse collapse" data-bs-parent="#accordion">
-						<div class="accordion-body">
-							<label asp-for="StartDateTime">@Localizer["DateTime"]</label>
-							<input type="hidden" id="StartDateTime" name="StartDateTime" />
-							<input id="calendar" class="form-control" type="date" />
-							<div id="time-slots" class="d-flex flex-wrap gap-2 mt-3">
-								@*Timeslots comes here*@
+
+						<!-- Step 5: DateTime Selection -->
+						<input type="hidden" asp-for="StartDateTime" id="StartDateTime" />
+						<div class="step" data-step="5">
+							<div class="row g-3">
+								<div class="col-12">
+									<h4 class="text-primary mb-3">@Localizer["SelectDateTime"]</h4>
+									<div class="row">
+										<div class="col-md-4 mb-3">
+											<div class="form-floating">
+												<input type="date" class="form-control" id="datePicker" disabled />
+												<label>@Localizer["SelectDate"]</label>
+											</div>
+										</div>
+										<div class="col-md-8">
+											<div id="timeSlots" class="row g-2"></div>
+										</div>
+									</div>
+									<div class="mt-3">
+										<button type="button" class="btn btn-secondary prev-step">
+											<i class="bi bi-arrow-left"></i> @Localizer["Back"]
+										</button>
+										<button type="button" class="btn btn-primary next-step" disabled>
+											@Localizer["Next"] <i class="bi bi-arrow-right"></i>
+										</button>
+									</div>
+								</div>
 							</div>
-							<span asp-validation-for="StartDateTime" class="text-danger"></span>
-							<button type="button" class="btn btn-secondary my-3" id="appointmentDateTimeNextButton" disabled>
-								@Localizer["Next"]
-							</button>
 						</div>
-					</div>
-				</div>
-				<div class="accordion-item disabled" id="appointmentSummaryAccordion">
-					<h2 class="accordion-header">
-						<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseAppointmentSummary" aria-expanded="false" aria-controls="collapseAppointmentSummary" id="appointmentSummaryButton">
-							@Localizer["AppointmentSummary"]
-						</button>
-					</h2>
-					<div id="collapseAppointmentSummary" class="accordion-collapse collapse" data-bs-parent="#accordion">
-						<div class="accordion-body">
-							<div class="form-group">
-								<label>@Localizer["Branch"] :</label>
-								<p id="summaryBranch"></p>
+
+						<!-- Step 6: Final Summary -->
+						<div class="step" data-step="6">
+							<div class="row g-3">
+								<div class="col-12">
+									<h4 class="text-primary mb-3">@Localizer["AppointmentSummary"]</h4>
+									<div class="summary-card border p-3 mb-3 rounded">
+										<!-- Summary content will be populated via JS -->
+									</div>
+									<div class="form-floating">
+										<select asp-for="Status" class="form-select">
+											@foreach (var status in Enum.GetValues(typeof(CustomerAppointmentStatus)))
+											{
+												<option value="@status">@Localizer[status.ToString()]</option>
+											}
+										</select>
+										<label asp-for="Status">@Localizer["Status"]</label>
+									</div>
+									<div class="mt-3">
+										<button type="button" class="btn btn-secondary prev-step">
+											<i class="bi bi-arrow-left"></i> @Localizer["Back"]
+										</button>
+										<button type="submit" class="btn btn-success">
+											<i class="bi bi-check-circle"></i> @Localizer["ConfirmAppointment"]
+										</button>
+									</div>
+								</div>
 							</div>
-							<div class="form-group">
-								<label>@Localizer["Gender"] :</label>
-								<p id="summaryGender"></p>
-							</div>
-							<div class="form-group">
-								<label>@Localizer["AgeGroup"] :</label>
-								<p id="summaryAgeGroup"></p>
-							</div>
-							<div class="form-group">
-								<label>@Localizer["NameSurname"] : </label>
-								<p id="summaryNameSurname"></p>
-							</div>
-							<div class="form-group">
-								<label>@Localizer["Hairdressing Services"] :</label>
-								<ul id="summaryServices"></ul>
-							</div>
-							<div class="form-group">
-								<label>@Localizer["Approximate Duration"] :</label>
-								<p id="summaryDuration"></p>
-							</div>
-							<div class="form-group">
-								<label>@Localizer["Price"] :</label>
-								<p id="summaryPrice"></p>
-							</div>
-							<div class="form-group">
-								<label>@Localizer["Employee"] :</label>
-								<p id="summaryEmployee"></p>
-							</div>
-							<div class="form-group">
-								<label>@Localizer["Appointment Date and Time"] :</label>
-								<p id="summaryDateTime"></p>
-							</div>
-							<div class="form-group">
-                                <label asp-for="Status">@Localizer["Status"]</label>
-                                <select asp-for="Status" class="form-control form-select" id="statusSelect" asp-items="Html.GetEnumSelectList<CustomerAppointmentStatus>()">
-                                </select>
-							</div>
-							<div class="text-danger" asp-validation-summary="All"></div>
-							<button type="submit" class="btn btn-primary my-3">
-								<i class="bi bi-floppy"></i>
-								@Localizer["SaveAppointment"]
-							</button>
 						</div>
-					</div>
+						<div class="text-danger small" asp-validation-summary="All"></div>
+					</form>
 				</div>
 			</div>
-		</form>
+		</div>
 	</div>
 </div>
 
 <style>
-	.accordion-item.disabled .accordion-button {
-		pointer-events: none;
-		opacity: 0.5;
+	.step {
+		display: none;
+	}
+
+		.step.active {
+			display: block;
+			animation: fadeIn 0.3s ease-in;
+		}
+
+	.summary-card {
+		background: rgba(255, 255, 255, 0.05);
+		border: 1px solid rgba(255, 255, 255, 0.1);
+	}
+
+	@*
+	.time-slot {
+		min-width: 100px;
+		margin: 2px;
+		transition: all 0.2s;
+	}
+
+		.time-slot.active {
+			background: #0d6efd !important;
+			color: white !important;
+		}
+	*@
+	@@keyframes fadeIn {
+		from
+
+	{
+		opacity: 0;
+		transform: translateY(10px);
+	}
+
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+
+	}
+
+	@@media (max-width: 768px) {
+		.form-floating > label {
+			font-size: 0.9rem;
+		}
+
+		.btn {
+			width: 100%;
+			margin-bottom: 0.5rem;
+		}
+	@*
+		.time-slot {
+			width: 100%;
+		}
+		*@
 	}
 </style>
 
-@section Scripts
-{
-	<script>
-		document.addEventListener('DOMContentLoaded', function ()
-		{
-			const branchSelect = document.getElementById('branchSelect');
-			const ageGroupSelect = document.getElementById('ageGroupSelect');
-			const genderSelect = document.getElementById('genderSelect');
-			const preliminaryInformationNextButton = document.getElementById('preliminaryInformationNextButton');
-
-			function enablePreliminaryInformationNextButton()
-			{
-				if (branchSelect.value && ageGroupSelect.value && genderSelect.value)
-				{
-					preliminaryInformationNextButton.removeAttribute('disabled');
-				}
-			}
-
-			branchSelect.addEventListener('change', enablePreliminaryInformationNextButton);
-			ageGroupSelect.addEventListener('change', enablePreliminaryInformationNextButton);
-			genderSelect.addEventListener('change', enablePreliminaryInformationNextButton);
-		});
-	</script>
-
-	<script>
-		document.addEventListener('DOMContentLoaded', function ()
-		{
-			const branchSelect = document.getElementById('branchSelect');
-			const ageGroupSelect = document.getElementById('ageGroupSelect');
-			const genderSelect = document.getElementById('genderSelect');
-			const offeredServicesAccordion = document.getElementById('offeredServicesAccordion');
-			const offeredServicesButton = document.getElementById('offeredServicesButton');
-			const preliminaryInformationNextButton = document.getElementById('preliminaryInformationNextButton'); // New button for triggering the check
-
-			function checkPreliminarySelections()
-			{
-				if (branchSelect.value && ageGroupSelect.value && genderSelect.value)
-				{
-					// Enable and show Hairdressing Services Accordion
-					offeredServicesAccordion.classList.remove('disabled'); // Enable accordion
-					offeredServicesButton.click();
-				}
-			}
-
-			preliminaryInformationNextButton.addEventListener('click', checkPreliminarySelections); // Bind click event to the button
-
-			checkPreliminarySelections()
-		});
-	</script>
-
-	<script>
-		document.addEventListener('DOMContentLoaded', function ()
-		{
-			const offeredServicesTableBody = document.querySelector('#offeredServicesTable tbody');
-			const offeredServicesNextButton = document.getElementById('offeredServicesNextButton');
-
-			let selectedofferedServiceIds = new Set(); // To track selected services
-
-			function updateNextButtonState()
-			{
-				if (selectedofferedServiceIds.size > 0) {
-					offeredServicesNextButton.removeAttribute('disabled');
-				} else {
-					offeredServicesNextButton.setAttribute('disabled', 'true');
-				}
-			}
-
-			function bindCheckboxEvents()
-			{
-				const checkboxes = offeredServicesTableBody.querySelectorAll('input[type="checkbox"]');
-				checkboxes.forEach(checkbox => {
-					checkbox.addEventListener('change', function () {
-						if (this.checked) {
-							selectedofferedServiceIds.add(this.value);
-						} else {
-							selectedofferedServiceIds.delete(this.value);
-						}
-						updateNextButtonState();
-					});
-				});
-
-				// Update button state on initial binding (in case there are preselected checkboxes)
-				updateNextButtonState();
-			}
-
-			function fetchOfferedServices()
-			{
-				const ageGroupId = document.getElementById('ageGroupSelect').value;
-				const genderValue = document.getElementById('genderSelect').value;
-
-				if (ageGroupId && genderValue) {
-					$.ajax({
-						url: '/Admin/CustomerAppointment/GetOfferedServices', // Update with your controller's route
-						type: 'GET',
-						data: { genderValue, ageGroupId },
-						beforeSend: function () {
-							// Show the spinner before making the request
-							document.getElementById('offeredServicesCard').style.display = 'none';
-							document.getElementById('offeredServicesloadingSpinner').style.display = 'block';
-						},
-						success: function (data)
-						{
-							document.getElementById('offeredServicesCard').style.display = 'block';
-							// Clear existing rows
-							offeredServicesTableBody.innerHTML = '';
-
-							if (Array.isArray(data) && data.length > 0)
-							{
-								document.getElementById('approximateDurationInputDiv').style.display = 'block';
-								// Populate table with new data
-
-								document.getElementById('ApproximateDuration').value = 0;
-								document.getElementById('Price').value = 0;
-								let totalDuration = 0;
-								let totalPrice = 0;
-
-								data.forEach(service =>
-								{
-									const isChecked = selectedofferedServiceIds.has(service.id.toString()) ? 'checked' : '';
-									const durationParts = service.approximateDuration.split(':'); // Split the duration string
-									const formattedDuration = `${durationParts[0]}:${durationParts[1]}`; // Format as HH:MM
-									const row = `
-										<tr>
-											<td>
-												<div class="form-check d-flex justify-content-center align-items-center">
-													<input class="form-check-input" type="checkbox" name="offeredServiceIds" value=${service.id} id="offeredService-${service.id}" ${isChecked}>
-												</div>
-											</td>
-											<td>${service.name}</td>
-											<td class="text-end pe-5" id="serviceApproximateDuration">${formattedDuration}</td>
-											<td class="pe-5 text-end" id="servicePrice">${service.price}</td>
-										</tr>
-									`;
-									offeredServicesTableBody.insertAdjacentHTML('beforeend', row);
-
-									//setDurationAndPrice
-
-									if (isChecked == 'checked')
-									{
-										if (formattedDuration)
-										{
-											const [hours, minutes] = formattedDuration.split(':').map(Number);
-											totalDuration += (hours * 60) + minutes; // Convert to total minutes
-											totalPrice += Number(service.price);
-										}
-									}
-								});
-
-								const totalHours = Math.floor(totalDuration / 60);
-								const totalMinutes = totalDuration % 60;
-								document.getElementById('ApproximateDuration').value = `${String(totalHours).padStart(2, '0')}:${String(totalMinutes).padStart(2, '0')}`;
-								document.getElementById('Price').value = totalPrice;
-
-								attachCheckboxListeners();
-								// Re-bind change event to checkboxes for tracking selections
-								bindCheckboxEvents();
-							} else {
-								// Display a "No Data Available" message
-								document.getElementById('approximateDurationInputDiv').style.display = 'none';
-								offeredServicesTableBody.innerHTML = `
-									<tr>
-										<td colspan="4" class="text-center">@Localizer["NoOfferedServicesAvailable"] @Localizer["PleaseTryWithDiffrentAgeGroupOrGender"]</td>
-									</tr>
-								`;
-							}
-						},
-						error: function (xhr, status, error) {
-							document.getElementById('offeredServicesCard').style.display = 'block';
-							offeredServicesTableBody.innerHTML = `<tr>
-																	   <td colspan="4" class="text-center">An error occurred while fetching data. Please try again later.</td>
-																	   </tr>`;
-							console.error('Error fetching data:', error);
-						},
-						complete: function () {
-							// Hide the spinner after the request is complete
-							document.getElementById('offeredServicesloadingSpinner').style.display = 'none';
-						}
-					});
-				}
-			}
-
-			function attachCheckboxListeners()
-			{
-				// Get the table body and all dynamically added checkboxes
-				const serviceCheckboxes = offeredServicesTableBody.querySelectorAll('input[type="checkbox"]');
-				const approximateDurationInput = document.getElementById('ApproximateDuration');
-				const priceInput = document.getElementById('Price');
-
-				// Function to update the approximate duration
-				function updateApproximateDuration()
-				{
-					let totalDuration = 0;
-					let totalPrice = 0;
-
-					serviceCheckboxes.forEach(checkbox => {
-						if (checkbox.checked) {
-							// Find the parent row of the checkbox
-							const row = checkbox.closest('tr');
-							// Find the cell containing the approximate duration
-							const durationCell = row.cells.namedItem("serviceApproximateDuration").innerHTML;
-							const priceCell = row.cells.namedItem("servicePrice").innerHTML;
-
-							if (durationCell) {
-								const [hours, minutes] = durationCell.split(':').map(Number);
-								totalDuration += (hours * 60) + minutes; // Convert to total minutes
-								totalPrice += Number(priceCell);
-							}
-						}
-					});
-
-					// Convert totalDuration back to HH:mm format
-					const totalHours = Math.floor(totalDuration / 60);
-					const totalMinutes = totalDuration % 60;
-					approximateDurationInput.value = `${String(totalHours).padStart(2, '0')}:${String(totalMinutes).padStart(2, '0')}`;
-					priceInput.value = totalPrice;
-
-					document.getElementById('appointmentDateTimeAccordion').classList.add('disabled');
-					document.getElementById('appointmentSummaryAccordion').classList.add('disabled');
-				}
-
-				// Attach event listeners to each checkbox
-				serviceCheckboxes.forEach(checkbox => {
-					checkbox.addEventListener('change', updateApproximateDuration);
-				});
-			}
-
-			// Bind the service fetching to changes in selects
-			document.getElementById('ageGroupSelect').addEventListener('change', fetchOfferedServices);
-			document.getElementById('genderSelect').addEventListener('change', fetchOfferedServices);
-
-			// Initial fetch and binding
-			fetchOfferedServices();
-			attachCheckboxListeners();
-		});
-	</script>
-
-	<script>
-		document.addEventListener('DOMContentLoaded', function ()
-		{
-			const offeredServicesNextButton = document.getElementById('offeredServicesNextButton');
-			const appointmentInfoButton = document.getElementById('appointmentInfoButton');
-			const appointmentInfoAccordion = document.getElementById('appointmentInfoAccordion');
-
-			function checkOfferedServicesSelections()
-			{
-				appointmentInfoAccordion.classList.remove('disabled');
-				appointmentInfoButton.click();
-			}
-
-			offeredServicesNextButton.addEventListener('click', checkOfferedServicesSelections);
-		});
-	</script>
-
-	<script>
-		branchSelect.addEventListener('change', function() {
-			const selectedBranchId = branchSelect.value;
-			const selectedServiceIds = Array.from(document.querySelectorAll('input[name="offeredServiceIds"]:checked')).map(input => parseInt(input.value)); // Convert to integers
-
-			if (selectedBranchId && selectedServiceIds.length > 0) {
-				$.ajax({
-					url: '/Admin/CustomerAppointment/GetEmployees',
-					type: 'GET',
-					traditional: true,
-					data: { branchId: selectedBranchId, offeredServiceIds: JSON.stringify(selectedServiceIds) },
-					success: function(data) {
-						employeeSelect.innerHTML = '<option selected hidden value="">@Localizer["SelectEmployee"]</option>';
-						data.forEach(employee => {
-							employeeSelect.insertAdjacentHTML('beforeend', `<option value="${employee.Id}">${employee.Name} ${employee.Surname}</option>`);
-						});
-					},
-					error: function(xhr, status, error) {
-						employeeSelect.innerHTML = `<option>${xhr.responseJSON.message}</option>`;
-						console.error('Error fetching employees:', error);
-					}
-				});
-			}
-		});
-	</script>
-
-	<script>
-		document.getElementById('offeredServicesTable').addEventListener('change', function() {
-			const selectedBranchId = branchSelect.value;
-			const selectedServiceIds = Array.from(document.querySelectorAll('input[name="offeredServiceIds"]:checked')).map(input => parseInt(input.value));
-
-			if (selectedBranchId && selectedServiceIds.length > 0) {
-				$.ajax({
-					url: '/Admin/CustomerAppointment/GetEmployees',
-					type: 'GET',
-					traditional: true,
-					data: { branchId: selectedBranchId, offeredServiceIds: JSON.stringify(selectedServiceIds) },
-					success: function(data)
-					{
-						document.getElementById('appointmentInfoNextButton').disabled = true;
-						employeeSelect.innerHTML = '<option selected hidden value="">@Localizer["SelectEmployee"]</option>';
-						data.forEach(employee => {
-							employeeSelect.insertAdjacentHTML('beforeend', `<option value="${employee.Id}">${employee.Name} ${employee.Surname}</option>`);
-						});
-					},
-					error: function(xhr, status, error)
-					{
-						employeeSelect.innerHTML = `<option>${xhr.responseJSON.message}</option>`;
-						console.error('Error fetching employees:', error);
-					}
-				});
-			}
-		});
-	</script>
-
-	<script>
-		$(document).ready(function () {
-			$('#offeredServicesTable').DataTable({
-				columnDefs: [ {
-					"orderable": false,
-					"targets": [ 0 ]
-				}],
-				responsive: true,
-				paging: true,
-				searching: true,
-				ordering: true,
-				lengthChange: true,
-				language: {
-					search: "@Localizer["Search"] : ",
-					lengthMenu: "@Localizer["Show _MENU_ entries"]",
-					info: "@Localizer["Showing _START_ to _END_ of _TOTAL_ entries"]",
-					paginate: {
-						previous: "@Localizer["Previous"]",
-						next: "@Localizer["Next"]"
-					}
-				}
-			});
-		});
-	</script>
-
-	<script>
-		document.addEventListener('DOMContentLoaded', function ()
-		{
-			const appointmentInfoNextButton = document.getElementById('appointmentInfoNextButton');
-			const collapseAppointmentInfo = document.getElementById('collapseAppointmentInfo');
-			const inputs = collapseAppointmentInfo.querySelectorAll('input:not([type="email"]), select');
-
-			function enableappointmentInfoNextButton()
-			{
-				const allFilled = Array.from(inputs).every(input => input.value);
-				appointmentInfoNextButton.disabled = !allFilled;
-			}
-
-			inputs.forEach(input =>
-			{
-				input.addEventListener('input', enableappointmentInfoNextButton);
-			});
-
-			// Also check when employee options are populated
-			const employeeSelect = document.getElementById('employeeSelect');
-			employeeSelect.addEventListener('change', enableappointmentInfoNextButton);
-		});
-	</script>
-
-	<script>
-		document.addEventListener('DOMContentLoaded', function ()
-		{
-			const appointmentInfoNextButton = document.getElementById('appointmentInfoNextButton');
-			const appointmentDateTimeButton = document.getElementById('appointmentDateTimeButton');
-			const appointmentDateTimeAccordion = document.getElementById('appointmentDateTimeAccordion');
-
-			function appointmentDateTimeAccordionShow()
-			{
-				appointmentDateTimeAccordion.classList.remove('disabled');
-				appointmentDateTimeButton.click();
-			}
-
-			appointmentInfoNextButton.addEventListener('click', appointmentDateTimeAccordionShow);
-		});
-	</script>
-	<script>
-		const apiUrlTemplate = `/Admin/CustomerAppointment/GetReservedDaysTimes?employeeId={employeeId}&branchId={branchId}`;
-
-		function parseTimeToMinutes(timeString)
-		{
-			const [hours, minutes] = timeString.split(":").map(Number);
-			return hours * 60 + minutes;
-		}
-		// Fetch reserved data and update UI
-		function fetchReservedData() {
-			const employeeId = document.getElementById("employeeSelect").value;
-			const branchId = document.getElementById("branchSelect").value;
-			const approximateDurationValue = document.getElementById("ApproximateDuration").value;
-			const approximateDuration = parseTimeToMinutes(approximateDurationValue);
-
-			if (!employeeId || !branchId || approximateDuration <= 0) {
-				disableCalendar();
-				clearTimeSlots();
-				return;
-			}
-
-			const apiUrl = apiUrlTemplate
-				.replace("{employeeId}", employeeId)
-				.replace("{branchId}", branchId);
-
-			fetch(apiUrl)
-				.then(response => response.json())
-				.then(data => {
-					enableCalendar(data.reservationInAdvanceDayLimit);
-					setupTimeSlots(data, approximateDuration);
-				});
-		}
-
-		// Enable calendar and set date limits
-		function enableCalendar(dayLimit) {
-			const calendar = document.getElementById("calendar");
-			const today = new Date().toISOString().split("T")[0];
-			const limitDate = new Date();
-			limitDate.setDate(limitDate.getDate() + dayLimit);
-
-			calendar.disabled = false;
-			calendar.min = today;
-			calendar.max = limitDate.toISOString().split("T")[0];
-			calendar.addEventListener("change", () => updateTimeSlots());
-		}
-
-		// Disable calendar and clear time slots
-		function disableCalendar() {
-			const calendar = document.getElementById("calendar");
-			calendar.disabled = true;
-			calendar.removeEventListener("change", updateTimeSlots);
-			calendar.value = "";
-		}
-
-		// Clear time slots
-		function clearTimeSlots() {
-			const timeSlotsContainer = document.getElementById("time-slots");
-			timeSlotsContainer.innerHTML = "";
-			document.getElementById("appointmentDateTimeNextButton").setAttribute('disabled', 'true');
-		}
-
-		// Re-generate time slots when the selected date changes
-		function updateTimeSlots()
-		{
-			const employeeId = document.getElementById("employeeSelect").value;
-			const branchId = document.getElementById("branchSelect").value;
-			const approximateDurationValue = document.getElementById("ApproximateDuration").value;
-			const approximateDuration = parseTimeToMinutes(approximateDurationValue);
-
-			if (!employeeId || !branchId || approximateDuration <= 0) {
-				clearTimeSlots();
-				return;
-			}
-
-			// Fetch the reserved data again (you can cache it instead of re-fetching for optimization)
-			const apiUrl = apiUrlTemplate
-				.replace("{employeeId}", employeeId)
-				.replace("{branchId}", branchId);
-
-			fetch(apiUrl)
-				.then(response => response.json())
-				.then(data => {
-					setupTimeSlots(data, approximateDuration);
-				});
-		}
-
-		// Generate time slots based on reserved data
-		function setupTimeSlots(data, approximateDuration) {
-			const calendar = document.getElementById("calendar");
-			if (!calendar.value) return;
-
-			const selectedDate = new Date(calendar.value);
-			const timeSlotsContainer = document.getElementById("time-slots");
-			clearTimeSlots();
-
-			const reservedSlots = data.reservedDaysTimes.filter(slot =>
-				new Date(slot.startDateTime).toDateString() === selectedDate.toDateString()
-			);
-
-			const leaves = data.employeeLeaves.filter(leave =>
-				new Date(leave.startDateTime).toDateString() === selectedDate.toDateString()
-			);
-
-			const minimumServiceDuration = data.minimumServiceDuration; // Get the duration from JSON
-
-			for (let hour = 0; hour < 24; hour++) {
-				for (let minute = 0; minute < 60; minute += minimumServiceDuration) {
-					const startTime = new Date(selectedDate);
-					startTime.setHours(hour, minute, 0, 0);
-
-					const endTime = new Date(startTime);
-					endTime.setMinutes(endTime.getMinutes() + approximateDuration);
-
-					if (!isTimeSlotAvailable(startTime, endTime, reservedSlots, leaves)) continue;
-
-					const button = document.createElement("button");
-					button.type = "button";
-					button.className = "btn btn-outline-light";
-					button.textContent = startTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-					button.dataset.time = `${startTime.toLocaleDateString()} ${startTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
-					button.setAttribute("data-bs-toggle", "button"); // Bootstrap toggle
-
-					// Add event listener to handle selection logic if needed
-					button.addEventListener("click", (event) =>
-					{
-						const previouslySelected = timeSlotsContainer.querySelector(".active");
-						if (previouslySelected && previouslySelected !== button) {
-							previouslySelected.classList.remove("active");
-						}
-						button.classList.toggle("active");
-						document.getElementById("appointmentDateTimeNextButton").removeAttribute('disabled');
-						if (event.target.tagName === "BUTTON" && event.target.dataset.time)
-						{
-						const selectedTime = event.target.dataset.time; // Get the ISO string from the button
-						document.getElementById("StartDateTime").value = selectedTime; // Set it in the hidden input
-						}
-					});
-
-					timeSlotsContainer.appendChild(button);
-				}
-			}
-		}
-
-		// Check if a time slot is available
-		function isTimeSlotAvailable(startTime, endTime, reservedSlots, leaves) {
-			for (const slot of reservedSlots) {
-				const reservedStart = new Date(slot.startDateTime);
-				const reservedEnd = new Date(slot.endDateTime);
-
-				if (
-					(startTime >= reservedStart && startTime < reservedEnd) ||
-					(endTime > reservedStart && endTime <= reservedEnd) ||
-					(startTime <= reservedStart && endTime >= reservedEnd)
-				) {
-					return false;
-				}
-			}
-
-			for (const leave of leaves) {
-				const leaveStart = new Date(leave.startDateTime);
-				const leaveEnd = new Date(leave.endDateTime);
-
-				if (
-					(startTime >= leaveStart && startTime < leaveEnd) ||
-					(endTime > leaveStart && endTime <= leaveEnd) ||
-					(startTime <= leaveStart && endTime >= leaveEnd)
-				) {
-					return false;
-				}
-			}
-
-			return true;
-		}
-
-		// Attach event listeners for input changes
-		document.getElementById("employeeSelect").addEventListener("change", fetchReservedData);
-		document.getElementById("branchSelect").addEventListener("change", fetchReservedData);
-		document.getElementById("ApproximateDuration").addEventListener("input", fetchReservedData);
-	</script>
-	<script>
-		document.addEventListener('DOMContentLoaded', function ()
-		{
-			const appointmentDateTimeNextButton = document.getElementById('appointmentDateTimeNextButton');
-			const appointmentSummaryButton = document.getElementById('appointmentSummaryButton');
-			const appointmentSummaryAccordion = document.getElementById('appointmentSummaryAccordion');
-
-			function appointmentSummaryAccordionShow()
-			{
-				appointmentSummaryAccordion.classList.remove('disabled');
-				appointmentSummaryButton.click();
-			}
-
-			appointmentDateTimeNextButton.addEventListener('click', appointmentSummaryAccordionShow);
-		});
-	</script>
+@section Scripts {
 	<script>
 		document.addEventListener('DOMContentLoaded', function () {
-			const summaryBranch = document.getElementById('summaryBranch');
-			const summaryGender = document.getElementById('summaryGender');
-			const summaryAgeGroup = document.getElementById('summaryAgeGroup');
-			const summaryNameSurname = document.getElementById('summaryNameSurname');
-			const summaryServices = document.getElementById('summaryServices');
-			const summaryDuration = document.getElementById('summaryDuration');
-			const summaryPrice = document.getElementById('summaryPrice');
-			const summaryEmployee = document.getElementById('summaryEmployee');
-			const summaryDateTime = document.getElementById('summaryDateTime');
+			// Step Management
+			const steps = document.querySelectorAll('.step');
+			let currentStep = 1;
 
-			function updateSummary() {
-				summaryBranch.textContent = document.getElementById('branchSelect').selectedOptions[0].text;
-				summaryGender.textContent = document.getElementById('genderSelect').selectedOptions[0].text;
-				summaryAgeGroup.textContent = document.getElementById('ageGroupSelect').selectedOptions[0].text;
-				summaryNameSurname.textContent = document.getElementById('Name').value + " " + document.getElementById('Surname').value;
+			// Form Elements
+			const branchSelect = document.getElementById('branchSelect');
+			const genderSelect = document.getElementById('genderSelect');
+			const ageGroupSelect = document.getElementById('ageGroupSelect');
+			const employeeSelect = document.getElementById('employeeSelect');
+			const datePicker = document.getElementById('datePicker');
+			const timeSlotsContainer = document.getElementById('timeSlots');
+			const form = document.querySelector('.multi-step-form');
+			const nameInput = document.getElementById('Name');
+			const surnameInput = document.getElementById('Surname');
+			const phoneInput = document.getElementById('PhoneNumber');
 
-				const selectedServices = document.querySelectorAll('input[name="offeredServiceIds"]:checked');
-				summaryServices.innerHTML = '';
-				selectedServices.forEach(service => {
-					const serviceName = service.closest('tr').querySelector('td:nth-child(2)').textContent;
-					const li = document.createElement('li');
-					li.textContent = serviceName;
-					summaryServices.appendChild(li);
+			// State Management
+			let selectedServices = new Set();
+			let selectedDateTime = null;
+
+			// Initialize Steps
+			function showStep(stepNumber) {
+				steps.forEach(step => {
+					step.classList.remove('active');
+					if (parseInt(step.dataset.step) === stepNumber) {
+						step.classList.add('active');
+					}
 				});
-
-				summaryDuration.textContent = document.getElementById('ApproximateDuration').value;
-				summaryPrice.textContent = document.getElementById('Price').value;
-				summaryEmployee.textContent = document.getElementById('employeeSelect').selectedOptions[0].text;
-				summaryDateTime.textContent = document.querySelector('#time-slots .active')?.dataset.time || '';
 			}
 
-			document.getElementById('appointmentDateTimeNextButton').addEventListener('click', updateSummary);
-		});
-	</script>
-	<script>
-		document.querySelector("form").addEventListener("submit", function (e) {
-			console.log("submit : " + emailInput.validity.valid);
-			const emailInput = document.getElementById("EMail");
-			if (emailInput.validity.valid === false) {
-				console.log("emailInput.validity.valid : " + emailInput.validity.valid);
-				const accordionItem = emailInput.closest(".accordion-item");
-				if (accordionItem) {
-					const button = accordionItem.querySelector("button[data-bs-toggle='collapse']");
-					if (button && button.getAttribute("aria-expanded") === "false") {
-						// Open the accordion section if it is collapsed
-						button.click();
-					}
+			// Step Navigation
+			function handleStepNavigation(targetStep) {
+				if (targetStep < 1 || targetStep > steps.length) return;
+
+				// Validate current step before proceeding
+				if (targetStep > currentStep && !validateStep(currentStep)) return;
+
+				currentStep = targetStep;
+				showStep(currentStep);
+				updateNavigationButtons();
+
+				// Load dynamic content when entering steps
+				switch(currentStep) {
+					case 2: loadServices(); break;
+					case 4: loadEmployees(); break;
+					case 5: initializeDateTimePicker(); break;
+					case 6: updateSummary(); break;
 				}
 			}
+
+			// Validation
+			function validateStep(stepNumber) {
+				switch(stepNumber) {
+					case 1:
+						return branchSelect.value && genderSelect.value && ageGroupSelect.value;
+					case 2:
+						return selectedServices.size > 0;
+					case 3:
+						return document.getElementById('Name').value.trim() &&
+							   document.getElementById('Surname').value.trim() &&
+							   document.getElementById('PhoneNumber').value.trim();
+					case 4:
+						return employeeSelect.value;
+					case 5:
+						return selectedDateTime;
+					default:
+						return true;
+				}
+			}
+
+			let servicesLoaded = false;
+
+			// Service Loading
+			async function loadServices() {
+			const container = document.getElementById('offeredServicesContainer');
+			const loader = document.getElementById('servicesLoading');
+			const table = document.getElementById('offeredServicesTable');
+			const nextButton = document.querySelector('[data-step="2"] .next-step');
+
+			// If already loaded, do nothing
+			if (servicesLoaded) {
+				return;
+			}
+
+			try {
+				container.classList.add('d-none');
+				loader.classList.remove('d-none');
+
+				const response = await fetch(`/Admin/CustomerAppointment/GetOfferedServices?genderValue=${genderSelect.value}&ageGroupId=${ageGroupSelect.value}`);
+				const data = await response.json();
+
+				if (data.result === false) {
+					// Show error message
+					table.innerHTML = `
+						<tbody>
+							<tr>
+								<td colspan="4" class="text-center text-danger py-4">
+									${data.message}
+								</td>
+							</tr>
+						</tbody>
+					`;
+					nextButton.disabled = true;
+				} else {
+					// Handle successful service list
+					populateServicesTable(data);
+				}
+
+				container.classList.remove('d-none');
+				servicesLoaded = true;
+			} catch (error) {
+				console.error('Error loading services:', error);
+				table.innerHTML = `
+					<tbody>
+						<tr>
+							<td colspan="4" class="text-center text-danger py-4">
+		@Localizer["ErrorLoadingServices"]
+							</td>
+						</tr>
+					</tbody>
+				`;
+				nextButton.disabled = true;
+			} finally {
+				loader.classList.add('d-none');
+				// Always show back button
+				document.querySelector('[data-step="2"] .prev-step').classList.remove('d-none');
+			}
+		}
+
+			function populateServicesTable(services) {
+			const table = document.getElementById('offeredServicesTable');
+			const nextButton = document.querySelector('[data-step="2"] .next-step');
+
+			table.innerHTML = `
+				<thead>
+					<tr>
+						<th>@Localizer["Select"]</th>
+						<th>@Localizer["Name"]</th>
+						<th>@Localizer["Duration"]</th>
+						<th>@Localizer["Price"]</th>
+					</tr>
+				</thead>
+				<tbody>
+					${services.map(service => `
+						<tr>
+							<td>
+								<input type="checkbox"
+									   name="OfferedServiceIds"
+									   id="${"offeredService"-service.offeredServiceId}"
+									   value="${service.offeredServiceId}"
+									   ${selectedServices.has(service.offeredServiceId.toString()) ? 'checked' : ''}
+									   class="service-checkbox form-check-input">
+							</td>
+							<td>${service.offeredServiceName}</td>
+							<td>${service.approximateDuration}</td>
+							<td>${service.price.toFixed(2)}</td>
+						</tr>
+					`).join('')}
+				</tbody>
+			`;
+
+			if (services.length === 0) {
+				nextButton.disabled = true;
+				table.innerHTML += `
+					<tbody>
+						<tr>
+							<td colspan="4" class="text-center text-warning py-4">
+		@Localizer["NoServicesAvailable"]
+							</td>
+						</tr>
+					</tbody>
+				`;
+			}
+
+			// Add checkbox handlers
+			table.querySelectorAll('.service-checkbox').forEach(checkbox => {
+				checkbox.addEventListener('change', function() {
+					const serviceId = parseInt(this.value);
+					if (this.checked) {
+						selectedServices.add(serviceId);
+					} else {
+						selectedServices.delete(serviceId);
+					}
+					loadEmployees();
+					updateDurationAndPrice();
+					nextButton.disabled = selectedServices.size === 0;
+				});
+			});
+
+			updateDurationAndPrice();
+			nextButton.disabled = services.length === 0 || selectedServices.size === 0;
+		}
+
+			function updateDurationAndPrice() {
+				let totalMinutes = 0;
+				let totalPrice = 0;
+
+				document.querySelectorAll('.service-checkbox:checked').forEach(checkbox => {
+					const row = checkbox.closest('tr');
+					const [hours, minutes] = row.cells[2].textContent.split(':').map(Number);
+					totalMinutes += (hours * 60) + minutes;
+					totalPrice += Number(row.cells[3].textContent);
+				});
+
+				const durationHours = Math.floor(totalMinutes / 60).toString().padStart(2, '0');
+				const durationMinutes = (totalMinutes % 60).toString().padStart(2, '0');
+				document.getElementById('ApproximateDuration').value = `${durationHours}:${durationMinutes}`;
+				document.getElementById('Price').value = totalPrice.toFixed(2);
+			}
+
+			// Employee Loading
+			async function loadEmployees() {
+				const loader = document.getElementById('employeeLoading');
+
+				try {
+					employeeSelect.disabled = true;
+					loader.classList.remove('d-none');
+
+					const response = await fetch(`/Admin/CustomerAppointment/GetEmployees?branchId=${branchSelect.value}&offeredServiceIds=${Array.from(selectedServices).join(',')}`);
+					const employees = await response.json();
+
+					employeeSelect.innerHTML = employees.map(e =>
+						`<option selected hidden value="">@Localizer["SelectEmployee"]</option>
+						 <option value="${e.identityUserId}">${e.employeeName} ${e.employeeSurname}</option>`
+					).join('');
+					employeeSelect.disabled = false;
+				} catch (error) {
+					console.error('Error loading employees:', error);
+					employeeSelect.innerHTML = '<option value="">@Localizer["ErrorLoadingEmployees"]</option>';
+				} finally {
+					loader.classList.add('d-none');
+				}
+			}
+
+			let dateTimePickerLoaded = false;
+
+			// DateTime Handling
+			async function initializeDateTimePicker() {
+				const employeeId = employeeSelect.value;
+				const branchId = branchSelect.value;
+
+				// If already loaded, do nothing
+				if (dateTimePickerLoaded) {
+					return;
+				}
+
+				if (!employeeId || !branchId) return;
+
+				try {
+					// Fetch reservation constraints
+					const response = await fetch(
+						`/Admin/CustomerAppointment/GetReservedDaysTimes?employeeId=${employeeId}&branchId=${branchId}`
+					);
+					const data = await response.json();
+
+					// Configure date picker constraints
+					const today = new Date();
+					const maxDate = new Date();
+					maxDate.setDate(today.getDate() + data.reservationInAdvanceDayLimit);
+
+					datePicker.min = today.toISOString().split('T')[0];
+					datePicker.max = maxDate.toISOString().split('T')[0];
+					datePicker.disabled = false;
+
+					// Store important data for time slot generation
+					window.reservationData = {
+						minDuration: data.minimumServiceDuration,
+						leaves: data.employeeLeaves,
+						reservations: data.reservedDaysTimes
+					};
+
+					datePicker.addEventListener('change', generateTimeSlots);
+
+					datePicker.value = '';
+					timeSlotsContainer.innerHTML = '';
+
+					dateTimePickerLoaded = true;
+					}
+					catch (error) {
+					console.error('Error loading schedule data:', error);
+					datePicker.disabled = true;
+					}
+				}
+
+		async function generateTimeSlots() {
+			const selectedDate = new Date(datePicker.value);
+			if (!selectedDate || !window.reservationData) return;
+
+			const { minDuration, leaves, reservations } = window.reservationData;
+			const timeSlotsContainer = document.getElementById('timeSlots');
+			timeSlotsContainer.innerHTML = '<div class="spinner-border"></div>';
+
+			try {
+				// Convert API dates to Date objects
+				const leavePeriods = leaves.map(leave => ({
+					start: new Date(leave.leaveStartDateTime),
+					end: new Date(leave.leaveEndDateTime)
+				}));
+
+				const reservedPeriods = reservations.map(res => ({
+					start: new Date(res.startDateTime),
+					end: new Date(res.endDateTime)
+				}));
+
+				// Clear existing content
+				timeSlotsContainer.innerHTML = '';
+				const fragment = document.createDocumentFragment();
+
+				// Generate time slots
+				const startHour = 0; // Opening hour
+				const endHour = 24;  // Closing hour
+
+				let currentHour = null;
+				let hourContainer = null;
+				let slotsRow = null;
+
+				for (let hour = startHour; hour < endHour; hour++) {
+					for (let minute = 0; minute < 60; minute += minDuration) {
+						// Create dates in LOCAL timezone
+						const slotStart = new Date(
+							selectedDate.getFullYear(),
+							selectedDate.getMonth(),
+							selectedDate.getDate(),
+							hour,
+							minute,
+							0
+						);
+
+						const slotEnd = new Date(
+							slotStart.getFullYear(),
+							slotStart.getMonth(),
+							slotStart.getDate(),
+							slotStart.getHours(),
+							slotStart.getMinutes() + minDuration,
+							0
+						);
+
+						// Check against leaves and reservations
+						const isAvailable = !isTimeSlotOccupied(slotStart, slotEnd, leavePeriods, reservedPeriods);
+
+						if (isAvailable) {
+							// Get local time components
+					const localHour = slotStart.getHours();
+					const localMinutes = slotStart.getMinutes().toString().padStart(2, '0');
+					const displayTime = `${localHour.toString().padStart(2, '0')}:${localMinutes}`;
+
+					// Create ISO strings in LOCAL time (without timezone offset)
+					const localISODate = `${slotStart.getFullYear()}-${(slotStart.getMonth() + 1).toString().padStart(2, '0')}-${slotStart.getDate().toString().padStart(2, '0')}T${displayTime}:00`;
+
+					// Create hour groups
+					if (localHour !== currentHour) {
+						currentHour = localHour;
+
+								hourContainer = document.createElement('div');
+								hourContainer.className = 'col-12';
+
+								// Create time slots row
+								slotsRow = document.createElement('div');
+								slotsRow.className = 'row g-1';
+
+								hourContainer.appendChild(slotsRow);
+								fragment.appendChild(hourContainer);
+							}
+
+							// Create time slot button
+							const slotCol = document.createElement('div');
+							slotCol.className = 'col-4';
+
+							const slotButton = document.createElement('button');
+							slotButton.type = 'button';
+							slotButton.className = 'btn btn-outline-light w-100 time-slot';
+							slotButton.dataset.start = localISODate;
+							slotButton.textContent = displayTime;
+							/*
+							slotButton.dataset.start = slotStart.toISOString().slice(0, 16);
+							slotButton.dataset.end = slotEnd.toISOString().slice(0, 16);
+							slotButton.textContent = slotStart.toLocaleTimeString([], {
+								hour: '2-digit',
+								minute: '2-digit'
+							});
+							*/
+							slotCol.appendChild(slotButton);
+							slotsRow.appendChild(slotCol);
+						}
+					}
+				}
+
+				timeSlotsContainer.appendChild(fragment);
+
+				if (timeSlotsContainer.children.length === 0) {
+					timeSlotsContainer.innerHTML = '<div class="text-warning">@Localizer["NoAvailableTimeSlots"]</div>';
+				}
+
+				// Add slot selection handler
+				document.querySelectorAll('.time-slot').forEach(button => {
+					button.addEventListener('click', function() {
+						document.querySelectorAll('.time-slot').forEach(b => b.classList.remove('active'));
+						this.classList.add('active');
+						document.getElementById('StartDateTime').value = this.dataset.start;
+						console.log("this.dataset.start : " + this.dataset.start);
+						selectedDateTime = this.dataset.start;
+						console.log("selectedDateTime : " + selectedDateTime);
+						updateNavigationButtons();
+					});
+				});
+
+			} catch (error) {
+				console.error('Error generating time slots:', error);
+				timeSlotsContainer.innerHTML = '<div class="text-danger">@Localizer["ErrorLoadingTimeSlots"]</div>';
+			}
+		}
+
+		// Helper function (ensure this matches)
+		function isTimeSlotOccupied(start, end, leaves, reservations) {
+			return [...leaves, ...reservations].some(period => {
+				return (
+					(start >= period.start && start < period.end) || // Slot starts during existing
+					(end > period.start && end <= period.end) ||     // Slot ends during existing
+					(start <= period.start && end >= period.end)     // Slot completely overlaps
+				);
+			});
+		}
+
+			// Helper function to check slot availability
+			function isTimeSlotOccupied(start, end, leaves, reservations) {
+				const checkAgainst = [...leaves, ...reservations];
+
+				return checkAgainst.some(period => {
+					return (start >= period.start && start < period.end) ||
+						   (end > period.start && end <= period.end) ||
+						   (start <= period.start && end >= period.end);
+				});
+			}
+
+			// Summary Update
+			function updateSummary() {
+				const summary = document.querySelector('.summary-card');
+				summary.innerHTML = `
+					<dl class="row">
+						<dt class="col-sm-3">@Localizer["Branch"]</dt>
+						<dd class="col-sm-9">${branchSelect.options[branchSelect.selectedIndex].text}</dd>
+
+						<dt class="col-sm-3">@Localizer["Gender"]</dt>
+						<dd class="col-sm-9">${genderSelect.options[genderSelect.selectedIndex].text}</dd>
+
+						<dt class="col-sm-3">@Localizer["AgeGroup"]</dt>
+						<dd class="col-sm-9">${ageGroupSelect.options[ageGroupSelect.selectedIndex].text}</dd>
+
+						<!-- Customer Information -->
+						<dt class="col-sm-3">@Localizer["CustomerInformation"]</dt>
+						<dd class="col-sm-9">
+							<ul class="list-unstyled">
+								<li>@Localizer["Name"]: ${document.getElementById('Name').value}</li>
+								<li>@Localizer["Surname"]: ${document.getElementById('Surname').value}</li>
+								<li>@Localizer["PhoneNumber"]: ${document.getElementById('PhoneNumber').value}</li>
+								<li>@Localizer["Email"]: ${document.getElementById('EMail').value}</li>
+							</ul>
+						</dd>
+
+						<dt class="col-sm-3">@Localizer["Services"]</dt>
+						<dd class="col-sm-9">
+							<ul>
+								${Array.from(document.querySelectorAll('.service-checkbox:checked')).map(cb =>
+									`<li>${cb.closest('tr').cells[1].textContent}</li>`
+								).join('')}
+							</ul>
+						</dd>
+
+						<!-- Employee Information -->
+						<dt class="col-sm-3">@Localizer["Employee"]</dt>
+						<dd class="col-sm-9">${employeeSelect.options[employeeSelect.selectedIndex].text}</dd>
+
+						<dt class="col-sm-3">@Localizer["DateTime"]</dt>
+							<dd class="col-sm-9">${new Date(selectedDateTime).toISOString().slice(0, 10)}
+												 ${new Date(selectedDateTime).toLocaleDateString("@System.Threading.Thread.CurrentThread.CurrentUICulture.Name", { weekday: 'long' })}
+												 ${new Date(selectedDateTime).toLocaleTimeString("@System.Threading.Thread.CurrentThread.CurrentUICulture.Name", {
+													 hour: '2-digit',
+													 minute: '2-digit',
+													 hour12: false
+												 }).replace('24:', '00:')}</dd>
+					</dl>
+				`;
+			}
+
+			// Navigation Buttons
+			function updateNavigationButtons() {
+				document.querySelectorAll('.next-step').forEach(button => {
+					button.disabled = !validateStep(currentStep);
+				});
+			}
+
+			// Event Listeners
+			document.querySelectorAll('.next-step').forEach(button => {
+				button.addEventListener('click', () => handleStepNavigation(currentStep + 1));
+			});
+
+			document.querySelectorAll('.prev-step').forEach(button => {
+				button.addEventListener('click', () => handleStepNavigation(currentStep - 1));
+			});
+
+			// Input Change Listeners
+			[branchSelect, genderSelect, ageGroupSelect].forEach(select => {
+				select.addEventListener('change', () => {
+					servicesLoaded = false;
+					selectedServices.clear();
+					loadServices();
+					if (currentStep === 1) updateNavigationButtons();
+				});
+			});
+
+			[nameInput, surnameInput, phoneInput].forEach(input => {
+				input.addEventListener('input', () => {
+					if (currentStep === 3) {
+						updateNavigationButtons();
+					}
+				});
+			});
+
+			employeeSelect.addEventListener('change', () => {
+				initializeDateTimePicker();
+				if (currentStep === 4) updateNavigationButtons();
+			});
+
+			// Form Submission
+			form.addEventListener('submit', function(e) {
+				if (!validateStep(5)) {
+					e.preventDefault();
+					alert('Please complete all steps before submitting');
+				}
+			});
+
+			// Initialize
+			showStep(1);
+			updateNavigationButtons();
 		});
 	</script>
 }

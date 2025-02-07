@@ -1,0 +1,47 @@
+﻿@model ApplicationSettingDtoForInsert
+
+<div class="container">
+    <div class="row justify-content-center my-5">
+        <div class="col-12 col-md-8 col-lg-6">
+            <div class="card card-dark bg-dark border-black">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">@Localizer["CreateApplicationSetting"]</h5>
+                </div>
+                <div class="card-body text-light">
+                    <form method="post" asp-action="Create">
+                        <!-- Key Input -->
+                        <div class="form-floating mb-4">
+                            <input asp-for="Key"
+                                   class="form-control"
+                                   placeholder=" "
+                                   required />
+                            <label asp-for="Key" class="ms-2">@Localizer["SettingKey"]</label>
+                            <span asp-validation-for="Key" class="text-danger small"></span>
+                        </div>
+
+                        <!-- Value Input -->
+                        <div class="form-floating mb-4">
+                            <input asp-for="Value"
+                                   class="form-control"
+                                   placeholder=" "
+                                   required />
+                            <label asp-for="Value" class="ms-2">@Localizer["SettingValue"]</label>
+                            <span asp-validation-for="Value" class="text-danger small"></span>
+                        </div>
+
+                        <!-- Validation Summary -->
+                        <div class="text-danger small mb-3" asp-validation-summary="All"></div>
+
+                        <!-- Submit Button -->
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-3">
+                            <button type="submit" class="btn btn-primary w-100 w-sm-auto px-4 py-2">
+                                <i class="bi bi-floppy me-2"></i>
+                                @Localizer["SaveSetting"]
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -60,4 +60,13 @@
   <data name="StartDateCannotBeLessThanNow" xml:space="preserve">
     <value>Start date cannot be less than now</value>
   </data>
+  <data name="DtoCannotBeNull" xml:space="preserve">
+    <value>Dto cannot be null</value>
+  </data>
+  <data name="EmployeeHasOverlappingAppointments" xml:space="preserve">
+    <value>Employee has overlapping appointments</value>
+  </data>
+  <data name="EmployeeHasOverlappingLeaves" xml:space="preserve">
+    <value>Employee has overlapping leaves</value>
+  </data>
 </root>

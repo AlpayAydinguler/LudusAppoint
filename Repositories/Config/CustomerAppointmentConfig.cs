@@ -27,18 +27,22 @@ namespace Repositories.Config
                    .HasForeignKey(ca => ca.AgeGroupId)
                    .OnDelete(DeleteBehavior.Restrict); // Restrict deletion
 
+            var fixedDate = DateTime.Today; // A fixed base date
+            var random = new Random(123); // Fixed seed
+
             builder.HasData(
                 new CustomerAppointment
                 {
                     CustomerAppointmentId = 1,
                     Name = "Alice",
                     Surname = "Smith",
-                    Gender = Gender.f,
+                    Gender = Gender.Female,
                     AgeGroupId = 1,
                     EmployeeId = 1,
                     ApproximateDuration = new TimeSpan(0, 30, 0),
                     Price = 150m,
-                    StartDateTime = new DateTime(2025, 1, 5, 10, 0, 0),
+                    // Original time: 10:00, now using today's date plus random days (1 to 3) plus 10:00
+                    StartDateTime = fixedDate.AddDays(random.Next(1, 4)).AddHours(10).AddMinutes(0),
                     PhoneNumber = "+90 123 456 7891",
                     EMail = "alice.smith@example.com",
                     CreatedBy = null,
@@ -51,148 +55,165 @@ namespace Repositories.Config
                     CustomerAppointmentId = 2,
                     Name = "Bob",
                     Surname = "Johnson",
-                    Gender = Gender.m,
+                    Gender = Gender.Male,
                     AgeGroupId = 2,
                     EmployeeId = 2,
                     ApproximateDuration = new TimeSpan(0, 45, 0),
                     Price = 200m,
-                    StartDateTime = new DateTime(2025, 1, 6, 11, 30, 0),
+                    // Original time: 11:30
+                    StartDateTime = fixedDate.AddDays(random.Next(1, 4)).AddHours(11).AddMinutes(30),
                     PhoneNumber = "+90 123 456 7892",
                     EMail = "bob.johnson@example.com",
                     CreatedBy = null,
                     Status = CustomerAppointmentStatus.AwaitingApproval,
                     BranchId = 1
                 },
+
                 new CustomerAppointment
                 {
                     CustomerAppointmentId = 3,
                     Name = "Charlie",
                     Surname = "Brown",
-                    Gender = Gender.m,
+                    Gender = Gender.Male,
                     AgeGroupId = 3,
                     EmployeeId = 1,
                     ApproximateDuration = new TimeSpan(0, 60, 0),
                     Price = 250m,
-                    StartDateTime = new DateTime(2025, 1, 7, 14, 0, 0),
+                    // Original time: 14:00
+                    StartDateTime = fixedDate.AddDays(random.Next(1, 4)).AddHours(14).AddMinutes(0),
                     PhoneNumber = "+90 123 456 7893",
                     EMail = "charlie.brown@example.com",
                     CreatedBy = null,
                     Status = CustomerAppointmentStatus.Completed,
                     BranchId = 1
                 },
+
                 new CustomerAppointment
                 {
                     CustomerAppointmentId = 4,
                     Name = "Diana",
                     Surname = "Prince",
-                    Gender = Gender.f,
+                    Gender = Gender.Female,
                     AgeGroupId = 2,
                     EmployeeId = 1,
                     ApproximateDuration = new TimeSpan(0, 40, 0),
                     Price = 180m,
-                    StartDateTime = new DateTime(2025, 1, 8, 9, 45, 0),
+                    // Original time: 09:45
+                    StartDateTime = fixedDate.AddDays(random.Next(1, 4)).AddHours(9).AddMinutes(45),
                     PhoneNumber = "+90 123 456 7894",
                     EMail = "diana.prince@example.com",
                     CreatedBy = null,
                     Status = CustomerAppointmentStatus.Cancelled,
                     BranchId = 1
                 },
+
                 new CustomerAppointment
                 {
                     CustomerAppointmentId = 5,
                     Name = "Eve",
                     Surname = "Adams",
-                    Gender = Gender.f,
+                    Gender = Gender.Female,
                     AgeGroupId = 1,
                     EmployeeId = 2,
                     ApproximateDuration = new TimeSpan(0, 35, 0),
                     Price = 160m,
-                    StartDateTime = new DateTime(2025, 1, 9, 16, 15, 0),
+                    // Original time: 16:15
+                    StartDateTime = fixedDate.AddDays(random.Next(1, 4)).AddHours(16).AddMinutes(15),
                     PhoneNumber = "+90 123 456 7895",
                     EMail = "eve.adams@example.com",
                     CreatedBy = null,
                     Status = CustomerAppointmentStatus.Confirmed,
                     BranchId = 1
                 },
+
                 new CustomerAppointment
                 {
                     CustomerAppointmentId = 6,
                     Name = "Frank",
                     Surname = "Miller",
-                    Gender = Gender.m,
+                    Gender = Gender.Male,
                     AgeGroupId = 2,
                     EmployeeId = 3,
                     ApproximateDuration = new TimeSpan(0, 30, 0),
                     Price = 120m,
-                    StartDateTime = new DateTime(2025, 1, 10, 12, 30, 0),
+                    // Original time: 12:30
+                    StartDateTime = fixedDate.AddDays(random.Next(1, 4)).AddHours(12).AddMinutes(30),
                     PhoneNumber = "+90 123 456 7896",
                     EMail = "frank.miller@example.com",
                     CreatedBy = null,
                     Status = CustomerAppointmentStatus.AwaitingApproval,
                     BranchId = 1
                 },
+
                 new CustomerAppointment
                 {
                     CustomerAppointmentId = 7,
                     Name = "Grace",
                     Surname = "Hall",
-                    Gender = Gender.f,
+                    Gender = Gender.Female,
                     AgeGroupId = 1,
                     EmployeeId = 2,
                     ApproximateDuration = new TimeSpan(1, 15, 0),
                     Price = 450m,
-                    StartDateTime = new DateTime(2025, 1, 11, 15, 0, 0),
+                    // Original time: 15:00
+                    StartDateTime = fixedDate.AddDays(random.Next(1, 4)).AddHours(15).AddMinutes(0),
                     PhoneNumber = "+90 123 456 7897",
                     EMail = "grace.hall@example.com",
                     CreatedBy = null,
                     Status = CustomerAppointmentStatus.Confirmed,
                     BranchId = 1
                 },
+
                 new CustomerAppointment
                 {
                     CustomerAppointmentId = 8,
                     Name = "Henry",
                     Surname = "Ford",
-                    Gender = Gender.m,
+                    Gender = Gender.Male,
                     AgeGroupId = 3,
                     EmployeeId = 1,
                     ApproximateDuration = new TimeSpan(1, 45, 0),
                     Price = 700m,
-                    StartDateTime = new DateTime(2025, 1, 12, 14, 30, 0),
+                    // Original time: 14:30
+                    StartDateTime = fixedDate.AddDays(random.Next(1, 4)).AddHours(14).AddMinutes(30),
                     PhoneNumber = "+90 123 456 7898",
                     EMail = "henry.ford@example.com",
                     CreatedBy = null,
                     Status = CustomerAppointmentStatus.Completed,
                     BranchId = 1
                 },
+
                 new CustomerAppointment
                 {
                     CustomerAppointmentId = 9,
                     Name = "Isabelle",
                     Surname = "Clark",
-                    Gender = Gender.f,
+                    Gender = Gender.Female,
                     AgeGroupId = 3,
                     EmployeeId = 3,
                     ApproximateDuration = new TimeSpan(0, 45, 0),
                     Price = 250m,
-                    StartDateTime = new DateTime(2025, 1, 13, 10, 0, 0),
+                    // Original time: 10:00
+                    StartDateTime = fixedDate.AddDays(random.Next(1, 4)).AddHours(10).AddMinutes(0),
                     PhoneNumber = "+90 123 456 7899",
                     EMail = "isabelle.clark@example.com",
                     CreatedBy = null,
                     Status = CustomerAppointmentStatus.Cancelled,
                     BranchId = 1
                 },
+
                 new CustomerAppointment
                 {
                     CustomerAppointmentId = 10,
                     Name = "Jack",
                     Surname = "White",
-                    Gender = Gender.m,
+                    Gender = Gender.Male,
                     AgeGroupId = 1,
                     EmployeeId = 2,
                     ApproximateDuration = new TimeSpan(1, 0, 0),
                     Price = 300m,
-                    StartDateTime = new DateTime(2025, 1, 14, 9, 15, 0),
+                    // Original time: 09:15
+                    StartDateTime = fixedDate.AddDays(random.Next(1, 4)).AddHours(9).AddMinutes(15),
                     PhoneNumber = "+90 123 456 7890",
                     EMail = "jack.white@example.com",
                     CreatedBy = null,

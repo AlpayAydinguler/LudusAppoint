@@ -1,7 +1,10 @@
-﻿using Entities.Models;
+﻿using Entities.Dtos;
+using Entities.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 using Services.Contracts;
+using System;
+using System.Globalization;
 
 namespace LudusAppoint.Areas.Admin.Controllers
 {
@@ -24,73 +27,97 @@ namespace LudusAppoint.Areas.Admin.Controllers
         }
         public IActionResult Update([FromRoute] int id)
         {
-            var model = _serviceManager.EmployeeService.GetOneEmployee(id, false, System.Globalization.CultureInfo.CurrentCulture.Name);
+            var model = _serviceManager.EmployeeService.GetOneEmployeeForUpdate(id, false, System.Globalization.CultureInfo.CurrentCulture.Name);
             PopulatePageData();
             return View(model);
         }
 
         [HttpPost]
         [AutoValidateAntiforgeryToken]
-        public IActionResult Update([FromForm] Employee employee, int[] offeredServiceIds)
+        public IActionResult Update([FromForm] EmployeeDtoForUpdate employeeDtoForUpdate)
         {
             if (!ModelState.IsValid)
             {
                 PopulatePageData();
-                // Manually populate the OfferedServices collection
-
-                employee.OfferedServices = new List<OfferedService>();
-                foreach (var serviceId in offeredServiceIds)
-                {
-                    var service = _serviceManager.OfferedServiceService.GetofferedService(serviceId, false);
-                    if (service != null)
-                    {
-                        employee.OfferedServices.Add(service);
-                    }
-                }
-
-                return View(employee);
+                return View(employeeDtoForUpdate);
             }
-            _serviceManager.EmployeeService.UpdateEmployee(employee, offeredServiceIds);
-            return RedirectToAction("Index");
+            try
+            {
+                _serviceManager.EmployeeService.UpdateEmployee(employeeDtoForUpdate);
+                TempData["OperationSuccessfull"] = true;
+                TempData["OperationMessage"] = _localizer["OfferedServiceUpdatedSuccessfully"].ToString() + ".";
+                return RedirectToAction("Index");
+            }
+            catch (AggregateException exceptions)
+            {
+                foreach (var exception in exceptions.InnerExceptions)
+                {
+                    ModelState.AddModelError(exception?.InnerException?.Source?.ToString() ?? string.Empty, exception?.Message ?? string.Empty);
+                }
+                PopulatePageData();
+                return View(employeeDtoForUpdate);
+            }
         }
         public IActionResult Create()
         {
-            var model = new Employee();
+            var model = new EmployeeDtoForInsert();
             PopulatePageData();
             return View(model);
         }
 
         [HttpPost]
         [AutoValidateAntiforgeryToken]
-        public IActionResult Create([FromForm] Employee employee, int[] offeredServiceIds)
+        public IActionResult Create([FromForm] EmployeeDtoForInsert employeeDtoForInsert)
         {
-            Console.WriteLine("Create Employee");
-            employee.OfferedServices = new List<OfferedService>();
-
-            foreach (var serviceId in offeredServiceIds)
-            {
-                var service = _serviceManager.OfferedServiceService.GetofferedService(serviceId, true);
-                if (service != null)
-                {
-                    employee.OfferedServices.Add(service);
-                }
-            }
-
             if (!ModelState.IsValid)
             {
                 PopulatePageData();
-                return View(employee);
+                return View(employeeDtoForInsert);
             }
 
-            _serviceManager.EmployeeService.CreateEmployee(employee);
-            return RedirectToAction("Index");
+            try
+            {
+                _serviceManager.EmployeeService.CreateEmployee(employeeDtoForInsert);
+                TempData["OperationSuccessfull"] = true;
+                TempData["OperationMessage"] = _localizer["OfferedServiceCreatedSuccessfully"].ToString() + ".";
+                return RedirectToAction("Index");
+            }
+            catch (AggregateException exceptions)
+            {
+                // Handle validation/domain errors
+                foreach (var exception in exceptions.InnerExceptions)
+                {
+                    ModelState.AddModelError(exception.InnerException?.Source ?? "General", exception.Message);
+                }
+                return View(employeeDtoForInsert);
+            }
+        }
+
+        [HttpGet]
+        [AutoValidateAntiforgeryToken]
+        public IActionResult Delete([FromRoute] int id)
+        {
+            try
+            {
+                _serviceManager.EmployeeService.DeleteEmployee(id);
+                TempData["OperationSuccessfull"] = true;
+                TempData["OperationMessage"] = _localizer["EmployeeDeletedSuccessfully"].ToString() + ".";
+                return RedirectToAction("Index");
+            }
+            catch (Exception exception)
+            {
+                TempData["OperationSuccessfull"] = false;
+                TempData["OperationMessage"] = exception.Message.ToString();
+                return RedirectToAction("Index");
+            }
         }
 
         private void PopulatePageData()
         {
             var offeredServices = _serviceManager.OfferedServiceService.GetActiveOfferedServices(false, System.Globalization.CultureInfo.CurrentCulture.Name);
             ViewBag.AllOfferedServices = offeredServices;
-            ViewBag.AllBranches = _serviceManager.BranchService.GetAllBranches(false).ToList();
+            ViewBag.AllBranches = _serviceManager.BranchService.GetAllActiveBranches(false).ToList();
+            //ViewBag.AllBranches = _serviceManager.BranchService.GetAllBranches(false).ToList();
         }
     }
 }

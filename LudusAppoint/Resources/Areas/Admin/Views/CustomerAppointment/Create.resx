@@ -165,4 +165,52 @@
   <data name="PleaseTryWithDiffrentAgeGroupOrGender" xml:space="preserve">
     <value>Please try with diffrent age group or gender</value>
   </data>
+  <data name="TotalDuration" xml:space="preserve">
+    <value>Total duration</value>
+  </data>
+  <data name="TotalPrice" xml:space="preserve">
+    <value>Total price</value>
+  </data>
+  <data name="Back" xml:space="preserve">
+    <value>Back</value>
+  </data>
+  <data name="CustomerDetails" xml:space="preserve">
+    <value>Customer details</value>
+  </data>
+  <data name="LoadingEmployees" xml:space="preserve">
+    <value>Loading employees</value>
+  </data>
+  <data name="SelectDateTime" xml:space="preserve">
+    <value>Select date time</value>
+  </data>
+  <data name="SelectDate" xml:space="preserve">
+    <value>Select date</value>
+  </data>
+  <data name="ConfirmAppointment" xml:space="preserve">
+    <value>Confirm appointment</value>
+  </data>
+  <data name="ErrorLoadingServices" xml:space="preserve">
+    <value>Error loading services</value>
+  </data>
+  <data name="Duration" xml:space="preserve">
+    <value>Duration</value>
+  </data>
+  <data name="NoServicesAvailable" xml:space="preserve">
+    <value>No services available</value>
+  </data>
+  <data name="ErrorLoadingEmployees" xml:space="preserve">
+    <value>Error loading employees</value>
+  </data>
+  <data name="NoAvailableTimeSlots" xml:space="preserve">
+    <value>No available time slots</value>
+  </data>
+  <data name="ErrorLoadingTimeSlots" xml:space="preserve">
+    <value>Error loading time slots</value>
+  </data>
+  <data name="CustomerInformation" xml:space="preserve">
+    <value>Customer ınformation</value>
+  </data>
+  <data name="Services" xml:space="preserve">
+    <value>Services</value>
+  </data>
 </root>

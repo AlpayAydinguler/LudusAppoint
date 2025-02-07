@@ -69,4 +69,25 @@
   <data name="Delete" xml:space="preserve">
     <value>Sil</value>
   </data>
+  <data name="ConfirmDeletion" xml:space="preserve">
+    <value>Silme işlemini onayla</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>İptal</value>
+  </data>
+  <data name="Search" xml:space="preserve">
+    <value>Ara</value>
+  </data>
+  <data name="Show _MENU_ entries" xml:space="preserve">
+    <value>_MENU_ Sonuç Göster</value>
+  </data>
+  <data name="Showing _START_ to _END_ of _TOTAL_ entries" xml:space="preserve">
+    <value>_START_ ile _END_ arasındakiler, toplam  _TOTAL_ girdi</value>
+  </data>
+  <data name="Previous" xml:space="preserve">
+    <value>Önceki</value>
+  </data>
+  <data name="Next" xml:space="preserve">
+    <value>Sonraki</value>
+  </data>
 </root>

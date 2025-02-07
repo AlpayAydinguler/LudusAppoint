@@ -57,4 +57,10 @@
   <data name="ApproximateDurationMustBeBiggerThan0Minutes" xml:space="preserve">
     <value>Yaklaşık süre 0 dakikadan büyük olmalıdır</value>
   </data>
+  <data name="OfferedServiceCannotBeDeletedBecauseItIsUsedInAnotherEntity" xml:space="preserve">
+    <value>Başka bir işletmede kullanıldığı için sunulan hizmet silinemiyor</value>
+  </data>
+  <data name="DtoCannotBeNull" xml:space="preserve">
+    <value>boş olamaz.</value>
+  </data>
 </root>

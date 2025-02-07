@@ -93,4 +93,7 @@
   <data name="SaveChanges" xml:space="preserve">
     <value>Save changes</value>
   </data>
+  <data name="IsActive" xml:space="preserve">
+    <value>Is active</value>
+  </data>
 </root>

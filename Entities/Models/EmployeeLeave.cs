@@ -1,4 +1,6 @@
-﻿namespace Entities.Models
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace Entities.Models
 {
     public class EmployeeLeave
     {
@@ -8,6 +10,7 @@
         public string? Reason { get; set; }
 
         //Foreign Keys
+        [ForeignKey("Employee")]
         public int EmployeeId { get; set; }
 
         // Navigarion Property

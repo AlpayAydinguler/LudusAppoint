@@ -1,14 +1,15 @@
-﻿using Entities.Models;
+﻿using Entities.Dtos;
+using Entities.Models;
 
 namespace Services.Contracts
 {
     public interface IEmployeeService
     {
-        void CreateEmployee(Employee employee);
-        IEnumerable<Employee> GetAllEmployees(bool trackChanges);
-        IEnumerable<Employee> GetEmployeesForForCustomerAppointment(int branchId, List<int> offeredServiceIds, bool trackChanges);
-        Employee GetOneEmployee(int id, bool trackChanges, string language);
-        public Employee? GetOneEmployee(int id);
-        void UpdateEmployee(Employee employee, int[] selectedServiceIds);
+        void CreateEmployee(EmployeeDtoForInsert employeeDtoForInsert);
+        void DeleteEmployee(int id);
+        IEnumerable<EmployeeDto> GetAllEmployees(bool trackChanges);
+        IEnumerable<Employee> GetEmployeesForCustomerAppointment(int branchId, List<int> offeredServiceIds, bool trackChanges);
+        EmployeeDtoForUpdate GetOneEmployeeForUpdate(int id, bool trackChanges, string language);
+        void UpdateEmployee(EmployeeDtoForUpdate employeeDtoForUpdate);
     }
 }

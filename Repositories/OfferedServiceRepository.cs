@@ -114,6 +114,7 @@ namespace Repositories
                                                                      .Select(hs => hs.ApproximateDuration.TotalMinutes)
                                                                      .First();
             return (int)minDuration;
+            
         }
 
         public OfferedService GetOfferedServiceForUpdate(int id, bool trackChanges)

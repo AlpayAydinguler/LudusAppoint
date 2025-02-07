@@ -18,6 +18,5 @@
         //Navigation Properties
         public ICollection<Employee>? Employee { get; set; }
         public ICollection<CustomerAppointment>? CustomerAppointment { get; set; }
-        public ShopSettings? ShopSettings { get; set; }
     }
 }

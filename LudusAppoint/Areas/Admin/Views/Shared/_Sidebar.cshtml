@@ -190,22 +190,29 @@
 		</li>
 	</ul>
 </li>
-<li class="nav-item @IsActive("SiteSettings")">
+<li class="nav-item @IsActive("ApplicationSetting")">
 	<a href="#" class="nav-link">
 		<i class="nav-icon bi bi-gear"></i>
 		<p>
-			@Localizer["SiteSettings"]
+			@Localizer["ApplicationSetting"]
 			<i class="nav-arrow bi bi-chevron-right"></i>
 		</p>
 	</a>
 	<ul class="nav nav-treeview">
 		<li class="nav-item">
-			<a class="nav-link @IsActive("SiteSettings", "Index")" aria-current="page" asp-controller="SiteSettings" asp-action="Index">
+			<a class="nav-link @IsActive("ApplicationSetting", "Index")" aria-current="page" asp-controller="ApplicationSetting" asp-action="Index">
 				<i class="bi bi-list-ol"></i>
 				<p>
-					@Localizer["SiteSettingsList"]
+					@Localizer["ApplicationSettingList"]
 				</p>
 			</a>
 		</li>
+		<li class="nav-item">
+			<a asp-controller="ApplicationSetting" asp-action="Create" class="nav-link @IsActive("ApplicationSetting", "Create")">
+				<i class="bi bi-plus-lg"></i>
+				<p>
+					@Localizer["CreateApplicationSetting"]
+				</p>
+			</a>
 	</ul>
 </li>

@@ -2,5 +2,6 @@
 {
     public record EmployeeDtoForUpdate : EmployeeDto
     {
+        public List<int> OfferedServiceIds { get; init; } = [];
     }
 }

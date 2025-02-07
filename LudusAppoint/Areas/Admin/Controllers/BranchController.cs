@@ -48,7 +48,7 @@ namespace LudusAppoint.Areas.Admin.Controllers
             {
                 foreach (var exception in exceptions.InnerExceptions)
                 {
-                    ModelState.AddModelError(exception.InnerException?.Source.ToString(), exception.Message);
+                    ModelState.AddModelError(exception?.InnerException?.Source?.ToString() ?? string.Empty, exception?.Message ?? string.Empty);
                 }
                 return View(branchDtoForInsert);
             }
@@ -71,13 +71,15 @@ namespace LudusAppoint.Areas.Admin.Controllers
             try
             {
                 _serviceManager.BranchService.UpdateBranch(branchDtoForUpdate);
+                TempData["OperationSuccessfull"] = true;
+                TempData["OperationMessage"] = _localizer["BranchUpdatedSuccessfully"].ToString() + ".";
                 return RedirectToAction("Index");
             }
             catch (AggregateException exceptions)
             {
                 foreach (var exception in exceptions.InnerExceptions)
                 {
-                    ModelState.AddModelError(exception.InnerException?.Source.ToString(), exception.Message);
+                    ModelState.AddModelError(exception?.InnerException?.Source?.ToString() ?? string.Empty, exception?.Message ?? string.Empty);
                 }
                 return View(branchDtoForUpdate);
             }
@@ -88,7 +90,7 @@ namespace LudusAppoint.Areas.Admin.Controllers
         {
             try
             {
-                _serviceManager.BranchService.DeleteAgeGroup(id);
+                _serviceManager.BranchService.DeleteBranch(id);
                 TempData["OperationSuccessfull"] = true;
                 TempData["OperationMessage"] = _localizer["BranchDeletedSuccessfully"].ToString() + ".";
                 return RedirectToAction("Index");

@@ -45,7 +45,7 @@
   <data name="TheDurationMustBeBetween1MinuteAnd24Hours" xml:space="preserve">
     <value>The duration must be between1 minute and24 hours</value>
   </data>
-  <data name="TheDurationMustBeBetween1And10000" xml:space="preserve">
-    <value>The duration must be between1 and10000</value>
+  <data name="ThePriceMustBeBetween1And10000" xml:space="preserve">
+    <value>The price must be between1 and10000</value>
   </data>
 </root>

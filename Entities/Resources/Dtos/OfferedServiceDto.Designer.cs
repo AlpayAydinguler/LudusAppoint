@@ -70,20 +70,20 @@ namespace Entities.Resources.Dtos {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The duration must be between1 and10000.
-        /// </summary>
-        public static string TheDurationMustBeBetween1And10000 {
-            get {
-                return ResourceManager.GetString("TheDurationMustBeBetween1And10000", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to The duration must be between1 minute and24 hours.
         /// </summary>
         public static string TheDurationMustBeBetween1MinuteAnd24Hours {
             get {
                 return ResourceManager.GetString("TheDurationMustBeBetween1MinuteAnd24Hours", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The duration must be between1 and10000.
+        /// </summary>
+        public static string ThePriceMustBeBetween1And10000 {
+            get {
+                return ResourceManager.GetString("ThePriceMustBeBetween1And10000", resourceCulture);
             }
         }
     }

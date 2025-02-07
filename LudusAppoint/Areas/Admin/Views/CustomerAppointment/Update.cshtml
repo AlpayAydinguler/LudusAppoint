@@ -1,1 +1,737 @@
-﻿@model CustomerAppointment
+﻿@model CustomerAppointmentDtoForUpdate
+
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-12 col-xl-10">
+            <div class="card card-dark bg-dark border-black">
+                <div class="card-header">
+                    <h2 class="h4 text-light mb-0">@Localizer["UpdateCustomerAppointment"]</h2>
+                </div>
+                <div class="card-body text-light">
+					<form method="post" class="single-step-form" asp-action="Update">
+                        <input type="hidden" asp-for="CustomerAppointmentId" />
+
+                        <!-- Preliminary Information -->
+                        <div class="row g-3 mb-4">
+                            <div class="col-12">
+                                <h4 class="text-primary mb-3">@Localizer["AppointmentDetails"]</h4>
+                            </div>
+
+                            <!-- Branch Selection -->
+                            <div class="col-12 col-md-6">
+                                <div class="form-floating">
+                                    @{
+                                        var branches = ViewBag.AllBranches as List<BranchDto>;
+                                        var isSingleBranch = branches?.Count == 1;
+                                    }
+                                    <select asp-for="BranchId" class="form-select" id="branchSelect"
+                                            disabled="@(isSingleBranch ? "disabled" : null)">
+                                        @foreach (var branch in branches)
+                                        {
+                                            <option value="@branch.BranchId" selected="@(branch.BranchId == Model.BranchId)">
+                                                @branch.BranchName
+                                            </option>
+                                        }
+                                    </select>
+                                    <label asp-for="BranchId">@Localizer["Branch"]</label>
+                                    <span asp-validation-for="BranchId" class="text-danger small"></span>
+                                </div>
+                            </div>
+
+                            <!-- Gender Selection -->
+                            <div class="col-12 col-md-6">
+                                <div class="form-floating">
+                                    <select asp-for="Gender" class="form-select" id="genderSelect">
+                                        @foreach (var gender in Enum.GetValues(typeof(Gender)))
+                                        {
+                                            <option value="@((int)gender)" selected="@((int)Model.Gender == (int)gender)">
+                                                @Localizer[gender.ToString()]
+                                            </option>
+                                        }
+                                    </select>
+                                    <label asp-for="Gender">@Localizer["Gender"]</label>
+                                    <span asp-validation-for="Gender" class="text-danger small"></span>
+                                </div>
+                            </div>
+
+                            <!-- Age Group Selection -->
+                            <div class="col-12 col-md-6">
+                                <div class="form-floating">
+                                    @{
+                                        var ageGroups = ViewBag.AllAgeGroups as List<AgeGroupDto>;
+                                    }
+                                    <select asp-for="AgeGroupId" class="form-select" id="ageGroupSelect">
+                                        @foreach (var ageGroup in ageGroups)
+                                        {
+                                            <option value="@ageGroup.AgeGroupId" selected="@(ageGroup.AgeGroupId == Model.AgeGroupId)">
+                                                @ageGroup.Name
+                                            </option>
+                                        }
+                                    </select>
+                                    <label asp-for="AgeGroupId">@Localizer["AgeGroup"]</label>
+                                    <span asp-validation-for="AgeGroupId" class="text-danger small"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Services Selection -->
+                        <div class="row g-3 mb-4">
+                            <div class="col-12">
+                                <h4 class="text-primary mb-3">@Localizer["SelectedServices"]</h4>
+                                <div id="offeredServicesContainer">
+                                    <div class="table-responsive">
+                                        <table id="offeredServicesTable" class="table table-dark">
+                                            <!-- Dynamically populated -->
+                                        </table>
+                                    </div>
+                                    <div class="row mt-3">
+                                        <div class="col-md-6">
+                                            <div class="form-floating">
+                                                <input asp-for="ApproximateDuration" class="form-control"
+                                                       type="time" readonly />
+                                                <label asp-for="ApproximateDuration">@Localizer["TotalDuration"]</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-floating">
+                                                <input asp-for="Price" class="form-control"
+                                                       type="number" step="0.01" readonly />
+                                                <label asp-for="Price">@Localizer["TotalPrice"]</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="servicesLoading" class="text-center d-none">
+                                    <div class="spinner-border text-primary" role="status">
+                                        <span class="visually-hidden">@Localizer["Loading"]...</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Customer Information -->
+                        <div class="row g-3 mb-4">
+                            <div class="col-12">
+                                <h4 class="text-primary mb-3">@Localizer["CustomerInformation"]</h4>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input asp-for="Name" class="form-control" />
+                                    <label asp-for="Name">@Localizer["Name"]</label>
+                                    <span asp-validation-for="Name" class="text-danger small"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input asp-for="Surname" class="form-control" />
+                                    <label asp-for="Surname">@Localizer["Surname"]</label>
+                                    <span asp-validation-for="Surname" class="text-danger small"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input asp-for="PhoneNumber" class="form-control" type="tel" />
+                                    <label asp-for="PhoneNumber">@Localizer["PhoneNumber"]</label>
+                                    <span asp-validation-for="PhoneNumber" class="text-danger small"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input asp-for="EMail" class="form-control" type="email" />
+                                    <label asp-for="EMail">@Localizer["Email"]</label>
+                                    <span asp-validation-for="EMail" class="text-danger small"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Employee & DateTime Selection -->
+                        <div class="row g-3 mb-4">
+                            <div class="col-12">
+                                <h4 class="text-primary mb-3">@Localizer["AppointmentTiming"]</h4>
+                            </div>
+
+                            <!-- Employee Selection -->
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <select asp-for="EmployeeId" class="form-select" id="employeeSelect">
+                                        <option value="">@Localizer["LoadingEmployees"]...</option>
+                                    </select>
+                                    <label asp-for="EmployeeId">@Localizer["Employee"]</label>
+                                    <span asp-validation-for="EmployeeId" class="text-danger small"></span>
+                                </div>
+                            </div>
+
+                            <!-- DateTime Selection -->
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input type="hidden" asp-for="StartDateTime" id="StartDateTime" />
+                                    <input type="date" class="form-control" id="datePicker" disabled />
+                                    <label>@Localizer["SelectDate"]</label>
+                                </div>
+                                <div id="timeSlots" class="row g-2 mt-2"></div>
+                            </div>
+                        </div>
+
+                        <!-- Status & Submission -->
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <div class="form-floating">
+                                    <select asp-for="Status" class="form-select">
+                                        @foreach (var status in Enum.GetValues(typeof(CustomerAppointmentStatus)))
+                                        {
+                                            <option value="@status" selected="@status.Equals(Model.Status)">
+                                                @Localizer[status.ToString()]
+                                            </option>
+                                        }
+                                    </select>
+                                    <label asp-for="Status">@Localizer["Status"]</label>
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <button type="submit" class="btn btn-primary w-100">
+                                    <i class="bi bi-floppy me-2"></i> @Localizer["UpdateAppointment"]
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="text-danger small mt-3" asp-validation-summary="All"></div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Reuse the same JavaScript logic from Create.cshtml
+        // Initialize with existing values
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set initial values
+            const initialServices = @Json.Serialize(Model.OfferedServicesIds);
+            initialServices.forEach(id => selectedServices.add(id));
+
+            // Trigger initial loads
+            loadServices().then(() => {
+                loadEmployees().then(() => {
+                    initializeDateTimePicker().then(() => {
+                        // Set initial date/time
+                        const initialDate = new Date("@Model.StartDateTime.ToString("o")");
+                        datePicker.value = initialDate.toISOString().split('T')[0];
+                        generateTimeSlots();
+                    });
+                });
+            });
+
+            // Update form validation
+            form.addEventListener('submit', function(e) {
+                if (!selectedDateTime) {
+                    e.preventDefault();
+                    alert('Please select a valid time slot');
+                }
+            });
+        });
+
+        // Include all JavaScript from Create.cshtml here
+		
+			// Step Management
+			const steps = document.querySelectorAll('.step');
+			let currentStep = 1;
+
+			// Form Elements
+			const branchSelect = document.getElementById('branchSelect');
+			const genderSelect = document.getElementById('genderSelect');
+			const ageGroupSelect = document.getElementById('ageGroupSelect');
+			const employeeSelect = document.getElementById('employeeSelect');
+			const datePicker = document.getElementById('datePicker');
+			const timeSlotsContainer = document.getElementById('timeSlots');
+			const form = document.querySelector('.single-step-form');
+			const nameInput = document.getElementById('Name');
+			const surnameInput = document.getElementById('Surname');
+			const phoneInput = document.getElementById('PhoneNumber');
+
+			// State Management
+			let selectedServices = new Set();
+			let selectedDateTime = null;
+
+			// Initialize Steps
+			function showStep(stepNumber) {
+				steps.forEach(step => {
+					step.classList.remove('active');
+					if (parseInt(step.dataset.step) === stepNumber) {
+						step.classList.add('active');
+					}
+				});
+			}
+
+			// Step Navigation
+			function handleStepNavigation(targetStep) {
+				if (targetStep < 1 || targetStep > steps.length) return;
+
+				// Validate current step before proceeding
+				if (targetStep > currentStep && !validateStep(currentStep)) return;
+
+				currentStep = targetStep;
+				showStep(currentStep);
+
+				// Load dynamic content when entering steps
+				switch(currentStep) {
+					case 2: loadServices(); break;
+					case 4: loadEmployees(); break;
+					case 5: initializeDateTimePicker(); break;
+					case 6: updateSummary(); break;
+				}
+			}
+
+			// Validation
+			function validateStep(stepNumber) {
+				switch(stepNumber) {
+					case 1:
+						return branchSelect.value && genderSelect.value && ageGroupSelect.value;
+					case 2:
+						return selectedServices.size > 0;
+					case 3:
+						return document.getElementById('Name').value.trim() &&
+							   document.getElementById('Surname').value.trim() &&
+							   document.getElementById('PhoneNumber').value.trim();
+					case 4:
+						return employeeSelect.value;
+					case 5:
+						return selectedDateTime;
+					default:
+						return true;
+				}
+			}
+
+			let servicesLoaded = false;
+
+			// Service Loading
+			async function loadServices() {
+			const container = document.getElementById('offeredServicesContainer');
+			const loader = document.getElementById('servicesLoading');
+			const table = document.getElementById('offeredServicesTable');
+			
+
+			// If already loaded, do nothing
+			if (servicesLoaded) {
+				return;
+			}
+
+			try {
+				container.classList.add('d-none');
+				loader.classList.remove('d-none');
+
+				const response = await fetch(`/Admin/CustomerAppointment/GetOfferedServices?genderValue=${genderSelect.value}&ageGroupId=${ageGroupSelect.value}`);
+				const data = await response.json();
+
+				if (data.result === false) {
+					// Show error message
+					table.innerHTML = `
+						<tbody>
+							<tr>
+								<td colspan="4" class="text-center text-danger py-4">
+									${data.message}
+								</td>
+							</tr>
+						</tbody>
+					`;
+				} else {
+					// Handle successful service list
+					populateServicesTable(data);
+				}
+
+				container.classList.remove('d-none');
+				servicesLoaded = true;
+			} catch (error) {
+				console.error('Error loading services:', error);
+				table.innerHTML = `
+					<tbody>
+						<tr>
+							<td colspan="4" class="text-center text-danger py-4">
+		@Localizer["ErrorLoadingServices"]
+							</td>
+						</tr>
+					</tbody>
+				`;
+
+			} finally {
+				loader.classList.add('d-none');
+			}
+		}
+
+			function populateServicesTable(services) {
+			const table = document.getElementById('offeredServicesTable');
+
+			table.innerHTML = `
+				<thead>
+					<tr>
+						<th>@Localizer["Select"]</th>
+						<th>@Localizer["Name"]</th>
+						<th>@Localizer["Duration"]</th>
+						<th>@Localizer["Price"]</th>
+					</tr>
+				</thead>
+				<tbody>
+					${services.map(service => `
+						<tr>
+							<td>
+								<input type="checkbox"
+									   name="OfferedServiceIds"
+									   id="${"offeredService"-service.offeredServiceId}"
+									   value="${service.offeredServiceId}"
+									   ${selectedServices.has(service.offeredServiceId.toString()) ? 'checked' : ''}
+									   class="service-checkbox form-check-input">
+							</td>
+							<td>${service.offeredServiceName}</td>
+							<td>${service.approximateDuration}</td>
+							<td>${service.price.toFixed(2)}</td>
+						</tr>
+					`).join('')}
+				</tbody>
+			`;
+
+			if (services.length === 0) {
+				table.innerHTML += `
+					<tbody>
+						<tr>
+							<td colspan="4" class="text-center text-warning py-4">
+		@Localizer["NoServicesAvailable"]
+							</td>
+						</tr>
+					</tbody>
+				`;
+			}
+
+			// Add checkbox handlers
+			table.querySelectorAll('.service-checkbox').forEach(checkbox => {
+				checkbox.addEventListener('change', function() {
+					const serviceId = parseInt(this.value);
+					if (this.checked) {
+						selectedServices.add(serviceId);
+					} else {
+						selectedServices.delete(serviceId);
+					}
+					loadEmployees();
+					updateDurationAndPrice();
+				});
+			});
+
+			updateDurationAndPrice();
+		}
+
+			function updateDurationAndPrice() {
+				let totalMinutes = 0;
+				let totalPrice = 0;
+
+				document.querySelectorAll('.service-checkbox:checked').forEach(checkbox => {
+					const row = checkbox.closest('tr');
+					const [hours, minutes] = row.cells[2].textContent.split(':').map(Number);
+					totalMinutes += (hours * 60) + minutes;
+					totalPrice += Number(row.cells[3].textContent);
+				});
+
+				const durationHours = Math.floor(totalMinutes / 60).toString().padStart(2, '0');
+				const durationMinutes = (totalMinutes % 60).toString().padStart(2, '0');
+				document.getElementById('ApproximateDuration').value = `${durationHours}:${durationMinutes}`;
+				document.getElementById('Price').value = totalPrice.toFixed(2);
+			}
+
+			// Employee Loading
+			async function loadEmployees() {
+
+				try {
+					employeeSelect.disabled = true;
+
+					const response = await fetch(`/Admin/CustomerAppointment/GetEmployees?branchId=${branchSelect.value}&offeredServiceIds=${Array.from(selectedServices).join(',')}`);
+					const employees = await response.json();
+
+					employeeSelect.innerHTML = employees.map(e =>
+						`<option selected hidden value="">@Localizer["SelectEmployee"]</option>
+						 <option value="${e.identityUserId}">${e.employeeName} ${e.employeeSurname}</option>`
+					).join('');
+					employeeSelect.disabled = false;
+				} catch (error) {
+					console.error('Error loading employees:', error);
+					employeeSelect.innerHTML = '<option value="">@Localizer["ErrorLoadingEmployees"]</option>';
+				} finally {
+				}
+			}
+
+			let dateTimePickerLoaded = false;
+
+			// DateTime Handling
+			async function initializeDateTimePicker() {
+				const employeeId = employeeSelect.value;
+				const branchId = branchSelect.value;
+
+				// If already loaded, do nothing
+				if (dateTimePickerLoaded) {
+					return;
+				}
+
+				if (!employeeId || !branchId) return;
+
+				try {
+					// Fetch reservation constraints
+					const response = await fetch(
+						`/Admin/CustomerAppointment/GetReservedDaysTimes?employeeId=${employeeId}&branchId=${branchId}`
+					);
+					const data = await response.json();
+
+					// Configure date picker constraints
+					const today = new Date();
+					const maxDate = new Date();
+					maxDate.setDate(today.getDate() + data.reservationInAdvanceDayLimit);
+
+					datePicker.min = today.toISOString().split('T')[0];
+					datePicker.max = maxDate.toISOString().split('T')[0];
+					datePicker.disabled = false;
+
+					// Store important data for time slot generation
+					window.reservationData = {
+						minDuration: data.minimumServiceDuration,
+						leaves: data.employeeLeaves,
+						reservations: data.reservedDaysTimes
+					};
+
+					datePicker.addEventListener('change', generateTimeSlots);
+
+					datePicker.value = '';
+					timeSlotsContainer.innerHTML = '';
+
+					dateTimePickerLoaded = true;
+					}
+					catch (error) {
+					console.error('Error loading schedule data:', error);
+					datePicker.disabled = true;
+					}
+				}
+
+		async function generateTimeSlots() {
+			const selectedDate = new Date(datePicker.value);
+			if (!selectedDate || !window.reservationData) return;
+
+			const { minDuration, leaves, reservations } = window.reservationData;
+			const timeSlotsContainer = document.getElementById('timeSlots');
+			timeSlotsContainer.innerHTML = '<div class="spinner-border"></div>';
+
+			try {
+				// Convert API dates to Date objects
+				const leavePeriods = leaves.map(leave => ({
+					start: new Date(leave.leaveStartDateTime),
+					end: new Date(leave.leaveEndDateTime)
+				}));
+
+				const reservedPeriods = reservations.map(res => ({
+					start: new Date(res.startDateTime),
+					end: new Date(res.endDateTime)
+				}));
+
+				// Clear existing content
+				timeSlotsContainer.innerHTML = '';
+				const fragment = document.createDocumentFragment();
+
+				// Generate time slots
+				const startHour = 0; // Opening hour
+				const endHour = 24;  // Closing hour
+
+				let currentHour = null;
+				let hourContainer = null;
+				let slotsRow = null;
+
+				for (let hour = startHour; hour < endHour; hour++) {
+					for (let minute = 0; minute < 60; minute += minDuration) {
+						// Create dates in LOCAL timezone
+						const slotStart = new Date(
+							selectedDate.getFullYear(),
+							selectedDate.getMonth(),
+							selectedDate.getDate(),
+							hour,
+							minute,
+							0
+						);
+
+						const slotEnd = new Date(
+							slotStart.getFullYear(),
+							slotStart.getMonth(),
+							slotStart.getDate(),
+							slotStart.getHours(),
+							slotStart.getMinutes() + minDuration,
+							0
+						);
+
+						// Check against leaves and reservations
+						const isAvailable = !isTimeSlotOccupied(slotStart, slotEnd, leavePeriods, reservedPeriods);
+
+						if (isAvailable) {
+							// Get local time components
+					const localHour = slotStart.getHours();
+					const localMinutes = slotStart.getMinutes().toString().padStart(2, '0');
+					const displayTime = `${localHour.toString().padStart(2, '0')}:${localMinutes}`;
+
+					// Create ISO strings in LOCAL time (without timezone offset)
+					const localISODate = `${slotStart.getFullYear()}-${(slotStart.getMonth() + 1).toString().padStart(2, '0')}-${slotStart.getDate().toString().padStart(2, '0')}T${displayTime}:00`;
+
+					// Create hour groups
+					if (localHour !== currentHour) {
+						currentHour = localHour;
+
+								hourContainer = document.createElement('div');
+								hourContainer.className = 'col-12';
+
+								// Create time slots row
+								slotsRow = document.createElement('div');
+								slotsRow.className = 'row g-1';
+
+								hourContainer.appendChild(slotsRow);
+								fragment.appendChild(hourContainer);
+							}
+
+							// Create time slot button
+							const slotCol = document.createElement('div');
+							slotCol.className = 'col-4';
+
+							const slotButton = document.createElement('button');
+							slotButton.type = 'button';
+							slotButton.className = 'btn btn-outline-light w-100 time-slot';
+							slotButton.dataset.start = localISODate;
+							slotButton.textContent = displayTime;
+							/*
+							slotButton.dataset.start = slotStart.toISOString().slice(0, 16);
+							slotButton.dataset.end = slotEnd.toISOString().slice(0, 16);
+							slotButton.textContent = slotStart.toLocaleTimeString([], {
+								hour: '2-digit',
+								minute: '2-digit'
+							});
+							*/
+							slotCol.appendChild(slotButton);
+							slotsRow.appendChild(slotCol);
+						}
+					}
+				}
+
+				timeSlotsContainer.appendChild(fragment);
+
+				if (timeSlotsContainer.children.length === 0) {
+					timeSlotsContainer.innerHTML = '<div class="text-warning">@Localizer["NoAvailableTimeSlots"]</div>';
+				}
+
+				// Add slot selection handler
+				document.querySelectorAll('.time-slot').forEach(button => {
+					button.addEventListener('click', function() {
+						document.querySelectorAll('.time-slot').forEach(b => b.classList.remove('active'));
+						this.classList.add('active');
+						document.getElementById('StartDateTime').value = this.dataset.start;
+						selectedDateTime = this.dataset.start;
+					});
+				});
+
+			} catch (error) {
+				console.error('Error generating time slots:', error);
+				timeSlotsContainer.innerHTML = '<div class="text-danger">@Localizer["ErrorLoadingTimeSlots"]</div>';
+			}
+		}
+
+		// Helper function (ensure this matches)
+		function isTimeSlotOccupied(start, end, leaves, reservations) {
+			return [...leaves, ...reservations].some(period => {
+				return (
+					(start >= period.start && start < period.end) || // Slot starts during existing
+					(end > period.start && end <= period.end) ||     // Slot ends during existing
+					(start <= period.start && end >= period.end)     // Slot completely overlaps
+				);
+			});
+		}
+
+			// Helper function to check slot availability
+			function isTimeSlotOccupied(start, end, leaves, reservations) {
+				const checkAgainst = [...leaves, ...reservations];
+
+				return checkAgainst.some(period => {
+					return (start >= period.start && start < period.end) ||
+						   (end > period.start && end <= period.end) ||
+						   (start <= period.start && end >= period.end);
+				});
+			}
+
+			// Summary Update
+			function updateSummary() {
+				const summary = document.querySelector('.summary-card');
+				summary.innerHTML = `
+					<dl class="row">
+						<dt class="col-sm-3">@Localizer["Branch"]</dt>
+						<dd class="col-sm-9">${branchSelect.options[branchSelect.selectedIndex].text}</dd>
+
+						<dt class="col-sm-3">@Localizer["Gender"]</dt>
+						<dd class="col-sm-9">${genderSelect.options[genderSelect.selectedIndex].text}</dd>
+
+						<dt class="col-sm-3">@Localizer["AgeGroup"]</dt>
+						<dd class="col-sm-9">${ageGroupSelect.options[ageGroupSelect.selectedIndex].text}</dd>
+
+						<!-- Customer Information -->
+						<dt class="col-sm-3">@Localizer["CustomerInformation"]</dt>
+						<dd class="col-sm-9">
+							<ul class="list-unstyled">
+								<li>@Localizer["Name"]: ${document.getElementById('Name').value}</li>
+								<li>@Localizer["Surname"]: ${document.getElementById('Surname').value}</li>
+								<li>@Localizer["PhoneNumber"]: ${document.getElementById('PhoneNumber').value}</li>
+								<li>@Localizer["Email"]: ${document.getElementById('EMail').value}</li>
+							</ul>
+						</dd>
+
+						<dt class="col-sm-3">@Localizer["Services"]</dt>
+						<dd class="col-sm-9">
+							<ul>
+								${Array.from(document.querySelectorAll('.service-checkbox:checked')).map(cb =>
+									`<li>${cb.closest('tr').cells[1].textContent}</li>`
+								).join('')}
+							</ul>
+						</dd>
+
+						<!-- Employee Information -->
+						<dt class="col-sm-3">@Localizer["Employee"]</dt>
+						<dd class="col-sm-9">${employeeSelect.options[employeeSelect.selectedIndex].text}</dd>
+
+						<dt class="col-sm-3">@Localizer["DateTime"]</dt>
+							<dd class="col-sm-9">${new Date(selectedDateTime).toISOString().slice(0, 10)}
+												 ${new Date(selectedDateTime).toLocaleDateString("@System.Threading.Thread.CurrentThread.CurrentUICulture.Name", { weekday: 'long' })}
+												 ${new Date(selectedDateTime).toLocaleTimeString("@System.Threading.Thread.CurrentThread.CurrentUICulture.Name", {
+													 hour: '2-digit',
+													 minute: '2-digit',
+													 hour12: false
+												 }).replace('24:', '00:')}</dd>
+					</dl>
+				`;
+			}
+
+			
+
+			// Input Change Listeners
+			[branchSelect, genderSelect, ageGroupSelect].forEach(select => {
+				select.addEventListener('change', () => {
+					servicesLoaded = false;
+					selectedServices.clear();
+					loadServices();
+				});
+			});
+
+
+			employeeSelect.addEventListener('change', () => {
+				initializeDateTimePicker();
+			});
+
+			// Form Submission
+			form.addEventListener('submit', function(e) {
+				if (!validateStep(5)) {
+					e.preventDefault();
+					alert('Please complete all steps before submitting');
+				}
+			});
+
+			// Initialize
+			showStep(1);
+		
+
+    </script>
+}

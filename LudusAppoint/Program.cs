@@ -38,8 +38,8 @@ builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
 builder.Services.AddScoped<IOfferedServiceRepository, OfferedServiceRepository>();
 builder.Services.AddScoped<ICustomerAppointmentRepository, CustomerAppointmentRepository>();
 builder.Services.AddScoped<IBranchRepository, BranchRepository>();
-//builder.Services.AddScoped<IShopSettingsRepository, ShopSettingsRepository>();
 builder.Services.AddScoped<IEmployeeLeaveRepository, EmployeeLeaveRepository>();
+builder.Services.AddScoped<IApplicationSettingRepository, ApplicationSettingRepository>();
 
 builder.Services.AddScoped<IServiceManager, ServiceManager>();
 builder.Services.AddScoped<IAgeGroupService, AgeGroupManager>();
@@ -47,8 +47,10 @@ builder.Services.AddScoped<IEmployeeService, EmployeeManager>();
 builder.Services.AddScoped<IOfferedServiceService, OfferedServiceManager>();
 builder.Services.AddScoped<ICustomerAppointmentService, CustomerAppointmentManager>();
 builder.Services.AddScoped<IBranchService, BranchManager>();
-//builder.Services.AddScoped<IShopSettingsService, ShopSettingsManager>();
 builder.Services.AddScoped<IEmployeeLeaveService, EmployeeLeaveManager>();
+builder.Services.AddScoped<IApplicationSettingService, ApplicationSettingManager>();
+
+builder.Services.AddMemoryCache();
 
 builder.Services.AddAutoMapper(typeof(Program));
 

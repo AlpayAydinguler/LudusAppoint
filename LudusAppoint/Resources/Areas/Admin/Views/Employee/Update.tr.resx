@@ -93,4 +93,7 @@
   <data name="SaveChanges" xml:space="preserve">
     <value>Değişiklikleri Kaydet</value>
   </data>
+  <data name="IsActive" xml:space="preserve">
+    <value>Etkin mi</value>
+  </data>
 </root>

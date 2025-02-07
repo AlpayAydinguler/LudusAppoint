@@ -10,5 +10,9 @@ namespace Repositories.Contracts
         IQueryable<T> GetAllByCondition(Expression<Func<T, bool>> expression, bool trackChanges);
         void Update(T entity);
         void Delete(T entity);
+        Task<T?> FindByConditionAsync(Expression<Func<T, bool>> expression, bool trackChanges);
+        Task<IEnumerable<T>> GetAllAsync(bool trackChanges);
+        Task<IEnumerable<T>> GetAllByConditionAsync(Expression<Func<T, bool>> expression, bool trackChanges);
+        Task SaveAsync();
     }
 }

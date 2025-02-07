@@ -63,4 +63,7 @@
   <data name="PleaseTryWithDiffrentBranchOrOfferedServices" xml:space="preserve">
     <value>Lütfen farklı bir şubeyle veya sunulan hizmetlerle deneyin</value>
   </data>
+  <data name="PleaseTryWithDifferentBranchOrOfferedServices" xml:space="preserve">
+    <value>Lütfen farklı bir şubeyle veya sunulan hizmetlerle deneyin</value>
+  </data>
 </root>

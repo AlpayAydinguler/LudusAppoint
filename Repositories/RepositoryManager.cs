@@ -10,7 +10,7 @@ namespace Repositories
         private readonly IEmployeeRepository _employeeRepository;
         private readonly ICustomerAppointmentRepository _customerAppointmentRepository;
         private readonly IBranchRepository _branchRepository;
-        //private readonly IShopSettingsRepository _shopSettingsRepository;
+        private readonly IApplicationSettingRepository _applicationSettingRepository;
         private readonly IEmployeeLeaveRepository _employeeLeaveRepository;
 
         public RepositoryManager(IAgeGroupRepository ageGroupRepository,
@@ -19,8 +19,8 @@ namespace Repositories
                                  IEmployeeRepository employeeRepository,
                                  ICustomerAppointmentRepository customerAppointmentRepository,
                                  IBranchRepository branchRepository,
-                                 //IShopSettingsRepository shopSettingsRepository,
-                                 IEmployeeLeaveRepository employeeLeaveRepository)
+                                 IEmployeeLeaveRepository employeeLeaveRepository,
+                                 IApplicationSettingRepository applicationSettingRepository)
         {
             _ageGroupRepository = ageGroupRepository;
             _repositoryContext = repositoryContext;
@@ -28,8 +28,8 @@ namespace Repositories
             _employeeRepository = employeeRepository;
             _customerAppointmentRepository = customerAppointmentRepository;
             _branchRepository = branchRepository;
-            //_shopSettingsRepository = shopSettingsRepository;
             _employeeLeaveRepository = employeeLeaveRepository;
+            _applicationSettingRepository = applicationSettingRepository;
         }
 
         public IAgeGroupRepository AgeGroupRepository => _ageGroupRepository;
@@ -38,8 +38,13 @@ namespace Repositories
         public IEmployeeRepository EmployeeRepository => _employeeRepository;
         public ICustomerAppointmentRepository CustomerAppointmentRepository => _customerAppointmentRepository;
         public IBranchRepository BranchRepository => _branchRepository;
-        //public IShopSettingsRepository ShopSettingsRepository => _shopSettingsRepository;
+        public IApplicationSettingRepository ApplicationSettingRepository => _applicationSettingRepository;
         public IEmployeeLeaveRepository EmployeeLeaveRepository => _employeeLeaveRepository;
+
+        public Task BeginTransactionAsync()
+        {
+            return _repositoryContext.Database.BeginTransactionAsync();
+        }
 
         public void Save()
         {

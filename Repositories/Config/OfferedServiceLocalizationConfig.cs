@@ -8,6 +8,7 @@ namespace Repositories.Config
     {
         public void Configure(EntityTypeBuilder<OfferedServiceLocalization> builder)
         {
+            
             builder.HasData(// HairCut
                             new OfferedServiceLocalization { OfferedServiceLocalizationId = 1, OfferedServiceId = 1, Language = "en-GB", OfferedServiceLocalizationName = "Hair Cut" },
                             new OfferedServiceLocalization { OfferedServiceLocalizationId = 2, OfferedServiceId = 1, Language = "tr-TR", OfferedServiceLocalizationName = "Saç Kesimi" },
@@ -41,6 +42,7 @@ namespace Repositories.Config
                             // Makeup(Bride)
                             new OfferedServiceLocalization { OfferedServiceLocalizationId = 21, OfferedServiceId = 11, Language = "en-GB", OfferedServiceLocalizationName = "Makeup (Bride)" },
                             new OfferedServiceLocalization { OfferedServiceLocalizationId = 22, OfferedServiceId = 11, Language = "tr-TR", OfferedServiceLocalizationName = "Makyaj (Gelin)" });
+            
         }
     }
 }

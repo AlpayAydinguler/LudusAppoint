@@ -1,49 +1,108 @@
-﻿@model IEnumerable<EmployeeLeave>
+﻿@model IEnumerable<EmployeeLeaveDto>
 
 <div class="card card-dark bg-dark border-black" data-bs-theme="dark">
-	<div class="display-6 text-light">@Localizer["EmployeeLeaves"]</div>
-	<div class="d-flex justify-content-end">
-		<a asp-action="Create" class="btn btn-success">
-			<i class="bi bi-plus-lg"></i>
-			@Localizer["Create"]
-		</a>
+	<div class="card-header">
+		<h5 class="card-title mb-0">@Localizer["EmployeeLeaves"]</h5>
+		<div class="d-flex justify-content-end">
+			<a asp-action="Create" class="btn btn-success btn-sm">
+				<i class="bi bi-plus-lg"></i>
+				<span class="d-none d-md-inline">@Localizer["Create"]</span>
+			</a>
+		</div>
 	</div>
-	<div class="card-body text-light table-responsive">
-		<table id="employeeLeavesTable" class="table table-dark table-hover table-striped align-middle">
-			<thead>
-				<tr>
-					<th class="text-center">@Localizer["Id"]</th>
-					<th>@Localizer["Employee"]</th>
-					<th>@Localizer["StartDateTime"]</th>
-					<th>@Localizer["EndDateTime"]</th>
-					<th>@Localizer["Reason"]</th>
-					<th>@Localizer["Operations"]</th>
-				</tr>
-			</thead>
-			<tbody>
-				@foreach (var employeeLeave in Model)
-				{
+	<div class="card-body text-light p-0 p-md-3">
+		<div class="table-responsive rounded-3">
+			<table id="employeeLeavesTable" class="table table-dark table-hover table-striped align-middle mb-0">
+				<thead class="table-secondary">
 					<tr>
-						<td class="text-center">@employeeLeave.EmployeeLeaveId</td>
-						<td>@employeeLeave.Employee.EmployeeName</td>
-						<td>@employeeLeave.LeaveStartDateTime</td>
-						<td>@employeeLeave.LeaveEndDateTime</td>
-						<td>@employeeLeave.Reason</td>
-						<td>
-							<div class="d-flex justify-content-center">
-								<a asp-action="Update" asp-route-id="@employeeLeave.EmployeeLeaveId" class="btn btn-warning">
-									<i class="bi bi-pencil"></i>
-									@Localizer["Update"]
-								</a>
-								<form asp-action="Delete" asp-route-id="@employeeLeave.EmployeeLeaveId" class="btn btn-danger">
-									<i class="bi bi-trash"></i>
-									@Localizer["Delete"]
-								</form>
-							</div>
-						</td>
+						<th class="text-center d-none d-md-table-cell">@Localizer["Id"]</th>
+						<th>@Localizer["Employee"]</th>
+						<th class="min-width-150">@Localizer["StartDateTime"]</th>
+						<th class="min-width-150">@Localizer["EndDateTime"]</th>
+						<th class="d-none d-lg-table-cell">@Localizer["Reason"]</th>
+						<th class="text-center">@Localizer["Operations"]</th>
 					</tr>
-				}
-			</tbody>
-		</table>
+				</thead>
+				<tbody>
+					@foreach (var employeeLeave in Model)
+					{
+						<tr>
+							<td class="text-center d-none d-md-table-cell">@employeeLeave.EmployeeLeaveId</td>
+							<td>@employeeLeave.Employee.EmployeeFullName</td>
+							<td>@employeeLeave.LeaveStartDateTime.ToString("yyyy-MM-dd dddd HH:mm")</td>
+							<td>@employeeLeave.LeaveEndDateTime.ToString("yyyy-MM-dd dddd HH:mm")</td>
+							<td class="d-none d-lg-table-cell text-truncate" style="max-width: 200px" title="@employeeLeave.Reason">
+								@employeeLeave.Reason
+							</td>
+							<td>
+								<div class="d-flex justify-content-center gap-1">
+									<a asp-action="Update" asp-route-id="@employeeLeave.EmployeeLeaveId"
+									   class="btn btn-warning btn-sm py-1 px-2">
+										<i class="bi bi-pencil"></i>
+										<span class="d-none d-md-inline">@Localizer["Update"]</span>
+									</a>
+									<button type="button" class="btn btn-danger btn-sm py-1 px-2"
+											data-bs-toggle="modal" data-bs-target="#deleteModal-@employeeLeave.EmployeeLeaveId">
+										<i class="bi bi-trash3"></i>
+										<span class="d-none d-md-inline">@Localizer["Delete"]</span>
+									</button>
+									<!-- Modal (unchanged but add 'modal-sm' class for mobile) -->
+									<div class="modal fade" id="deleteModal-@employeeLeave.EmployeeLeaveId" tabindex="-1"
+										 aria-labelledby="deleteModalLabel-@employeeLeave.EmployeeLeaveId" aria-hidden="true">
+										<div class="modal-dialog modal-dialog-centered modal-sm">
+											<div class="modal-content">
+												<div class="modal-header">
+													<h5 class="modal-title" id="deleteModalLabel-@employeeLeave.EmployeeLeaveId">@Localizer["ConfirmDeletion"]</h5>
+													<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+												</div>
+												<div class="modal-body">
+													<p>@Localizer["AreYouSureYouWantToDeleteThis{0}Leave", employeeLeave.Employee.EmployeeFullName]?</p>
+												</div>
+												<div class="modal-footer">
+													<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">@Localizer["Cancel"]</button>
+													<a asp-action="Delete" asp-route-id="@employeeLeave.EmployeeLeaveId" class="btn btn-danger rounded mx-1">
+														<i class="bi bi-trash3"></i>
+														@Localizer["Delete"]
+													</a>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</td>
+						</tr>
+					}
+				</tbody>
+			</table>
+		</div>
 	</div>
 </div>
+<div class="toast-container position-fixed bottom-0 end-0 p-3" data-bs-theme="dark">
+	@await Html.PartialAsync("_Toasts")
+</div>
+@section Scripts {
+	<script>
+		$(document).ready(function () {
+			$('#employeeLeavesTable').DataTable({
+				columnDefs: [ { 
+					"orderable": false, 
+					"targets": [ 5 ]
+				}],
+				responsive: true,
+				paging: true,
+				searching: true,
+				ordering: true,
+				lengthChange: true,
+				language: {
+					search: "@Localizer["Search"] : ",
+					lengthMenu: "@Localizer["Show _MENU_ entries"]",
+					info: "@Localizer["Showing _START_ to _END_ of _TOTAL_ entries"]",
+					paginate: {
+						previous: "@Localizer["Previous"]",
+						next: "@Localizer["Next"]"
+					}
+				}
+			});
+		});
+	</script>
+	}

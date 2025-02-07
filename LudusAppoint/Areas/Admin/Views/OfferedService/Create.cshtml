@@ -5,7 +5,7 @@
         <div class="col-12 col-xl-10">
             <div class="card card-dark bg-dark border-black">
                 <div class="card-header">
-                    <h4 class="card-title mb-0">@Localizer["CreateOfferedService"]</h4>
+                    <h5 class="card-title mb-0">@Localizer["CreateOfferedService"]</h5>
                 </div>
                 <div class="card-body text-light">
                     <form method="post" asp-action="Create">
@@ -52,14 +52,10 @@
                                     @foreach (var culture in supportedCultures)
                                     {
                                         <div class="form-floating text-body-tertiary mb-3">
-                                            @{
-                                                var localization = Model.OfferedServiceLocalizations?
-                                                .FirstOrDefault(l => l.Language == culture);
-                                            }
                                             <input class="form-control" type="text"
                                                    name="Translations[@culture]"
                                                    id="Translation-@culture"
-                                                   value="@(localization?.OfferedServiceLocalizationName ?? string.Empty)"
+                                                   value="@(Model.Translations?.ContainsKey(culture) == true ? Model.Translations[culture] : "")"
                                                    placeholder=" " />
                                             <label for="Translation-@culture">@Localizer["NameForCulture"] (@culture)</label>
                                         </div>
@@ -73,18 +69,18 @@
                                             <h6 class="mb-3"><i class="bi bi-gender-ambiguous me-2"></i>@Localizer["Genders"]</h6>
                                             <div class="form-check">
                                                 <input class="form-check-input" type="checkbox"
-                                                       name="Genders" value="m"
+                                                       name="Genders" value="Male"
                                                        id="genderMale"
-                                                       checked="@Model.Genders.Contains(Gender.m)" />
+                                                       checked="@Model.Genders.Contains(Gender.Male)" />
                                                 <label class="form-check-label" for="genderMale">
                                                     <i class="bi bi-gender-male"></i> @Localizer["Male"]
                                                 </label>
                                             </div>
                                             <div class="form-check">
                                                 <input class="form-check-input" type="checkbox"
-                                                       name="Genders" value="f"
+                                                       name="Genders" value="Female"
                                                        id="genderFemale"
-                                                       checked="@Model.Genders.Contains(Gender.f)" />
+                                                       checked="@Model.Genders.Contains(Gender.Female)" />
                                                 <label class="form-check-label" for="genderFemale">
                                                     <i class="bi bi-gender-female"></i> @Localizer["Female"]
                                                 </label>
@@ -102,14 +98,13 @@
                                             }
                                             @foreach (var ageGroup in allAgeGroups)
                                             {
-                                                var isChecked = Model?.AgeGroups.Any(ag => ag.AgeGroupId == ageGroup.AgeGroupId) ?? false;
                                                 <div class="form-check">
                                                     <input class="form-check-input" type="checkbox"
                                                            name="AgeGroupIds"
                                                            value="@ageGroup.AgeGroupId"
                                                            id="ageGroup-@ageGroup.AgeGroupId"
-                                                           checked="@isChecked" />
-                                                    <label class="form-check-label" for="ageGroup-@ageGroup.AgeGroupId">
+                                                           checked="@Model.AgeGroupIds.Contains(ageGroup.AgeGroupId)" />
+                                                    <label class="form-check-label">
                                                         @ageGroup.Name
                                                     </label>
                                                 </div>

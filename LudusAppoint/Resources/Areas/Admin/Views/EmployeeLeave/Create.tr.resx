@@ -57,4 +57,7 @@
   <data name="CreateLeave" xml:space="preserve">
     <value>İzin oluştur</value>
   </data>
+  <data name="SelectEmployee" xml:space="preserve">
+    <value>Çalışan Seçin</value>
+  </data>
 </root>

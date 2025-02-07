@@ -44,5 +44,25 @@ namespace Repositories
         {
             _repositoryContext.Set<T>().Remove(entity);
         }
+
+        public async Task<T?> FindByConditionAsync(Expression<Func<T, bool>> expression, bool trackChanges)
+            => await (trackChanges
+                ? _repositoryContext.Set<T>().Where(expression)
+                : _repositoryContext.Set<T>().Where(expression).AsNoTracking())
+                .FirstOrDefaultAsync();
+
+        public async Task<IEnumerable<T>> GetAllAsync(bool trackChanges)
+            => await (trackChanges
+                ? _repositoryContext.Set<T>()
+                : _repositoryContext.Set<T>().AsNoTracking())
+                .ToListAsync();
+
+        public async Task<IEnumerable<T>> GetAllByConditionAsync(Expression<Func<T, bool>> expression, bool trackChanges)
+            => await (trackChanges
+                ? _repositoryContext.Set<T>().Where(expression)
+                : _repositoryContext.Set<T>().Where(expression).AsNoTracking())
+                .ToListAsync();
+
+        public async Task SaveAsync() => await _repositoryContext.SaveChangesAsync();
     }
 }

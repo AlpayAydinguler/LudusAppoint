@@ -57,4 +57,13 @@
   <data name="StartDateCannotBeLessThanNow" xml:space="preserve">
     <value>Başlangıç tarihi şu andan önce olamaz</value>
   </data>
+  <data name="DtoCannotBeNull" xml:space="preserve">
+    <value>boş olamaz.</value>
+  </data>
+  <data name="EmployeeHasOverlappingAppointments" xml:space="preserve">
+    <value>Çalışanın birbiriyle çakışan randevuları var</value>
+  </data>
+  <data name="EmployeeHasOverlappingLeaves" xml:space="preserve">
+    <value>Çalışanın çakışan izinleri var</value>
+  </data>
 </root>

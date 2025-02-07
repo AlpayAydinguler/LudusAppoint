@@ -14,10 +14,10 @@ namespace Entities.Models
         public DayOfWeek DayOff { get; set; }
         public TimeSpan StartOfWorkingHours { get; set; }
         public TimeSpan EndOfWorkingHours { get; set; }
+        public bool Status { get; set; } = false;
 
         //Foreign Keys
         public ICollection<OfferedService> OfferedServices { get; set; } = new List<OfferedService>();
-        [ValidateNever]
         public Branch Branch { get; set; }
 
         //Navigation Properties

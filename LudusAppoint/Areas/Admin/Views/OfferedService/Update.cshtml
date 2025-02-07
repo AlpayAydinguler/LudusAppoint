@@ -60,7 +60,7 @@
                                             <input class="form-control" type="text"
                                                    name="Translations[@culture]"
                                                    id="Translation-@culture"
-                                                   value="@(localization?.OfferedServiceLocalizationName ?? string.Empty)"
+                                                   value="@(Model.Translations?.ContainsKey(culture) == true ? Model.Translations[culture] : localization?.OfferedServiceLocalizationName)"
                                                    placeholder=" " />
                                             <label for="Translation-@culture">@Localizer["NameForCulture"] (@culture)</label>
                                         </div>
@@ -74,18 +74,18 @@
                                             <h6 class="mb-3"><i class="bi bi-gender-ambiguous me-2"></i>@Localizer["Genders"]</h6>
                                             <div class="form-check">
                                                 <input class="form-check-input" type="checkbox"
-                                                       name="Genders" value="m"
+                                                       name="Genders" value="Male"
                                                        id="genderMale"
-                                                       checked="@Model.Genders.Contains(Gender.m)" />
+                                                       checked="@Model.Genders.Contains(Gender.Male)" />
                                                 <label class="form-check-label" for="genderMale">
                                                     <i class="bi bi-gender-male"></i> @Localizer["Male"]
                                                 </label>
                                             </div>
                                             <div class="form-check">
                                                 <input class="form-check-input" type="checkbox"
-                                                       name="Genders" value="f"
+                                                       name="Genders" value="Female"
                                                        id="genderFemale"
-                                                       checked="@Model.Genders.Contains(Gender.f)" />
+                                                       checked="@Model.Genders.Contains(Gender.Female)" />
                                                 <label class="form-check-label" for="genderFemale">
                                                     <i class="bi bi-gender-female"></i> @Localizer["Female"]
                                                 </label>
@@ -107,6 +107,7 @@
                                                     <input class="form-check-input" type="checkbox"
                                                            name="AgeGroupIds"
                                                            value="@ageGroup.AgeGroupId"
+                                                           id="ageGroup-@ageGroup.AgeGroupId"
                                                            checked="@Model.AgeGroupIds.Contains(ageGroup.AgeGroupId)" />
                                                     <label class="form-check-label">
                                                         @ageGroup.Name
@@ -119,10 +120,9 @@
                                 </div>
                             </div>
                         </div>
-
+                        <div class="text-danger small" asp-validation-summary="All"></div>
                         <!-- Validation and Submit -->
                         <div class="mt-4">
-                            <div class="text-danger small" asp-validation-summary="All"></div>
                             <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                                 <button type="submit" class="btn btn-primary px-4 py-2">
                                     <i class="bi bi-floppy me-2"></i>

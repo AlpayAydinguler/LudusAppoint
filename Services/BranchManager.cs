@@ -54,7 +54,7 @@ namespace Services
             _repositoryManager.Save();
         }
 
-        public void DeleteAgeGroup(int id)
+        public void DeleteBranch(int id)
         {
             var branch = GetBranch(id, false);
             try
@@ -70,6 +70,13 @@ namespace Services
                 }
                 throw;
             }
+        }
+
+        public IEnumerable<BranchDto> GetAllActiveBranches(bool trackChanges)
+        {
+            var branches = _repositoryManager.BranchRepository.GetAllByCondition(x => x.Status, trackChanges);
+            var branchesDto = _mapper.Map<IEnumerable<BranchDto>>(branches);
+            return branchesDto;
         }
     }
 }

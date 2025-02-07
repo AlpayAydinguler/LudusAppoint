@@ -16,12 +16,14 @@ namespace LudusAppoint.Infrastructure.Mapper
             CreateMap<BranchDtoForUpdate, Branch>().ReverseMap();
             CreateMap<Branch, BranchDto>();
 
-            CreateMap<CustomerAppointmentForInsert, CustomerAppointment>();
-            CreateMap<CustomerAppointmentForUpdate, CustomerAppointment>().ReverseMap();
+            CreateMap<CustomerAppointmentDtoForInsert, CustomerAppointment>();
+            CreateMap<CustomerAppointmentDtoForUpdate, CustomerAppointment>().ReverseMap()
+                                                                             .ForMember(dest => dest.OfferedServicesIds, opt => opt.MapFrom(src => src.OfferedServices.Select(os => os.OfferedServiceId)));
             CreateMap<CustomerAppointment, CustomerAppointmentDto>();
 
             CreateMap<EmployeeDtoForInsert, Employee>();
-            CreateMap<EmployeeDtoForUpdate, Employee>().ReverseMap();
+            CreateMap<EmployeeDtoForUpdate, Employee>().ReverseMap()
+                                                       .ForMember(dest => dest.OfferedServiceIds, opt => opt.MapFrom(src => src.OfferedServices.Select(os => os.OfferedServiceId)));
             CreateMap<Employee, EmployeeDto>();
 
             CreateMap<EmployeeLeaveDtoForInsert, EmployeeLeave>();
@@ -36,6 +38,10 @@ namespace LudusAppoint.Infrastructure.Mapper
             CreateMap<OfferedServiceLocalizationDtoForInsert, OfferedServiceLocalization>();
             CreateMap<OfferedServiceLocalizationDtoForUpdate, OfferedServiceLocalization>().ReverseMap();
             CreateMap<OfferedServiceLocalization, OfferedServiceLocalizationDto>();
+
+            CreateMap<ApplicationSettingDtoForInsert, ApplicationSetting>();
+            CreateMap<ApplicationSettingDtoForUpdate, ApplicationSetting>().ReverseMap();
+            CreateMap<ApplicationSetting, ApplicationSettingDto>();
         }
     }
 }

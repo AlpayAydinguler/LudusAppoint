@@ -27,8 +27,8 @@ namespace LudusAppoint.Controllers
             ag.Add(ag2);
 
             var ge = new List<Gender>();
-            ge.Add(Gender.m);
-            ge.Add(Gender.f);
+            ge.Add(Gender.Male);
+            ge.Add(Gender.Female);
 
             List<OfferedService> dummy = new List<OfferedService>();
             dummy.Add(new OfferedService { OfferedServiceId = 1, OfferedServiceName = "HairCut", Genders = ge, AgeGroups = ag, ApproximateDuration = new TimeSpan(0, 40, 0) });

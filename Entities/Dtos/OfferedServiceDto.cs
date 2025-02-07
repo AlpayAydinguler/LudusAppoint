@@ -19,7 +19,7 @@ namespace Entities.Dtos
         public TimeSpan ApproximateDuration { get; init; }
         [Required(ErrorMessageResourceType = typeof(Resources.SharedResources), ErrorMessageResourceName = "MissingKeyOrValueAccessor")]
         [DataType(DataType.Currency)]
-        [Range(1.00, 10000.00, ErrorMessageResourceType = typeof(Resources.Dtos.OfferedServiceDto), ErrorMessageResourceName = "TheDurationMustBeBetween1And10000")]
+        [Range(1.00, 10000.00, ErrorMessageResourceType = typeof(Resources.Dtos.OfferedServiceDto), ErrorMessageResourceName = "ThePriceMustBeBetween1And10000")]
         [Precision(18, 2)]
         public decimal Price { get; init; }
         public bool Status { get; init; } = false;

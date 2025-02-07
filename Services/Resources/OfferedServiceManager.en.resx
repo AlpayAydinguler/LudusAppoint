@@ -57,4 +57,10 @@
   <data name="ApproximateDurationMustBeBiggerThan0Minutes" xml:space="preserve">
     <value>Approximate duration must be bigger than0 minutes</value>
   </data>
+  <data name="OfferedServiceCannotBeDeletedBecauseItIsUsedInAnotherEntity" xml:space="preserve">
+    <value>Offered service cannot be deleted because ıt ıs used ın another entity</value>
+  </data>
+  <data name="DtoCannotBeNull" xml:space="preserve">
+    <value>Dto cannot be null</value>
+  </data>
 </root>

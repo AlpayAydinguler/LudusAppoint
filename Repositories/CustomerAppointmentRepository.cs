@@ -2,6 +2,7 @@
 using Entities.Models.Enums;
 using Microsoft.EntityFrameworkCore;
 using Repositories.Contracts;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Repositories
 {
@@ -91,15 +92,20 @@ namespace Repositories
             return customerAppointments;
         }
 
-        public object GetReservedDaysTimes(int employeeId)
+        public object GetReservedDaysTimes(int employeeId, int reservationInAdvanceDayLimit)
         {
-            var reservedDaysTimes = _repositoryContext.CustomerAppointments.Where(ca => ca.EmployeeId == employeeId)
-                                                                           .Select(ca => new
-                                                                           {
-                                                                               ca.StartDateTime,
-                                                                               ca.EndDateTime
-                                                                           })
-                                                                           .ToList();
+            var maxDate = DateTime.Today.AddDays(reservationInAdvanceDayLimit + 1); // Includes the entire day of the last allowed day
+
+            var reservedDaysTimes = _repositoryContext.CustomerAppointments
+                .Where(ca => ca.EmployeeId == employeeId &&
+                             ca.StartDateTime.Date >= DateTime.Today &&
+                             ca.StartDateTime.Date < maxDate)
+                .Select(ca => new
+                {
+                    ca.StartDateTime,
+                    ca.EndDateTime
+                })
+                .ToList();
             return reservedDaysTimes;
         }
     }

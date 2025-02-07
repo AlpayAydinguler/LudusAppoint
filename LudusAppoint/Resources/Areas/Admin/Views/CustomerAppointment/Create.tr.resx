@@ -162,4 +162,52 @@
   <data name="PleaseTryWithDiffrentAgeGroupOrGender" xml:space="preserve">
     <value>Lütfen farklı yaş grubu veya cinsiyetle deneyin</value>
   </data>
+  <data name="TotalDuration" xml:space="preserve">
+    <value>Toplam süre</value>
+  </data>
+  <data name="TotalPrice" xml:space="preserve">
+    <value>Toplam fiyat</value>
+  </data>
+  <data name="Back" xml:space="preserve">
+    <value>Geri</value>
+  </data>
+  <data name="CustomerDetails" xml:space="preserve">
+    <value>Müşteri Detayları</value>
+  </data>
+  <data name="LoadingEmployees" xml:space="preserve">
+    <value>Çalışanlar yükleniyor</value>
+  </data>
+  <data name="SelectDateTime" xml:space="preserve">
+    <value>Tarih ve saati seçin</value>
+  </data>
+  <data name="SelectDate" xml:space="preserve">
+    <value>Tarih seçin</value>
+  </data>
+  <data name="ConfirmAppointment" xml:space="preserve">
+    <value>Randevuyu onayla</value>
+  </data>
+  <data name="ErrorLoadingServices" xml:space="preserve">
+    <value>Hizmetler yüklenirken hata oluştu</value>
+  </data>
+  <data name="Duration" xml:space="preserve">
+    <value>Süre</value>
+  </data>
+  <data name="NoServicesAvailable" xml:space="preserve">
+    <value>Kullanılabilir hizmet yok</value>
+  </data>
+  <data name="ErrorLoadingEmployees" xml:space="preserve">
+    <value>Çalışanlar yüklenirken hata oluştu</value>
+  </data>
+  <data name="NoAvailableTimeSlots" xml:space="preserve">
+    <value>Uygun zaman dilimi yok</value>
+  </data>
+  <data name="ErrorLoadingTimeSlots" xml:space="preserve">
+    <value>Zaman dilimleri yüklenirken hata oluştu</value>
+  </data>
+  <data name="CustomerInformation" xml:space="preserve">
+    <value>Müşteri bilgileri</value>
+  </data>
+  <data name="Services" xml:space="preserve">
+    <value>Hizmetler</value>
+  </data>
 </root>

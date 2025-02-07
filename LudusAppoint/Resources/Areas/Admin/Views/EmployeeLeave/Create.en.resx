@@ -57,4 +57,7 @@
   <data name="CreateLeave" xml:space="preserve">
     <value>Create leave</value>
   </data>
+  <data name="SelectEmployee" xml:space="preserve">
+    <value>Select employee</value>
+  </data>
 </root>

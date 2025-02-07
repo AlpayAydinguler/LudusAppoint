@@ -7,6 +7,6 @@ namespace Repositories.Contracts
         public List<CustomerAppointment> GetAllCustomerAppointments(bool trackChanges, string language = "en-GB");
         bool EmployeeHaveAppointment(EmployeeLeave employeeLeave);
         IEnumerable<CustomerAppointment> GetPendingCustomerAppointments(bool trackChanges, string language = "en-GB");
-        object GetReservedDaysTimes(int employeeId);
+        object GetReservedDaysTimes(int employeeId, int reservationInAdvanceDayLimit);
     }
 }

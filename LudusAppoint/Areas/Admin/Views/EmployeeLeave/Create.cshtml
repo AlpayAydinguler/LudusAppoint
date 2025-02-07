@@ -1,35 +1,62 @@
-﻿@model EmployeeLeave
+﻿@model EmployeeLeaveDtoForInsert
 
 <div class="card card-dark bg-dark border-black" data-bs-theme="dark">
-	<div class="display-6 text-light">@Localizer["CreateEmployeeLeave"]</div>
-	<div class="card-body text-light">
-		<form asp-action="Create" method="post">
-			<div class="form-group">
-				<label asp-for="EmployeeId" class="form-label">@Localizer["Employee"]</label>
-				<select asp-for="EmployeeId" class="form-select" asp-items="ViewBag.Employees"></select>
-				<span asp-validation-for="EmployeeId" class="text-danger"></span>
-			</div>
-			<div class="form-group">
-				<label asp-for="LeaveStartDateTime" class="form-label">@Localizer["StartDateTime"]</label>
-				<input asp-for="LeaveStartDateTime" class="form-control" type="datetime-local" />
-				<span asp-validation-for="LeaveStartDateTime" class="text-danger"></span>
-			</div>
-			<div class="form-group">
-				<label asp-for="LeaveEndDateTime" class="form-label">@Localizer["EndDateTime"]</label>
-				<input asp-for="LeaveEndDateTime" class="form-control" type="datetime-local" />
-				<span asp-validation-for="LeaveEndDateTime" class="text-danger"></span>
-			</div>
-			<div class="form-group">
-				<label asp-for="Reason" class="form-label">@Localizer["Reason"]</label>
-				<input asp-for="Reason" class="form-control" />
-				<span asp-validation-for="Reason" class="text-danger"></span>
-			</div>
-			<div>
-				<button type="submit" class="btn btn-primary my-3">
-					<i class="bi bi-check-lg"></i>
-					@Localizer["CreateLeave"]
-				</button>
-			</div>
-		</form>
-	</div>
+    <div class="card-header">
+        <h5 class="card-title mb-0">@Localizer["CreateEmployeeLeave"]</h5>
+    </div>
+    <div class="card-body text-light p-3 p-md-4">
+        <form asp-action="Create" method="post">
+            <div class="row g-3">
+                <!-- Employee Selection -->
+                <div class="col-12">
+                    <div class="form-group">
+                        <label asp-for="EmployeeId" class="form-label">@Localizer["Employee"]</label>
+                        <select asp-for="EmployeeId" class="form-select" asp-items="ViewBag.Employees">
+                            <option value="" selected disabled hidden>@Localizer["SelectEmployee"]</option>
+                        </select>
+                        <span asp-validation-for="EmployeeId" class="text-danger"></span>
+                    </div>
+                </div>
+                <!-- Date/Time Inputs -->
+                <div class="col-12 col-md-6">
+                    <div class="form-group">
+                        <label asp-for="LeaveStartDateTime" class="form-label">@Localizer["StartDateTime"]</label>
+                        <input asp-for="LeaveStartDateTime" class="form-control datetime-input"
+                               type="datetime-local"
+                               min="@DateTime.Now.ToString("yyyy-MM-ddTHH:mm")" />
+                        <span asp-validation-for="LeaveStartDateTime" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="col-12 col-md-6">
+                    <div class="form-group">
+                        <label asp-for="LeaveEndDateTime" class="form-label">@Localizer["EndDateTime"]</label>
+                        <input asp-for="LeaveEndDateTime" class="form-control datetime-input"
+                               type="datetime-local"
+                               min="@DateTime.Now.ToString("yyyy-MM-ddTHH:mm")" />
+                        <span asp-validation-for="LeaveEndDateTime" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <!-- Reason Input -->
+                <div class="col-12">
+                    <div class="form-group">
+                        <label asp-for="Reason" class="form-label">@Localizer["Reason"]</label>
+                        <textarea asp-for="Reason" class="form-control" rows="3"></textarea>
+                        <span asp-validation-for="Reason" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="text-danger small" asp-validation-summary="All"></div>
+                <!-- Submit Button -->
+                <div class="col-12">
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-start">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-check-lg me-1"></i>
+                            @Localizer["CreateLeave"]
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
 </div>

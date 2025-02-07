@@ -5,8 +5,8 @@ namespace Entities.Models.Enums
     public enum Gender
     {
         [Display(Name = "Male")]
-        m,
+        Male,
         [Display(Name = "Female")]
-        f,
+        Female,
     }
 }

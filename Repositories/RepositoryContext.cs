@@ -7,14 +7,12 @@ namespace Repositories
     public class RepositoryContext : DbContext
     {
         public DbSet<AgeGroup> AgeGroups { get; set; }
-
         public DbSet<Employee> Employees { get; set; }
         public DbSet<OfferedService> OfferedServices { get; set; }
-
         public DbSet<CustomerAppointment> CustomerAppointments { get; set; }
         public DbSet<OfferedServiceLocalization> OfferedServiceLocalizations { get; set; }
         public DbSet<Branch> Branches { get; set; }
-        public DbSet<ShopSettings> ShopSettings { get; set; }
+        public DbSet<ApplicationSetting> ShopSettings { get; set; }
         public DbSet<EmployeeLeave> EmployeeLeaves { get; set; }
 
         public RepositoryContext(DbContextOptions<RepositoryContext> options) : base(options)

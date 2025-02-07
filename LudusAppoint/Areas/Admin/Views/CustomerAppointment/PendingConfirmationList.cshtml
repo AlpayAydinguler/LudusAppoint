@@ -1,4 +1,4 @@
-﻿@model IEnumerable<CustomerAppointment>
+﻿@model IEnumerable<CustomerAppointmentDto>
 
 @{
 	var cultureInfo = new CultureInfo("tr-TR");
@@ -11,125 +11,129 @@
 	CultureInfo.CurrentUICulture = cultureInfo;
 }
 
-<div class="card card-dark bg-dark border-black" data-bs-theme="dark" ">
-	<div class="display-6 text-light">@Localizer["CustomerAppointments"]</div>
-	<div class="d-flex justify-content-end">
-		<a asp-action="Create" class="btn btn-success">
-			<i class="bi bi-plus-lg"></i>
-@Localizer["Create"]
-		</a>
+<div class="card card-dark bg-dark border-black" data-bs-theme="dark">
+	<div class="card-header align-items-center">
+		<h5 class="card-title mb-0 text-light">@Localizer["CustomerAppointments"]</h5>
+		<div class="d-flex justify-content-end">
+			<a asp-action="Create" class="btn btn-success btn-sm">
+				<i class="bi bi-plus-lg"></i>
+				@Localizer["Create"]
+			</a>
+		</div>
 	</div>
-	<div class="card-body text-light table-responsive">
-		<table id="customerAppointmentsTable" class="table table-dark table-hover table-striped align-middle">
-			<thead>
-				<tr>
-					<th class="text-center">@Localizer["Id"]</th>
-					<th>@Localizer["Customer"]</th>
-					<th>@Localizer["OfferedServices"]</th>
-					<th class="text-center">@Localizer["Gender"]</th>
-					<th class="text-center">@Localizer["AgeGroup"]</th>
-					<th>@Localizer["Employee"]</th>
-					<th>@Localizer["ApproximateDuration"]</th>
-					<th class="pe-5 text-end">@Localizer["Price"]</th>
-					<th>@Localizer["DateTime"]</th>
-					<th>@Localizer["PhoneNumber"]</th>
-					<th>@Localizer["EMail"]</th>
-					<th>@Localizer["CreatedBy"]</th>
-					<th>@Localizer["Operations"]</th>
-				</tr>
-			</thead>
-			<tbody>
-@foreach (var customerAppointment in Model)
-{
+	<div class="card-body text-light">
+		<div class="table-responsive">
+			<table id="customerAppointmentsTable" class="table table-dark table-hover table-striped align-middle mb-0">
+				<thead class="table-secondary">
 					<tr>
-						<td class="text-center">@customerAppointment.CustomerAppointmentId</td>
-						<td>@customerAppointment.Name @customerAppointment.Surname</td>
-						<td>
-			@foreach (var offeredService in @customerAppointment.OfferedServices)
-			{
-								<div class="p-2 text-center rounded-4 border border-success border-opacity-25 col-form-label-sm">
-					@offeredService.OfferedServiceName
-								</div>
-			}
-						</td>
-						<td class="text-center">
-			@if (@customerAppointment.Gender == Entities.Models.Enums.Gender.m)
-			{
-								<i class="bi bi-gender-male"></i>
-				@Localizer["Male"]
-			}
-			else
-			{
-								<i class="bi bi-gender-female"></i>
-				@Localizer["Female"]
-			}
-						</td>
-						<td class="text-center">@*@customerAppointment.AgeGroup.Name@**@...:::!!!FIX HERE!!!:::...</td>
-						<td>@customerAppointment.Employee.EmployeeName @customerAppointment.Employee.EmployeeSurname</td>
-						<td>@customerAppointment.ApproximateDuration</td>
-						<td class="pe-5 text-end">@customerAppointment.Price.ToString("C", cultureInfo)</td>
-						<td>@customerAppointment.StartDateTime</td>
-						<td>@customerAppointment.PhoneNumber</td>
-						<td>@customerAppointment.EMail</td>
-						<td>@customerAppointment.CreatedBy</td>
-						<td class="text-center">
-							<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#fastApproveModal">
-								<i class="bi bi-hand-thumbs-up"></i>
-				@Localizer["FastApprove"]
-							</button>
-							<div class="modal fade" data-bs-theme="dark" id="fastApproveModal" tabindex="-1" aria-hidden="true">
-								<div class="modal-dialog modal-sm modal-dialog-centered">
-									<div class="modal-content">
-										<div class="modal-header">
-											<h1 class="modal-title fs-5" id="exampleModalLabel">@Localizer["ApproveAppointment"]</h1>
-											<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-										</div>
-										<div class="modal-body">
-							@Localizer["WouldYouLikeToApproveThisAppointment?"]
-										</div>
-										<div class="modal-footer">
-											<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">@Localizer["Close"]</button>
-											<a asp-action="FastApprove" asp-route-id="@customerAppointment.CustomerAppointmentId" class="btn btn-success">
-												<i class="bi bi-check2-square"></i>
-								@Localizer["Approve"]
-											</a>
-										</div>
-									</div>
-								</div>
-							</div>
-							<a asp-action="Update" asp-route-id="@customerAppointment.CustomerAppointmentId" class="btn btn-warning">
-								<i class="fa-solid fa-pen-to-square"></i>
-				@Localizer["Update"]
-							</a>
-							<button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#fastCancelModal">
-								<i class="bi bi-x-octagon"></i>
-				@Localizer["FastCancel"]
-							</button>
-							<div class="modal fade" data-bs-theme="dark" id="fastCancelModal" tabindex="-1" aria-hidden="true">
-								<div class="modal-dialog modal-sm modal-dialog-centered">
-									<div class="modal-content">
-										<div class="modal-header">
-											<h1 class="modal-title fs-5" id="exampleModalLabel">@Localizer["CancelAppointment"]</h1>
-											<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-										</div>
-										<div class="modal-body">
-							@Localizer["WouldYouLikeToCancelThisAppointment?"]
-										</div>
-										<div class="modal-footer">
-											<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">@Localizer["Close"]</button>
-											<a asp-action="Cancel" asp-route-id="@customerAppointment.CustomerAppointmentId" class="btn btn-success">
-												<i class="bi bi-trash3"></i>
-								@Localizer["Cancel"]
-											</a>
-										</div>
-									</div>
-								</div>
-							</div>
-						</td>
+						<th class="text-center">@Localizer["Id"]</th>
+						<th>@Localizer["Customer"]</th>
+						<th>@Localizer["OfferedServices"]</th>
+						<th class="text-center">@Localizer["Gender"]</th>
+						<th class="text-center">@Localizer["AgeGroup"]</th>
+						<th>@Localizer["Employee"]</th>
+						<th>@Localizer["ApproximateDuration"]</th>
+						<th class="pe-5 text-end">@Localizer["Price"] @NumberFormatInfo.CurrentInfo.CurrencySymbol</th>
+						<th>@Localizer["DateTime"]</th>
+						<th>@Localizer["PhoneNumber"]</th>
+						<th>@Localizer["EMail"]</th>
+						<th>@Localizer["CreatedBy"]</th>
+						<th>@Localizer["Operations"]</th>
 					</tr>
-}
-			</tbody>
-		</table>
+				</thead>
+				<tbody>
+					@foreach (var customerAppointment in Model)
+					{
+						<tr>
+							<td class="text-center">@customerAppointment.CustomerAppointmentId</td>
+							<td class="text-truncate">@customerAppointment.Name @customerAppointment.Surname</td>
+							<td>
+								@foreach (var offeredService in @customerAppointment.OfferedServices)
+								{
+									<div class="p-2 text-center rounded-4 border border-success border-opacity-25 col-form-label-sm mb-1">
+										@offeredService.OfferedServiceName
+									</div>
+								}
+							</td>
+							<td class="text-center">
+								@if (@customerAppointment.Gender == Entities.Models.Enums.Gender.Male)
+								{
+									<i class="bi bi-gender-male"></i>
+									@Localizer["Male"]
+								}
+								else
+								{
+									<i class="bi bi-gender-female"></i>
+									@Localizer["Female"]
+								}
+							</td>
+							<td class="text-center">@customerAppointment.AgeGroup.Name</td>
+							<td>@customerAppointment.Employee.EmployeeName @customerAppointment.Employee.EmployeeSurname</td>
+							<td>@customerAppointment.ApproximateDuration</td>
+							<td class="pe-5 text-end" data-order="@customerAppointment.Price">@customerAppointment.Price.ToString("C")</td>
+							<td>@customerAppointment.StartDateTime.ToString("yyyy-MM-dd dddd HH:mm")</td>
+							<td>@customerAppointment.PhoneNumber</td>
+							<td class="text-truncate">@customerAppointment.EMail</td>
+							<td class="text-truncate">@customerAppointment.CreatedBy</td>
+							<td class="text-center">
+								<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#fastApproveModal">
+									<i class="bi bi-hand-thumbs-up"></i>
+									@Localizer["FastApprove"]
+								</button>
+								<div class="modal fade" data-bs-theme="dark" id="fastApproveModal" tabindex="-1" aria-hidden="true">
+									<div class="modal-dialog modal-sm modal-dialog-centered">
+										<div class="modal-content">
+											<div class="modal-header">
+												<h1 class="modal-title fs-5" id="exampleModalLabel">@Localizer["ApproveAppointment"]</h1>
+												<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+											</div>
+											<div class="modal-body">
+												@Localizer["WouldYouLikeToApproveThisAppointment?"]
+											</div>
+											<div class="modal-footer">
+												<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">@Localizer["Close"]</button>
+												<a asp-action="FastApprove" asp-route-id="@customerAppointment.CustomerAppointmentId" class="btn btn-success">
+													<i class="bi bi-check2-square"></i>
+													@Localizer["Approve"]
+												</a>
+											</div>
+										</div>
+									</div>
+								</div>
+								<a asp-action="Update" asp-route-id="@customerAppointment.CustomerAppointmentId" class="btn btn-warning">
+									<i class="fa-solid fa-pen-to-square"></i>
+									@Localizer["Update"]
+								</a>
+								<button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#fastCancelModal">
+									<i class="bi bi-x-octagon"></i>
+									@Localizer["FastCancel"]
+								</button>
+								<div class="modal fade" data-bs-theme="dark" id="fastCancelModal" tabindex="-1" aria-hidden="true">
+									<div class="modal-dialog modal-sm modal-dialog-centered">
+										<div class="modal-content">
+											<div class="modal-header">
+												<h1 class="modal-title fs-5" id="exampleModalLabel">@Localizer["CancelAppointment"]</h1>
+												<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+											</div>
+											<div class="modal-body">
+												@Localizer["WouldYouLikeToCancelThisAppointment?"]
+											</div>
+											<div class="modal-footer">
+												<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">@Localizer["Close"]</button>
+												<a asp-action="Cancel" asp-route-id="@customerAppointment.CustomerAppointmentId" class="btn btn-success">
+													<i class="bi bi-trash3"></i>
+													@Localizer["Cancel"]
+												</a>
+											</div>
+										</div>
+									</div>
+								</div>
+							</td>
+						</tr>
+					}
+				</tbody>
+			</table>
+		</div>
 	</div>
 </div>
 @section Scripts {

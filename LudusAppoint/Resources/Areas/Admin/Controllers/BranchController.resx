@@ -54,4 +54,7 @@
   <data name="BranchDeletedSuccessfully" xml:space="preserve">
     <value>Branch deleted successfully</value>
   </data>
+  <data name="BranchUpdatedSuccessfully" xml:space="preserve">
+    <value>Branch updated successfully</value>
+  </data>
 </root>

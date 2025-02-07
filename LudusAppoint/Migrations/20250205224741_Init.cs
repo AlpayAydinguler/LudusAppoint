@@ -29,6 +29,29 @@ namespace LudusAppoint.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Branches",
+                columns: table => new
+                {
+                    BranchId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    BranchName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Country = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    City = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    District = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Neighbourhood = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Street = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Address = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    BranchPhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    BranchEmail = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ReservationInAdvanceDayLimit = table.Column<int>(type: "int", nullable: false),
+                    Status = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Branches", x => x.BranchId);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "IdentityUser",
                 columns: table => new
                 {
@@ -68,19 +91,47 @@ namespace LudusAppoint.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_OfferedServices", x => x.OfferedServiceId);
-                    table.CheckConstraint("CK_OfferedService_ApproximateDuration", "ApproximateDuration >= '00:01:00' AND ApproximateDuration <= '24:00:00'");
+                    table.CheckConstraint("CK_OfferedService_ApproximateDuration", "ApproximateDuration >= '00:01:00' AND ApproximateDuration <= '23:59:59'");
                 });
 
             migrationBuilder.CreateTable(
                 name: "ShopSettings",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1")
+                    Key = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Value = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    LastModified = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ShopSettings", x => x.Id);
+                    table.PrimaryKey("PK_ShopSettings", x => x.Key);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Employees",
+                columns: table => new
+                {
+                    EmployeeId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    IdentityUserId = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    BranchId = table.Column<int>(type: "int", nullable: false),
+                    EmployeeName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    EmployeeSurname = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CanTakeClients = table.Column<bool>(type: "bit", nullable: false),
+                    DayOff = table.Column<int>(type: "int", nullable: false),
+                    StartOfWorkingHours = table.Column<TimeSpan>(type: "time", nullable: false),
+                    EndOfWorkingHours = table.Column<TimeSpan>(type: "time", nullable: false),
+                    Status = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Employees", x => x.EmployeeId);
+                    table.ForeignKey(
+                        name: "FK_Employees_Branches_BranchId",
+                        column: x => x.BranchId,
+                        principalTable: "Branches",
+                        principalColumn: "BranchId",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -104,7 +155,7 @@ namespace LudusAppoint.Migrations
                         column: x => x.OfferedServiceId,
                         principalTable: "OfferedServices",
                         principalColumn: "OfferedServiceId",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -129,61 +180,6 @@ namespace LudusAppoint.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Branches",
-                columns: table => new
-                {
-                    BranchId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    BranchName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Country = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    City = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    District = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Neighbourhood = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Street = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Address = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    BranchPhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    BranchEmail = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ReservationInAdvanceDayLimit = table.Column<int>(type: "int", nullable: false),
-                    Status = table.Column<bool>(type: "bit", nullable: false),
-                    ShopSettingsId = table.Column<int>(type: "int", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Branches", x => x.BranchId);
-                    table.ForeignKey(
-                        name: "FK_Branches_ShopSettings_ShopSettingsId",
-                        column: x => x.ShopSettingsId,
-                        principalTable: "ShopSettings",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Employees",
-                columns: table => new
-                {
-                    EmployeeId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    IdentityUserId = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    BranchId = table.Column<int>(type: "int", nullable: false),
-                    EmployeeName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    EmployeeSurname = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CanTakeClients = table.Column<bool>(type: "bit", nullable: false),
-                    DayOff = table.Column<int>(type: "int", nullable: false),
-                    StartOfWorkingHours = table.Column<TimeSpan>(type: "time", nullable: false),
-                    EndOfWorkingHours = table.Column<TimeSpan>(type: "time", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Employees", x => x.EmployeeId);
-                    table.ForeignKey(
-                        name: "FK_Employees_Branches_BranchId",
-                        column: x => x.BranchId,
-                        principalTable: "Branches",
-                        principalColumn: "BranchId",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "CustomerAppointments",
                 columns: table => new
                 {
@@ -192,7 +188,6 @@ namespace LudusAppoint.Migrations
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Surname = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Gender = table.Column<int>(type: "int", nullable: false),
-                    EmployeeId = table.Column<int>(type: "int", nullable: false),
                     ApproximateDuration = table.Column<TimeSpan>(type: "time", nullable: false),
                     Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     StartDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -200,8 +195,9 @@ namespace LudusAppoint.Migrations
                     EMail = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CreatedById = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     Status = table.Column<int>(type: "int", nullable: false),
+                    AgeGroupId = table.Column<int>(type: "int", nullable: false),
                     BranchId = table.Column<int>(type: "int", nullable: false),
-                    AgeGroupId = table.Column<int>(type: "int", nullable: false)
+                    EmployeeId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -312,11 +308,11 @@ namespace LudusAppoint.Migrations
 
             migrationBuilder.InsertData(
                 table: "Branches",
-                columns: new[] { "BranchId", "Address", "BranchEmail", "BranchName", "BranchPhoneNumber", "City", "Country", "District", "Neighbourhood", "ReservationInAdvanceDayLimit", "ShopSettingsId", "Status", "Street" },
+                columns: new[] { "BranchId", "Address", "BranchEmail", "BranchName", "BranchPhoneNumber", "City", "Country", "District", "Neighbourhood", "ReservationInAdvanceDayLimit", "Status", "Street" },
                 values: new object[,]
                 {
-                    { 1, "no 13 a", "businessmail@business.com", "Hacıhalil Şube", "+90 537 025 52 80", "Kocaeli", "Turkey", "Gebze", "Hacıhalil", 60, null, true, "Kızılay caddesi, 1203. Sk." },
-                    { 2, "No:68", "businessmail@business.com", "Gebze Şube", "+90 537 025 52 80", "Kocaeli", "Turkey", "Gebze", "Osman Yılmaz", 60, null, false, "Kızılay Cd." }
+                    { 1, "no 13 a", "businessmail@business.com", "Hacıhalil Şube", "+90 537 025 52 80", "Kocaeli", "Turkey", "Gebze", "Hacıhalil", 60, true, "Kızılay caddesi, 1203. Sk." },
+                    { 2, "No:68", "businessmail@business.com", "Gebze Şube", "+90 537 025 52 80", "Kocaeli", "Turkey", "Gebze", "Osman Yılmaz", 60, false, "Kızılay Cd." }
                 });
 
             migrationBuilder.InsertData(
@@ -339,12 +335,12 @@ namespace LudusAppoint.Migrations
 
             migrationBuilder.InsertData(
                 table: "Employees",
-                columns: new[] { "EmployeeId", "BranchId", "CanTakeClients", "DayOff", "EmployeeName", "EmployeeSurname", "EndOfWorkingHours", "IdentityUserId", "StartOfWorkingHours" },
+                columns: new[] { "EmployeeId", "BranchId", "CanTakeClients", "DayOff", "EmployeeName", "EmployeeSurname", "EndOfWorkingHours", "IdentityUserId", "StartOfWorkingHours", "Status" },
                 values: new object[,]
                 {
-                    { 1, 1, true, 0, "Aydın", "Sevim", new TimeSpan(0, 19, 0, 0, 0), "1", new TimeSpan(0, 10, 0, 0, 0) },
-                    { 2, 1, true, 0, "Alpay", "Aydıngüler", new TimeSpan(0, 19, 0, 0, 0), "2", new TimeSpan(0, 10, 0, 0, 0) },
-                    { 3, 1, false, 0, "Deniz", "Dağ", new TimeSpan(0, 19, 0, 0, 0), "3", new TimeSpan(0, 10, 0, 0, 0) }
+                    { 1, 1, true, 0, "Aydın", "Sevim", new TimeSpan(0, 19, 0, 0, 0), "1", new TimeSpan(0, 10, 0, 0, 0), true },
+                    { 2, 1, true, 0, "Alpay", "Aydıngüler", new TimeSpan(0, 19, 0, 0, 0), "2", new TimeSpan(0, 10, 0, 0, 0), true },
+                    { 3, 1, false, 0, "Deniz", "Dağ", new TimeSpan(0, 19, 0, 0, 0), "3", new TimeSpan(0, 10, 0, 0, 0), true }
                 });
 
             migrationBuilder.InsertData(
@@ -401,16 +397,26 @@ namespace LudusAppoint.Migrations
                 columns: new[] { "CustomerAppointmentId", "AgeGroupId", "ApproximateDuration", "BranchId", "CreatedById", "EMail", "EmployeeId", "Gender", "Name", "PhoneNumber", "Price", "StartDateTime", "Status", "Surname" },
                 values: new object[,]
                 {
-                    { 1, 1, new TimeSpan(0, 0, 30, 0, 0), 1, null, "alice.smith@example.com", 1, 1, "Alice", "+90 123 456 7891", 150m, new DateTime(2025, 1, 5, 10, 0, 0, 0, DateTimeKind.Unspecified), 1, "Smith" },
-                    { 2, 2, new TimeSpan(0, 0, 45, 0, 0), 1, null, "bob.johnson@example.com", 2, 0, "Bob", "+90 123 456 7892", 200m, new DateTime(2025, 1, 6, 11, 30, 0, 0, DateTimeKind.Unspecified), 0, "Johnson" },
-                    { 3, 3, new TimeSpan(0, 1, 0, 0, 0), 1, null, "charlie.brown@example.com", 1, 0, "Charlie", "+90 123 456 7893", 250m, new DateTime(2025, 1, 7, 14, 0, 0, 0, DateTimeKind.Unspecified), 3, "Brown" },
-                    { 4, 2, new TimeSpan(0, 0, 40, 0, 0), 1, null, "diana.prince@example.com", 1, 1, "Diana", "+90 123 456 7894", 180m, new DateTime(2025, 1, 8, 9, 45, 0, 0, DateTimeKind.Unspecified), 2, "Prince" },
-                    { 5, 1, new TimeSpan(0, 0, 35, 0, 0), 1, null, "eve.adams@example.com", 2, 1, "Eve", "+90 123 456 7895", 160m, new DateTime(2025, 1, 9, 16, 15, 0, 0, DateTimeKind.Unspecified), 1, "Adams" },
-                    { 6, 2, new TimeSpan(0, 0, 30, 0, 0), 1, null, "frank.miller@example.com", 3, 0, "Frank", "+90 123 456 7896", 120m, new DateTime(2025, 1, 10, 12, 30, 0, 0, DateTimeKind.Unspecified), 0, "Miller" },
-                    { 7, 1, new TimeSpan(0, 1, 15, 0, 0), 1, null, "grace.hall@example.com", 2, 1, "Grace", "+90 123 456 7897", 450m, new DateTime(2025, 1, 11, 15, 0, 0, 0, DateTimeKind.Unspecified), 1, "Hall" },
-                    { 8, 3, new TimeSpan(0, 1, 45, 0, 0), 1, null, "henry.ford@example.com", 1, 0, "Henry", "+90 123 456 7898", 700m, new DateTime(2025, 1, 12, 14, 30, 0, 0, DateTimeKind.Unspecified), 3, "Ford" },
-                    { 9, 3, new TimeSpan(0, 0, 45, 0, 0), 1, null, "isabelle.clark@example.com", 3, 1, "Isabelle", "+90 123 456 7899", 250m, new DateTime(2025, 1, 13, 10, 0, 0, 0, DateTimeKind.Unspecified), 2, "Clark" },
-                    { 10, 1, new TimeSpan(0, 1, 0, 0, 0), 1, null, "jack.white@example.com", 2, 0, "Jack", "+90 123 456 7890", 300m, new DateTime(2025, 1, 14, 9, 15, 0, 0, DateTimeKind.Unspecified), 0, "White" }
+                    { 1, 1, new TimeSpan(0, 0, 30, 0, 0), 1, null, "alice.smith@example.com", 1, 1, "Alice", "+90 123 456 7891", 150m, new DateTime(2025, 2, 9, 10, 0, 0, 0, DateTimeKind.Local), 1, "Smith" },
+                    { 2, 2, new TimeSpan(0, 0, 45, 0, 0), 1, null, "bob.johnson@example.com", 2, 0, "Bob", "+90 123 456 7892", 200m, new DateTime(2025, 2, 9, 11, 30, 0, 0, DateTimeKind.Local), 0, "Johnson" },
+                    { 3, 3, new TimeSpan(0, 1, 0, 0, 0), 1, null, "charlie.brown@example.com", 1, 0, "Charlie", "+90 123 456 7893", 250m, new DateTime(2025, 2, 9, 14, 0, 0, 0, DateTimeKind.Local), 3, "Brown" },
+                    { 4, 2, new TimeSpan(0, 0, 40, 0, 0), 1, null, "diana.prince@example.com", 1, 1, "Diana", "+90 123 456 7894", 180m, new DateTime(2025, 2, 9, 9, 45, 0, 0, DateTimeKind.Local), 2, "Prince" },
+                    { 5, 1, new TimeSpan(0, 0, 35, 0, 0), 1, null, "eve.adams@example.com", 2, 1, "Eve", "+90 123 456 7895", 160m, new DateTime(2025, 2, 9, 16, 15, 0, 0, DateTimeKind.Local), 1, "Adams" },
+                    { 6, 2, new TimeSpan(0, 0, 30, 0, 0), 1, null, "frank.miller@example.com", 3, 0, "Frank", "+90 123 456 7896", 120m, new DateTime(2025, 2, 7, 12, 30, 0, 0, DateTimeKind.Local), 0, "Miller" },
+                    { 7, 1, new TimeSpan(0, 1, 15, 0, 0), 1, null, "grace.hall@example.com", 2, 1, "Grace", "+90 123 456 7897", 450m, new DateTime(2025, 2, 7, 15, 0, 0, 0, DateTimeKind.Local), 1, "Hall" },
+                    { 8, 3, new TimeSpan(0, 1, 45, 0, 0), 1, null, "henry.ford@example.com", 1, 0, "Henry", "+90 123 456 7898", 700m, new DateTime(2025, 2, 7, 14, 30, 0, 0, DateTimeKind.Local), 3, "Ford" },
+                    { 9, 3, new TimeSpan(0, 0, 45, 0, 0), 1, null, "isabelle.clark@example.com", 3, 1, "Isabelle", "+90 123 456 7899", 250m, new DateTime(2025, 2, 7, 10, 0, 0, 0, DateTimeKind.Local), 2, "Clark" },
+                    { 10, 1, new TimeSpan(0, 1, 0, 0, 0), 1, null, "jack.white@example.com", 2, 0, "Jack", "+90 123 456 7890", 300m, new DateTime(2025, 2, 8, 9, 15, 0, 0, DateTimeKind.Local), 0, "White" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "EmployeeLeaves",
+                columns: new[] { "EmployeeLeaveId", "EmployeeId", "LeaveEndDateTime", "LeaveStartDateTime", "Reason" },
+                values: new object[,]
+                {
+                    { 1, 1, new DateTime(2025, 2, 7, 18, 0, 0, 0, DateTimeKind.Local), new DateTime(2025, 2, 7, 8, 0, 0, 0, DateTimeKind.Local), "Sick" },
+                    { 2, 2, new DateTime(2025, 2, 8, 18, 0, 0, 0, DateTimeKind.Local), new DateTime(2025, 2, 8, 8, 0, 0, 0, DateTimeKind.Local), "Vacation" },
+                    { 3, 3, new DateTime(2025, 2, 9, 18, 0, 0, 0, DateTimeKind.Local), new DateTime(2025, 2, 9, 8, 0, 0, 0, DateTimeKind.Local), "Personal" }
                 });
 
             migrationBuilder.InsertData(
@@ -463,11 +469,6 @@ namespace LudusAppoint.Migrations
                 table: "AgeGroups",
                 columns: new[] { "MinAge", "MaxAge" },
                 unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Branches_ShopSettingsId",
-                table: "Branches",
-                column: "ShopSettingsId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_CustomerAppointmentOfferedServices_OfferedServicesId",
@@ -539,6 +540,9 @@ namespace LudusAppoint.Migrations
                 name: "OfferedServiceLocalizations");
 
             migrationBuilder.DropTable(
+                name: "ShopSettings");
+
+            migrationBuilder.DropTable(
                 name: "CustomerAppointments");
 
             migrationBuilder.DropTable(
@@ -555,9 +559,6 @@ namespace LudusAppoint.Migrations
 
             migrationBuilder.DropTable(
                 name: "Branches");
-
-            migrationBuilder.DropTable(
-                name: "ShopSettings");
         }
     }
 }
