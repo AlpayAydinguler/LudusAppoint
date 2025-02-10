@@ -396,7 +396,7 @@
 			const phoneInput = document.getElementById('PhoneNumber');
 
 			// State Management
-			let selectedServices = new Set();
+			var selectedServices = new Set(@Html.Raw(JsonSerializer.Serialize(Model.OfferedServiceIds?.Select(id => id.ToString()) ?? new List<string>())));
 			let selectedDateTime = null;
 
 			// Initialize Steps
@@ -602,7 +602,7 @@
 
 					employeeSelect.innerHTML = employees.map(e =>
 						`<option selected hidden value="">@Localizer["SelectEmployee"]</option>
-						 <option value="${e.identityUserId}">${e.employeeName} ${e.employeeSurname}</option>`
+						 <option value="${e.employeeId}">${e.employeeName} ${e.employeeSurname}</option>`
 					).join('');
 					employeeSelect.disabled = false;
 				} catch (error) {
@@ -735,6 +735,11 @@
 								hourContainer = document.createElement('div');
 								hourContainer.className = 'col-12';
 
+								const hourHeader = document.createElement('div');
+								hourHeader.className = 'text-secondary small';
+								hourHeader.textContent = `${localHour.toString().padStart(2, '0')}:00 - ${(localHour + 1).toString().padStart(2, '0')}:00`;
+								hourContainer.appendChild(hourHeader);
+
 								// Create time slots row
 								slotsRow = document.createElement('div');
 								slotsRow.className = 'row g-1';
@@ -745,7 +750,18 @@
 
 							// Create time slot button
 							const slotCol = document.createElement('div');
-							slotCol.className = 'col-4';
+
+							let computed = 12 / (60 / minDuration);
+							// Ensure minimum sizes on small and medium breakpoints:
+							let colSm = computed < 2 ? 2 : computed;
+							let colMd = computed < 3 ? 3 : computed;
+							let colLg = computed < 3 ? 3 : computed;   // Use the computed value on large screens
+							let colXl = computed < 3 ? 3 : computed;   // Use the computed value on extra-large screens
+							let colXxl = computed < 2 ? 2 : computed;  // Use the computed value on extra-extra-large screens
+
+							// Build the column classes string
+							// Note: For mobile, it's common to start with the 'col-sm-' class
+							slotCol.className = `col-3 col-sm-${colSm} col-md-${colMd} col-lg-${colLg} col-xl-${colXl} col-xxl-${colXxl}`;
 
 							const slotButton = document.createElement('button');
 							slotButton.type = 'button';
@@ -801,17 +817,6 @@
 				);
 			});
 		}
-
-			// Helper function to check slot availability
-			function isTimeSlotOccupied(start, end, leaves, reservations) {
-				const checkAgainst = [...leaves, ...reservations];
-
-				return checkAgainst.some(period => {
-					return (start >= period.start && start < period.end) ||
-						   (end > period.start && end <= period.end) ||
-						   (start <= period.start && end >= period.end);
-				});
-			}
 
 			// Summary Update
 			function updateSummary() {

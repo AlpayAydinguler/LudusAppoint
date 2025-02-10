@@ -9,6 +9,6 @@ namespace Entities.Dtos
         [MinLength(1,
                   ErrorMessageResourceType = typeof(Resources.Dtos.CustomerAppointmentDto),
                   ErrorMessageResourceName = "AtLeastOneServiceMustBeSelected")]
-        public List<int> OfferedServicesIds { get; init; } = [];
+        public List<int> OfferedServiceIds { get; init; } = [];
     }
 }

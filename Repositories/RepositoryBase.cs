@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 using Repositories.Contracts;
 using System.Linq.Expressions;
 
@@ -45,11 +46,22 @@ namespace Repositories
             _repositoryContext.Set<T>().Remove(entity);
         }
 
-        public async Task<T?> FindByConditionAsync(Expression<Func<T, bool>> expression, bool trackChanges)
-            => await (trackChanges
-                ? _repositoryContext.Set<T>().Where(expression)
-                : _repositoryContext.Set<T>().Where(expression).AsNoTracking())
-                .FirstOrDefaultAsync();
+        public async Task<T?> FindByConditionAsync(Expression<Func<T, bool>> expression, 
+                                                   bool trackChanges,
+                                                   Func<IQueryable<T>, 
+                                                   IIncludableQueryable<T, object>>? include = null)
+    
+        {
+            IQueryable<T> query = _repositoryContext.Set<T>();
+
+            if (!trackChanges)
+                query = query.AsNoTracking();
+
+            if (include != null)
+                query = include(query);
+
+            return await query.FirstOrDefaultAsync(expression);
+        }
 
         public async Task<IEnumerable<T>> GetAllAsync(bool trackChanges)
             => await (trackChanges

@@ -18,7 +18,7 @@ namespace LudusAppoint.Infrastructure.Mapper
 
             CreateMap<CustomerAppointmentDtoForInsert, CustomerAppointment>();
             CreateMap<CustomerAppointmentDtoForUpdate, CustomerAppointment>().ReverseMap()
-                                                                             .ForMember(dest => dest.OfferedServicesIds, opt => opt.MapFrom(src => src.OfferedServices.Select(os => os.OfferedServiceId)));
+                                                                             .ForMember(dest => dest.OfferedServiceIds, opt => opt.MapFrom(src => src.OfferedServices.Select(os => os.OfferedServiceId)));
             CreateMap<CustomerAppointment, CustomerAppointmentDto>();
 
             CreateMap<EmployeeDtoForInsert, Employee>();

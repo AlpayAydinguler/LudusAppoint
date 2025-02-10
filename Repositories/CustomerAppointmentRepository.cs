@@ -108,5 +108,24 @@ namespace Repositories
                 .ToList();
             return reservedDaysTimes;
         }
+
+        public Task<CustomerAppointment> GetCustomerAppointmentForUpdateAsync(int id, bool trackChanges, string language)
+        {
+            var customerAppointment = _repositoryContext.CustomerAppointments.Include(ca => ca.Employee)
+                                                                             .Include(ca => ca.AgeGroup)
+                                                                             .Include(ca => ca.OfferedServices)
+                                                                             .ThenInclude(hs => hs.OfferedServiceLocalizations.Where(loc => loc.Language == language))
+                                                                             .Where(ca => ca.CustomerAppointmentId == id)
+                                                                             .FirstOrDefaultAsync();
+            if (customerAppointment != null)
+            {
+                foreach (var offeredService in customerAppointment.Result.OfferedServices ?? Enumerable.Empty<OfferedService>())
+                {
+                    var localization = offeredService.OfferedServiceLocalizations.FirstOrDefault();
+                    offeredService.OfferedServiceName = localization?.OfferedServiceLocalizationName ?? offeredService.OfferedServiceName;
+                }
+            }
+            return customerAppointment;
+        }
     }
 }

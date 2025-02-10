@@ -60,10 +60,6 @@ namespace Entities.Dtos
         public string? EMail { get; init; }
 
         public IdentityUser? CreatedBy { get; init; }
-
-        [Range(0, int.MaxValue,
-              ErrorMessageResourceType = typeof(Resources.Dtos.CustomerAppointmentDto),
-              ErrorMessageResourceName = "InvalidStatus")]
         public CustomerAppointmentStatus Status { get; init; } = CustomerAppointmentStatus.CustomerConfirmed;
 
         // Foreign Keys
