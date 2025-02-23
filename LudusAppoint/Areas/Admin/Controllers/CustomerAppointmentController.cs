@@ -35,9 +35,7 @@ namespace LudusAppoint.Areas.Admin.Controllers
         public async Task<IActionResult> Create()
         {
             var model = new CustomerAppointmentDtoForInsert();
-            var supportedGendersSetting = await _serviceManager.ApplicationSettingService.GetSettingEntityAsync("SupportedGenders",false);
-            ViewBag.SupportedGenders = supportedGendersSetting.Value;
-            PopulateBranchesAndAgeGroups();
+            await PopulateBranchesAndAgeGroupsAsync();
             return View(model);
         }
 
@@ -48,7 +46,7 @@ namespace LudusAppoint.Areas.Admin.Controllers
             if (!ModelState.IsValid)
             {
                 ViewBag.SupportedGenders = await _serviceManager.ApplicationSettingService.GetSettingEntityAsync("SupportedGenders", false);
-                PopulateBranchesAndAgeGroups();
+                await PopulateBranchesAndAgeGroupsAsync();
                 return View(customerAppointmentDtoForInsert);
             }
             try
@@ -64,7 +62,7 @@ namespace LudusAppoint.Areas.Admin.Controllers
                 {
                     ModelState.AddModelError(exception?.InnerException?.Source?.ToString() ?? string.Empty, exception?.Message ?? string.Empty);
                 }
-                PopulateBranchesAndAgeGroups();
+                await PopulateBranchesAndAgeGroupsAsync();
                 return View(customerAppointmentDtoForInsert);
             }
         }
@@ -72,7 +70,7 @@ namespace LudusAppoint.Areas.Admin.Controllers
         public async Task<IActionResult> Update([FromRoute] int id)
         {
             var model = await _serviceManager.CustomerAppointmentService.GetCustomerAppointmentForUpdateAsync(id, false, System.Globalization.CultureInfo.CurrentCulture.Name);
-            PopulateBranchesAndAgeGroups();
+            await PopulateBranchesAndAgeGroupsAsync();
             return View(model);
         }
 
@@ -82,7 +80,7 @@ namespace LudusAppoint.Areas.Admin.Controllers
         {
             if (!ModelState.IsValid)
             {
-                PopulateBranchesAndAgeGroups();
+                await PopulateBranchesAndAgeGroupsAsync();
                 return View(customerAppointmentDtoForUpdate);
             }
             try
@@ -98,10 +96,54 @@ namespace LudusAppoint.Areas.Admin.Controllers
                 {
                     ModelState.AddModelError(exception?.InnerException?.Source?.ToString() ?? string.Empty, exception?.Message ?? string.Empty);
                 }
-                PopulateBranchesAndAgeGroups();
+                await PopulateBranchesAndAgeGroupsAsync();
                 ViewBag.AllServices = _serviceManager.OfferedServiceService.GetAllOfferedServices(false, System.Globalization.CultureInfo.CurrentCulture.Name).ToList();
                 ViewBag.AllEmployees = _serviceManager.EmployeeService.GetAllEmployees(false).ToList();
                 return View(customerAppointmentDtoForUpdate);
+            }
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ApproveAppointment([FromRoute] int id)
+        {
+            try
+            {
+                await _serviceManager.CustomerAppointmentService.ChangeStatusAsync(id, CustomerAppointmentStatus.Confirmed);
+                TempData["OperationSuccessfull"] = true;
+                TempData["OperationMessage"] = _localizer["CustomerAppointmentApprovedSuccessfully"].ToString() + ".";
+                return RedirectToAction("PendingConfirmationList");
+            }
+            catch (AggregateException exceptions)
+            {
+                foreach (var exception in exceptions.InnerExceptions)
+                {
+                    ModelState.AddModelError(exception?.InnerException?.Source?.ToString() ?? string.Empty, exception?.Message ?? string.Empty);
+                }
+                TempData["OperationSuccessfull"] = false;
+                TempData["OperationMessage"] = _localizer["CancellationFailed"].ToString();
+                return RedirectToAction("PendingConfirmationList");
+            }
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CancelAppointment([FromRoute] int id)
+        {
+            try
+            {
+                await _serviceManager.CustomerAppointmentService.ChangeStatusAsync(id, CustomerAppointmentStatus.Cancelled);
+                TempData["OperationSuccessfull"] = true;
+                TempData["OperationMessage"] = _localizer["CustomerAppointmentCancelledSuccessfully"].ToString() + ".";
+                return RedirectToAction("PendingConfirmationList");
+            }
+            catch (AggregateException exceptions)
+            {
+                foreach (var exception in exceptions.InnerExceptions)
+                {
+                    ModelState.AddModelError(exception?.InnerException?.Source?.ToString() ?? string.Empty, exception?.Message ?? string.Empty);
+                }
+                TempData["OperationSuccessfull"] = false;
+                TempData["OperationMessage"] = _localizer["CancellationFailed"].ToString();
+                return RedirectToAction("PendingConfirmationList");
             }
         }
 
@@ -145,8 +187,10 @@ namespace LudusAppoint.Areas.Admin.Controllers
             return _serviceManager.CustomerAppointmentService.GetReservedDaysTimes(employeeId, branchId);
         }
 
-        private void PopulateBranchesAndAgeGroups()
+        private async Task PopulateBranchesAndAgeGroupsAsync()
         {
+            var supportedGendersSetting = await _serviceManager.ApplicationSettingService.GetSettingEntityAsync("SupportedGenders", false);
+            ViewBag.SupportedGenders = supportedGendersSetting.Value;
             ViewBag.AllBranches = _serviceManager.BranchService.GetAllActiveBranches(false).ToList();
             ViewBag.AllAgeGroups = _serviceManager.AgeGroupService.GetAllAgeGroups(false).ToList();
         }

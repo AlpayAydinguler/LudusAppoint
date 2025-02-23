@@ -13,11 +13,14 @@ namespace Repositories.Config
     {
         public void Configure(EntityTypeBuilder<ApplicationSetting> builder)
         {
+            
             builder.HasData(
                             new ApplicationSetting { Key = "SupportedGenders", Value = "Male,Female" },
                             new ApplicationSetting { Key = "CompanyName", Value = "Hair Center" },
-                            new ApplicationSetting { Key = "CompanyLogoURL", Value = "\\assets\\img\\logo.jpg" }
+                            new ApplicationSetting { Key = "CompanyLogoURL", Value = "\\assets\\img\\logo.jpg" },
+                            new ApplicationSetting { Key = "Currency", Value = "tr-TR" }
                         );
+            
         }
     }
 }

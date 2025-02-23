@@ -1,9 +1,12 @@
+using Entities.Dtos;
+using LudusAppoint.Dtos;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.EntityFrameworkCore;
 using Repositories;
 using Repositories.Contracts;
 using Services;
 using Services.Contracts;
+using LudusAppoint.Infrastructure.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,33 +25,10 @@ builder.Services.Configure<RequestLocalizationOptions>(options =>
         .AddSupportedUICultures(supportedCultures);
 });
 
-builder.Services.AddDbContext<RepositoryContext>(options =>
-{
-    /*
-    options.UseSqlite(builder.Configuration.GetConnectionString("sqlconnection"),
-                      b => b.MigrationsAssembly("LudusAppoint"));
-    */
-    options.UseSqlServer(builder.Configuration.GetConnectionString("mssqlconnection"),
-                      b => b.MigrationsAssembly("LudusAppoint"));
-});
-
-builder.Services.AddScoped<IRepositoryManager, RepositoryManager>();
-builder.Services.AddScoped<IAgeGroupRepository, AgeGroupRepository>();
-builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
-builder.Services.AddScoped<IOfferedServiceRepository, OfferedServiceRepository>();
-builder.Services.AddScoped<ICustomerAppointmentRepository, CustomerAppointmentRepository>();
-builder.Services.AddScoped<IBranchRepository, BranchRepository>();
-builder.Services.AddScoped<IEmployeeLeaveRepository, EmployeeLeaveRepository>();
-builder.Services.AddScoped<IApplicationSettingRepository, ApplicationSettingRepository>();
-
-builder.Services.AddScoped<IServiceManager, ServiceManager>();
-builder.Services.AddScoped<IAgeGroupService, AgeGroupManager>();
-builder.Services.AddScoped<IEmployeeService, EmployeeManager>();
-builder.Services.AddScoped<IOfferedServiceService, OfferedServiceManager>();
-builder.Services.AddScoped<ICustomerAppointmentService, CustomerAppointmentManager>();
-builder.Services.AddScoped<IBranchService, BranchManager>();
-builder.Services.AddScoped<IEmployeeLeaveService, EmployeeLeaveManager>();
-builder.Services.AddScoped<IApplicationSettingService, ApplicationSettingManager>();
+builder.Services.ConfigureDbContext(builder.Configuration);
+builder.Services.ConfigureSession();
+builder.Services.ConfigureRepositoryRegistration();
+builder.Services.ConfigureServiceRegistration();
 
 builder.Services.AddMemoryCache();
 
@@ -67,7 +47,7 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseStaticFiles();
-
+app.UseSession();
 app.UseRouting();
 
 app.UseAuthorization();
@@ -87,5 +67,7 @@ app.MapAreaControllerRoute(
 );
 
 app.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}");
+
+app.ConfigureAndCheckMigration();
 
 app.Run();

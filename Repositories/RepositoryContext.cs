@@ -12,7 +12,7 @@ namespace Repositories
         public DbSet<CustomerAppointment> CustomerAppointments { get; set; }
         public DbSet<OfferedServiceLocalization> OfferedServiceLocalizations { get; set; }
         public DbSet<Branch> Branches { get; set; }
-        public DbSet<ApplicationSetting> ShopSettings { get; set; }
+        public DbSet<ApplicationSetting> ApplicationSetting { get; set; }
         public DbSet<EmployeeLeave> EmployeeLeaves { get; set; }
 
         public RepositoryContext(DbContextOptions<RepositoryContext> options) : base(options)

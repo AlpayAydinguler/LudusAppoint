@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
@@ -19,6 +20,6 @@ namespace Entities.Dtos
         public string Value { get; init; }
 
         [Display(Name = "Last Modified")]
-        public DateTime LastModified { get; init; }
+        public DateTime LastModified { get; init; } = DateTime.Now;
     }
 }

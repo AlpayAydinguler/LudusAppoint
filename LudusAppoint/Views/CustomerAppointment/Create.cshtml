@@ -1,4 +1,4 @@
-﻿@model CustomerAppointmentDtoForInsert
+﻿@model SessionCustomerAppointmentDtoForInsert
 
 @{
 	// Retrieve supported genders (expected to be a comma-separated string)
@@ -19,7 +19,7 @@
 <div class="container-fluid">
 	<div class="row justify-content-center">
 		<div class="col-12 col-xl-10">
-			<div class="card card-dark bg-dark border-black">
+			<div class="card border-black">
 				<div class="card-header">
 					<h2 class="h4 text-light mb-0">@Localizer["CreateCustomerAppointment"]</h2>
 				</div>
@@ -135,22 +135,22 @@
 									<h4 class="text-primary mb-3">@Localizer["OfferedServices"]</h4>
 									<div id="offeredServicesContainer" class="d-none">
 										<div class="table-responsive">
-											<table id="offeredServicesTable" class="table table-dark">
+											<table id="offeredServicesTable" class="table">
 												<!-- Table content will be populated via JS -->
 											</table>
 										</div>
 										<div class="row mt-3">
 											<div class="col-md-6">
 												<div class="form-floating">
-													<input asp-for="ApproximateDuration" class="form-control"
-														   type="time" />
+													<input type="hidden" asp-for="ApproximateDuration" />
+													<div class="form-control form-control-plaintext" id="approximateDurationDisplay"></div>
 													<label asp-for="ApproximateDuration">@Localizer["TotalDuration"]</label>
 												</div>
 											</div>
 											<div class="col-md-6">
 												<div class="form-floating">
-													<input asp-for="Price" class="form-control"
-														   type="number" step="0.01" />
+													<input type="hidden" asp-for="Price" step="0.01" />
+													<div class="form-control form-control-plaintext" id="priceDisplay"></div>
 													<label asp-for="Price">@Localizer["TotalPrice"]</label>
 												</div>
 											</div>
@@ -205,7 +205,7 @@
 													<input asp-for="PhoneNumber" class="form-control" type="tel" />
 													<label asp-for="PhoneNumber">@Localizer["PhoneNumber"]</label>
 													<span asp-validation-for="PhoneNumber" class="text-danger small"></span>
-												</div>
+													</div>
 											</div>
 										</div>
 									</div>
@@ -387,8 +387,8 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/5.0.9/jquery.inputmask.min.js" integrity="sha512-F5Ul1uuyFlGnIT1dk2c4kB4DBdi5wnBJjVhL7gQlGh46Xn0VhvD8kgxLtjdZ5YN83gybk/aASUAlpdoWUjRR3g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 	<script>
 		$(document).ready(function(){
-				  $("#PhoneNumber").inputmask({"mask": "(999) 999 99 99"});
-				});
+		  $("#PhoneNumber").inputmask({"mask": "(999) 999 99 99"});
+		});
 		document.addEventListener('DOMContentLoaded', function () {
 			// Step Management
 			const steps = document.querySelectorAll('.step');
@@ -529,7 +529,7 @@
 						<th>@Localizer["Select"]</th>
 						<th>@Localizer["Name"]</th>
 						<th>@Localizer["Duration"]</th>
-						<th>@Localizer["Price"]</th>
+						<th class="text-end">@Localizer["Price"]</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -545,7 +545,7 @@
 							</td>
 							<td>${service.offeredServiceName}</td>
 							<td>${service.approximateDuration}</td>
-							<td>${service.price.toFixed(2)}</td>
+							<td class="text-end">${service.price.toFixed(2)}</td>
 						</tr>
 					`).join('')}
 				</tbody>
@@ -583,22 +583,30 @@
 			nextButton.disabled = services.length === 0 || selectedServices.size === 0;
 		}
 
-			function updateDurationAndPrice() {
-				let totalMinutes = 0;
-				let totalPrice = 0;
+		function updateDurationAndPrice() {
+			let totalMinutes = 0;
+			let totalPrice = 0;
 
-				document.querySelectorAll('.service-checkbox:checked').forEach(checkbox => {
-					const row = checkbox.closest('tr');
-					const [hours, minutes] = row.cells[2].textContent.split(':').map(Number);
-					totalMinutes += (hours * 60) + minutes;
-					totalPrice += Number(row.cells[3].textContent);
-				});
+			document.querySelectorAll('.service-checkbox:checked').forEach(checkbox => {
+				const row = checkbox.closest('tr');
+				const [hours, minutes] = row.cells[2].textContent.split(':').map(Number);
+				totalMinutes += (hours * 60) + minutes;
+				totalPrice += Number(row.cells[3].textContent);
+			});
 
-				const durationHours = Math.floor(totalMinutes / 60).toString().padStart(2, '0');
-				const durationMinutes = (totalMinutes % 60).toString().padStart(2, '0');
-				document.getElementById('ApproximateDuration').value = `${durationHours}:${durationMinutes}`;
-				document.getElementById('Price').value = totalPrice.toFixed(2);
-			}
+			const durationHours = Math.floor(totalMinutes / 60).toString().padStart(2, '0');
+			const durationMinutes = (totalMinutes % 60).toString().padStart(2, '0');
+			const durationValue = `${durationHours}:${durationMinutes}`;
+			const priceValue = totalPrice;
+
+			// Update hidden inputs
+			document.getElementById('ApproximateDuration').value = durationValue;
+			document.getElementById('Price').value = priceValue.toLocaleString('@CultureInfo.CurrentCulture.Name', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+			// Update display elements
+			document.getElementById('approximateDurationDisplay').textContent = durationValue;
+			document.getElementById('priceDisplay').textContent = priceValue;
+		}
 
 			// Employee Loading
 			async function loadEmployees() {
@@ -674,7 +682,7 @@
 					}
 				}
 
-				async function generateTimeSlots() {
+		async function generateTimeSlots() {
 			const selectedDate = new Date(datePicker.value);
 			if (!selectedDate || !window.reservationData) return;
 

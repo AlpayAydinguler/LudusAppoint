@@ -1,7 +1,9 @@
 ﻿@using LudusAppoint
 @using LudusAppoint.Models
+@using LudusAppoint.Dtos
 @using Entities.Models
 @using Entities.Models.Enums
+@using Entities.Dtos
 @using LudusAppoint.Controllers
 <!--begin::Language-->
 @using Microsoft.AspNetCore.Builder
@@ -9,6 +11,8 @@
 @using Microsoft.AspNetCore.Localization
 @using Microsoft.AspNetCore.Mvc.Localization
 @using Microsoft.Extensions.Options
+@using System.Text.Json
+@using System.Globalization
 
 @inject IViewLocalizer Localizer
 @inject IOptions<RequestLocalizationOptions> LocOptions

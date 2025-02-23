@@ -1,11 +1,13 @@
 ﻿using Entities.Dtos;
 using Entities.Models;
+using Entities.Models.Enums;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Services.Contracts
 {
     public interface ICustomerAppointmentService
     {
+        Task ChangeStatusAsync(int id, CustomerAppointmentStatus newStatus);
         void CreateAppointment(CustomerAppointment customerAppointment, int[] offeredServiceIds);
         Task CreateCustomerAppointmentAsync(CustomerAppointmentDtoForInsert customerAppointmentDtoForInsert);
         IEnumerable<CustomerAppointmentDto> GetAllCustomerAppointments(bool trackChanges, string language = "en-GB");

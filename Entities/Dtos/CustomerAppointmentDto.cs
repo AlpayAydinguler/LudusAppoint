@@ -29,10 +29,11 @@ namespace Entities.Dtos
               ErrorMessageResourceType = typeof(Resources.Dtos.CustomerAppointmentDto),
               ErrorMessageResourceName = "InvalidGender")]
         public Gender? Gender { get; init; }
-
-        [Range(typeof(TimeSpan), "00:01:00", "23:59:59",
+        /*
+        [Range(typeof(TimeSpan), "00:01", "23:59",
               ErrorMessageResourceType = typeof(Resources.Dtos.CustomerAppointmentDto),
               ErrorMessageResourceName = "DurationValidation")]
+        */
         public TimeSpan ApproximateDuration { get; init; }
 
         [DataType(DataType.Currency)]
@@ -50,7 +51,7 @@ namespace Entities.Dtos
         [Phone]
         [Required(ErrorMessageResourceType = typeof(Resources.SharedResources),
                   ErrorMessageResourceName = "MissingKeyOrValueAccessor")]
-        [RegularExpression(@"^\d{10,15}$",
+        [RegularExpression(@"^\(\d{3}\)\s\d{3}\s\d{2}\s\d{2}$",
                   ErrorMessageResourceType = typeof(Resources.Dtos.CustomerAppointmentDto),
                   ErrorMessageResourceName = "PhoneFormat")]
         public string PhoneNumber { get; init; }
@@ -60,7 +61,7 @@ namespace Entities.Dtos
         public string? EMail { get; init; }
 
         public IdentityUser? CreatedBy { get; init; }
-        public CustomerAppointmentStatus Status { get; init; } = CustomerAppointmentStatus.CustomerConfirmed;
+        public CustomerAppointmentStatus Status { get; init; } //= CustomerAppointmentStatus.CustomerConfirmed;
 
         // Foreign Keys
         [ForeignKey("AgeGroup")]

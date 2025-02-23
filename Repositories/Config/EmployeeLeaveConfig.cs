@@ -8,7 +8,7 @@ namespace Repositories.Config
     {
         public void Configure(EntityTypeBuilder<EmployeeLeave> builder)
         {
-
+            
             var employeeLeave1 = new EmployeeLeave { EmployeeLeaveId = 1, EmployeeId = 1, LeaveStartDateTime = System.DateTime.Today.AddDays(1) + new TimeSpan(8, 0, 0), LeaveEndDateTime = System.DateTime.Today.AddDays(1) + new TimeSpan(18, 0, 0), Reason = "Sick" };
             var employeeLeave2 = new EmployeeLeave { EmployeeLeaveId = 2, EmployeeId = 2, LeaveStartDateTime = System.DateTime.Today.AddDays(2) + new TimeSpan(8, 0, 0), LeaveEndDateTime = System.DateTime.Today.AddDays(2) + new TimeSpan(18, 0, 0), Reason = "Vacation" };
             var employeeLeave3 = new EmployeeLeave { EmployeeLeaveId = 3, EmployeeId = 3, LeaveStartDateTime = System.DateTime.Today.AddDays(3) + new TimeSpan(8, 0, 0), LeaveEndDateTime = System.DateTime.Today.AddDays(3) + new TimeSpan(18, 0, 0), Reason = "Personal" };
@@ -17,6 +17,7 @@ namespace Repositories.Config
             employeeLeaves.Add(employeeLeave2);
             employeeLeaves.Add(employeeLeave3);
             builder.HasData(employeeLeaves);
+
         }
     }
 }

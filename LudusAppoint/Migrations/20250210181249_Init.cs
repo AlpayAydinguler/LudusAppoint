@@ -91,7 +91,7 @@ namespace LudusAppoint.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_OfferedServices", x => x.OfferedServiceId);
-                    table.CheckConstraint("CK_OfferedService_ApproximateDuration", "ApproximateDuration >= '00:01:00' AND ApproximateDuration <= '23:59:59'");
+                    table.CheckConstraint("CK_OfferedService_ApproximateDuration", "ApproximateDuration >= '00:01' AND ApproximateDuration <= '23:59'");
                 });
 
             migrationBuilder.CreateTable(
@@ -334,6 +334,16 @@ namespace LudusAppoint.Migrations
                 });
 
             migrationBuilder.InsertData(
+                table: "ShopSettings",
+                columns: new[] { "Key", "LastModified", "Value" },
+                values: new object[,]
+                {
+                    { "CompanyLogoURL", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "\\assets\\img\\logo.jpg" },
+                    { "CompanyName", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Hair Center" },
+                    { "SupportedGenders", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Male,Female" }
+                });
+
+            migrationBuilder.InsertData(
                 table: "Employees",
                 columns: new[] { "EmployeeId", "BranchId", "CanTakeClients", "DayOff", "EmployeeName", "EmployeeSurname", "EndOfWorkingHours", "IdentityUserId", "StartOfWorkingHours", "Status" },
                 values: new object[,]
@@ -397,16 +407,16 @@ namespace LudusAppoint.Migrations
                 columns: new[] { "CustomerAppointmentId", "AgeGroupId", "ApproximateDuration", "BranchId", "CreatedById", "EMail", "EmployeeId", "Gender", "Name", "PhoneNumber", "Price", "StartDateTime", "Status", "Surname" },
                 values: new object[,]
                 {
-                    { 1, 1, new TimeSpan(0, 0, 30, 0, 0), 1, null, "alice.smith@example.com", 1, 1, "Alice", "+90 123 456 7891", 150m, new DateTime(2025, 2, 9, 10, 0, 0, 0, DateTimeKind.Local), 1, "Smith" },
-                    { 2, 2, new TimeSpan(0, 0, 45, 0, 0), 1, null, "bob.johnson@example.com", 2, 0, "Bob", "+90 123 456 7892", 200m, new DateTime(2025, 2, 9, 11, 30, 0, 0, DateTimeKind.Local), 0, "Johnson" },
-                    { 3, 3, new TimeSpan(0, 1, 0, 0, 0), 1, null, "charlie.brown@example.com", 1, 0, "Charlie", "+90 123 456 7893", 250m, new DateTime(2025, 2, 9, 14, 0, 0, 0, DateTimeKind.Local), 3, "Brown" },
-                    { 4, 2, new TimeSpan(0, 0, 40, 0, 0), 1, null, "diana.prince@example.com", 1, 1, "Diana", "+90 123 456 7894", 180m, new DateTime(2025, 2, 9, 9, 45, 0, 0, DateTimeKind.Local), 2, "Prince" },
-                    { 5, 1, new TimeSpan(0, 0, 35, 0, 0), 1, null, "eve.adams@example.com", 2, 1, "Eve", "+90 123 456 7895", 160m, new DateTime(2025, 2, 9, 16, 15, 0, 0, DateTimeKind.Local), 1, "Adams" },
-                    { 6, 2, new TimeSpan(0, 0, 30, 0, 0), 1, null, "frank.miller@example.com", 3, 0, "Frank", "+90 123 456 7896", 120m, new DateTime(2025, 2, 7, 12, 30, 0, 0, DateTimeKind.Local), 0, "Miller" },
-                    { 7, 1, new TimeSpan(0, 1, 15, 0, 0), 1, null, "grace.hall@example.com", 2, 1, "Grace", "+90 123 456 7897", 450m, new DateTime(2025, 2, 7, 15, 0, 0, 0, DateTimeKind.Local), 1, "Hall" },
-                    { 8, 3, new TimeSpan(0, 1, 45, 0, 0), 1, null, "henry.ford@example.com", 1, 0, "Henry", "+90 123 456 7898", 700m, new DateTime(2025, 2, 7, 14, 30, 0, 0, DateTimeKind.Local), 3, "Ford" },
-                    { 9, 3, new TimeSpan(0, 0, 45, 0, 0), 1, null, "isabelle.clark@example.com", 3, 1, "Isabelle", "+90 123 456 7899", 250m, new DateTime(2025, 2, 7, 10, 0, 0, 0, DateTimeKind.Local), 2, "Clark" },
-                    { 10, 1, new TimeSpan(0, 1, 0, 0, 0), 1, null, "jack.white@example.com", 2, 0, "Jack", "+90 123 456 7890", 300m, new DateTime(2025, 2, 8, 9, 15, 0, 0, DateTimeKind.Local), 0, "White" }
+                    { 1, 1, new TimeSpan(0, 0, 30, 0, 0), 1, null, "alice.smith@example.com", 1, 1, "Alice", "+90 123 456 7891", 150m, new DateTime(2025, 2, 13, 10, 0, 0, 0, DateTimeKind.Local), 1, "Smith" },
+                    { 2, 2, new TimeSpan(0, 0, 45, 0, 0), 1, null, "bob.johnson@example.com", 2, 0, "Bob", "+90 123 456 7892", 200m, new DateTime(2025, 2, 13, 11, 30, 0, 0, DateTimeKind.Local), 0, "Johnson" },
+                    { 3, 3, new TimeSpan(0, 1, 0, 0, 0), 1, null, "charlie.brown@example.com", 1, 0, "Charlie", "+90 123 456 7893", 250m, new DateTime(2025, 2, 13, 14, 0, 0, 0, DateTimeKind.Local), 3, "Brown" },
+                    { 4, 2, new TimeSpan(0, 0, 40, 0, 0), 1, null, "diana.prince@example.com", 1, 1, "Diana", "+90 123 456 7894", 180m, new DateTime(2025, 2, 13, 9, 45, 0, 0, DateTimeKind.Local), 2, "Prince" },
+                    { 5, 1, new TimeSpan(0, 0, 35, 0, 0), 1, null, "eve.adams@example.com", 2, 1, "Eve", "+90 123 456 7895", 160m, new DateTime(2025, 2, 13, 16, 15, 0, 0, DateTimeKind.Local), 1, "Adams" },
+                    { 6, 2, new TimeSpan(0, 0, 30, 0, 0), 1, null, "frank.miller@example.com", 3, 0, "Frank", "+90 123 456 7896", 120m, new DateTime(2025, 2, 11, 12, 30, 0, 0, DateTimeKind.Local), 0, "Miller" },
+                    { 7, 1, new TimeSpan(0, 1, 15, 0, 0), 1, null, "grace.hall@example.com", 2, 1, "Grace", "+90 123 456 7897", 450m, new DateTime(2025, 2, 11, 15, 0, 0, 0, DateTimeKind.Local), 1, "Hall" },
+                    { 8, 3, new TimeSpan(0, 1, 45, 0, 0), 1, null, "henry.ford@example.com", 1, 0, "Henry", "+90 123 456 7898", 700m, new DateTime(2025, 2, 11, 14, 30, 0, 0, DateTimeKind.Local), 3, "Ford" },
+                    { 9, 3, new TimeSpan(0, 0, 45, 0, 0), 1, null, "isabelle.clark@example.com", 3, 1, "Isabelle", "+90 123 456 7899", 250m, new DateTime(2025, 2, 11, 10, 0, 0, 0, DateTimeKind.Local), 2, "Clark" },
+                    { 10, 1, new TimeSpan(0, 1, 0, 0, 0), 1, null, "jack.white@example.com", 2, 0, "Jack", "+90 123 456 7890", 300m, new DateTime(2025, 2, 12, 9, 15, 0, 0, DateTimeKind.Local), 0, "White" }
                 });
 
             migrationBuilder.InsertData(
@@ -414,9 +424,9 @@ namespace LudusAppoint.Migrations
                 columns: new[] { "EmployeeLeaveId", "EmployeeId", "LeaveEndDateTime", "LeaveStartDateTime", "Reason" },
                 values: new object[,]
                 {
-                    { 1, 1, new DateTime(2025, 2, 7, 18, 0, 0, 0, DateTimeKind.Local), new DateTime(2025, 2, 7, 8, 0, 0, 0, DateTimeKind.Local), "Sick" },
-                    { 2, 2, new DateTime(2025, 2, 8, 18, 0, 0, 0, DateTimeKind.Local), new DateTime(2025, 2, 8, 8, 0, 0, 0, DateTimeKind.Local), "Vacation" },
-                    { 3, 3, new DateTime(2025, 2, 9, 18, 0, 0, 0, DateTimeKind.Local), new DateTime(2025, 2, 9, 8, 0, 0, 0, DateTimeKind.Local), "Personal" }
+                    { 1, 1, new DateTime(2025, 2, 11, 18, 0, 0, 0, DateTimeKind.Local), new DateTime(2025, 2, 11, 8, 0, 0, 0, DateTimeKind.Local), "Sick" },
+                    { 2, 2, new DateTime(2025, 2, 12, 18, 0, 0, 0, DateTimeKind.Local), new DateTime(2025, 2, 12, 8, 0, 0, 0, DateTimeKind.Local), "Vacation" },
+                    { 3, 3, new DateTime(2025, 2, 13, 18, 0, 0, 0, DateTimeKind.Local), new DateTime(2025, 2, 13, 8, 0, 0, 0, DateTimeKind.Local), "Personal" }
                 });
 
             migrationBuilder.InsertData(

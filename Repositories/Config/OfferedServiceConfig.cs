@@ -24,8 +24,8 @@ namespace Repositories.Config
                                                                 b.HasKey("AgeGroupsId", "OfferedServiceId");
                                                             });
 
-            builder.ToTable(t => t.HasCheckConstraint("CK_OfferedService_ApproximateDuration", "ApproximateDuration >= '00:01:00' AND ApproximateDuration <= '23:59:59'"));
-
+            builder.ToTable(t => t.HasCheckConstraint("CK_OfferedService_ApproximateDuration", "ApproximateDuration >= '00:01' AND ApproximateDuration <= '23:59'"));
+            
             var offeredService1 = new OfferedService { OfferedServiceId = 1, OfferedServiceName = "HairCut", Genders = { Gender.Male }, ApproximateDuration = new TimeSpan(0, 20, 0), Price = 100, Status = true };
             var offeredService2 = new OfferedService { OfferedServiceId = 2, OfferedServiceName = "RazorShave", Genders = { Gender.Male }, ApproximateDuration = new TimeSpan(0, 40, 0), Price = 200, Status = true };
             var offeredService3 = new OfferedService { OfferedServiceId = 3, OfferedServiceName = "HairColoring", Genders = { Gender.Male }, ApproximateDuration = new TimeSpan(0, 60, 0), Price = 300, Status = true };
@@ -52,6 +52,7 @@ namespace Repositories.Config
             offeredServices.Add(offeredService11);
 
             builder.HasData(offeredServices);
+            
         }
     }
 }

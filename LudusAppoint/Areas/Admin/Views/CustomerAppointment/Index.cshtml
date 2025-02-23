@@ -1,17 +1,6 @@
 ﻿@model IEnumerable<CustomerAppointmentDto>
 
-@{
-	var cultureInfo = new CultureInfo("tr-TR");
-	var numberFormat = (NumberFormatInfo)cultureInfo.NumberFormat.Clone();
-	numberFormat.CurrencyPositivePattern = 3; // 3 means symbol after the number with a space
-	numberFormat.CurrencyNegativePattern = 8; // 8 means symbol after the number with a space and negative sign before the number
-	cultureInfo.NumberFormat = numberFormat;
-
-	CultureInfo.CurrentCulture = cultureInfo;
-	CultureInfo.CurrentUICulture = cultureInfo;
-}
-
-<div class="card card-dark bg-dark border-black" data-bs-theme="dark">
+<div class="card card-dark bg-dark border-black">
 	<div class="card-header align-items-center">
 		<h5 class="card-title mb-0 text-light">@Localizer["CustomerAppointments"]</h5>
 		<div class="d-flex justify-content-end">
@@ -20,6 +9,12 @@
 				@Localizer["Create"]
 			</a>
 		</div>
+	</div>
+	<p>Current Thread culture: @System.Threading.Thread.CurrentThread.CurrentCulture.Name</p>
+	<div class="debug-info">
+		Current Culture: @CultureInfo.CurrentCulture.Name<br>
+		Decimal Separator: @CultureInfo.CurrentCulture.NumberFormat.CurrencyDecimalSeparator<br>
+		Sample Format: @(1234.56m.ToString("C", CultureInfo.CurrentCulture))
 	</div>
 	<div class="card-body text-light">
 		<div class="table-responsive">
@@ -72,7 +67,7 @@
 							<td class="text-center">@customerAppointment.AgeGroup.Name</td>
 							<td class="text-truncate">@customerAppointment.Employee.EmployeeName @customerAppointment.Employee.EmployeeSurname</td>
 							<td>@customerAppointment.ApproximateDuration</td>
-							<td class="pe-5 text-end" data-order="@customerAppointment.Price">@customerAppointment.Price.ToString("C")</td>
+							<td class="pe-5 text-end" data-order="@customerAppointment.Price">@customerAppointment.Price.ToString("C", CultureInfo.CurrentCulture)</td>
 							<td>@customerAppointment.StartDateTime.ToString("yyyy-MM-dd dddd HH:mm")</td>
 							<td>@customerAppointment.PhoneNumber</td>
 							<td class="text-truncate">@customerAppointment.EMail</td>
@@ -103,7 +98,7 @@
 							}
 							else if (@customerAppointment.Status == CustomerAppointmentStatus.CustomerConfirmed)
 							{
-								<td class="text-center text-white">
+								<td class="text-center text-info-emphasis">
 									@customerAppointment.Status
 								</td>
 							}
@@ -116,6 +111,28 @@
 											<i class="bi bi-hand-thumbs-up"></i>
 											<span class="d-md-inline">@Localizer["FastApprove"]</span>
 										</button>
+										<div class="modal fade" id="fastApproveModal" tabindex="-1" aria-hidden="true">
+											<div class="modal-dialog modal-sm modal-dialog-centered">
+												<div class="modal-content">
+													<div class="modal-header">
+														<h1 class="modal-title fs-5" id="exampleModalLabel">@Localizer["ApproveAppointment"]</h1>
+														<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+													</div>
+													<div class="modal-body">
+														@Localizer["WouldYouLikeToApproveThisAppointment?"]
+													</div>
+													<div class="modal-footer">
+														<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">@Localizer["Close"]</button>
+														<form asp-action="ApproveAppointment" asp-route-id="@customerAppointment.CustomerAppointmentId" method="post" class="d-inline">
+															<button type="submit" class="btn btn-success">
+																<i class="bi bi-check2"></i>
+																@Localizer["Approve"]
+															</button>
+														</form>
+													</div>
+												</div>
+											</div>
+										</div>
 										<!-- Modal remains same -->
 									}
 
@@ -124,7 +141,6 @@
 										<i class="fa-solid fa-pen-to-square"></i>
 										<span class="d-md-inline">@Localizer["Update"]</span>
 									</a>
-
 									@if (customerAppointment.Status != CustomerAppointmentStatus.Cancelled &&
 																	customerAppointment.Status != CustomerAppointmentStatus.Completed)
 									{
@@ -132,7 +148,7 @@
 											<i class="bi bi-x-octagon"></i>
 											<span class="d-md-inline">@Localizer["FastCancel"]</span>
 										</button>
-										<div class="modal fade" data-bs-theme="dark" id="fastCancelModal" tabindex="-1" aria-hidden="true">
+										<div class="modal fade" id="fastCancelModal" tabindex="-1" aria-hidden="true">
 											<div class="modal-dialog modal-sm modal-dialog-centered">
 												<div class="modal-content">
 													<div class="modal-header">
@@ -144,10 +160,12 @@
 													</div>
 													<div class="modal-footer">
 														<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">@Localizer["Close"]</button>
-														<a asp-action="Cancel" asp-route-id="@customerAppointment.CustomerAppointmentId" class="btn btn-success">
-															<i class="bi bi-trash3"></i>
-															@Localizer["Cancel"]
-														</a>
+														<form asp-action="CancelAppointment" asp-route-id="@customerAppointment.CustomerAppointmentId" method="post" class="d-inline">
+															<button type="submit" class="btn btn-success">
+																<i class="bi bi-trash3"></i>
+																@Localizer["Cancel"]
+															</button>
+														</form>
 													</div>
 												</div>
 											</div>
@@ -162,7 +180,7 @@
 		</div>
 	</div>
 </div>
-<div class="toast-container position-fixed bottom-0 end-0 p-3" data-bs-theme="dark">
+<div class="toast-container position-fixed bottom-0 end-0 p-3">
 	@await Html.PartialAsync("_Toasts")
 </div>
 @section Scripts {

@@ -513,7 +513,7 @@
                                 hourContainer.appendChild(hourHeader);
 
                                 slotsRow = document.createElement('div');
-                                slotsRow.className = 'row g-1';
+                                slotsRow.className = 'row g-1 justify-content-center';
                                 hourContainer.appendChild(slotsRow);
                                 fragment.appendChild(hourContainer);
                             }
@@ -524,9 +524,9 @@
                             let computed = 12 / (60 / minDuration);
                             // Ensure minimum sizes on small and medium breakpoints:
                             let colSm = computed < 2 ? 2 : computed;
-                            let colMd = computed < 3 ? 3 : computed;
-                            let colLg = computed < 3 ? 3 : computed;   // Use the computed value on large screens
-                            let colXl = computed < 3 ? 3 : computed;   // Use the computed value on extra-large screens
+                            let colMd = computed < 2 ? 2 : computed;
+                            let colLg = computed < 2 ? 2 : computed;   // Use the computed value on large screens
+                            let colXl = computed < 2 ? 2 : computed;   // Use the computed value on extra-large screens
                             let colXxl = computed < 2 ? 2 : computed;  // Use the computed value on extra-extra-large screens
 
                             // Build the column classes string
@@ -536,7 +536,7 @@
 
                             const slotButton = document.createElement('button');
                             slotButton.type = 'button';
-                            slotButton.className = 'btn btn-outline-light w-100 time-slot';
+                            slotButton.className = 'btn btn-outline-light w-100 time-slot btn-sm';
                             slotButton.dataset.start = localISODate;
                             slotButton.textContent = displayTime;
 

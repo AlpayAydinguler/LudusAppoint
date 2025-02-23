@@ -1,16 +1,5 @@
 ﻿@model IEnumerable<OfferedServiceDto>
 
-@{
-	var cultureInfo = new CultureInfo("tr-TR");
-	var numberFormat = (NumberFormatInfo)cultureInfo.NumberFormat.Clone();
-	numberFormat.CurrencyPositivePattern = 3; // 3 means symbol after the number with a space
-	numberFormat.CurrencyNegativePattern = 8; // 8 means symbol after the number with a space and negative sign before the number
-	cultureInfo.NumberFormat = numberFormat;
-
-	CultureInfo.CurrentCulture = cultureInfo;
-	CultureInfo.CurrentUICulture = cultureInfo;
-}
-
 <div class="card card-dark bg-dark border-black" data-bs-theme="dark">
 	<div class="card-header">
 		<h6 class="card-title">@Localizer["OfferedServices"]</h6>

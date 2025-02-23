@@ -12,7 +12,7 @@ using Repositories;
 namespace LudusAppoint.Migrations
 {
     [DbContext(typeof(RepositoryContext))]
-    [Migration("20250205224741_Init")]
+    [Migration("20250210181249_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -277,6 +277,26 @@ namespace LudusAppoint.Migrations
                     b.HasKey("Key");
 
                     b.ToTable("ShopSettings");
+
+                    b.HasData(
+                        new
+                        {
+                            Key = "SupportedGenders",
+                            LastModified = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Value = "Male,Female"
+                        },
+                        new
+                        {
+                            Key = "CompanyName",
+                            LastModified = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Value = "Hair Center"
+                        },
+                        new
+                        {
+                            Key = "CompanyLogoURL",
+                            LastModified = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Value = "\\assets\\img\\logo.jpg"
+                        });
                 });
 
             modelBuilder.Entity("Entities.Models.Branch", b =>
@@ -436,7 +456,7 @@ namespace LudusAppoint.Migrations
                             Name = "Alice",
                             PhoneNumber = "+90 123 456 7891",
                             Price = 150m,
-                            StartDateTime = new DateTime(2025, 2, 9, 10, 0, 0, 0, DateTimeKind.Local),
+                            StartDateTime = new DateTime(2025, 2, 13, 10, 0, 0, 0, DateTimeKind.Local),
                             Status = 1,
                             Surname = "Smith"
                         },
@@ -452,7 +472,7 @@ namespace LudusAppoint.Migrations
                             Name = "Bob",
                             PhoneNumber = "+90 123 456 7892",
                             Price = 200m,
-                            StartDateTime = new DateTime(2025, 2, 9, 11, 30, 0, 0, DateTimeKind.Local),
+                            StartDateTime = new DateTime(2025, 2, 13, 11, 30, 0, 0, DateTimeKind.Local),
                             Status = 0,
                             Surname = "Johnson"
                         },
@@ -468,7 +488,7 @@ namespace LudusAppoint.Migrations
                             Name = "Charlie",
                             PhoneNumber = "+90 123 456 7893",
                             Price = 250m,
-                            StartDateTime = new DateTime(2025, 2, 9, 14, 0, 0, 0, DateTimeKind.Local),
+                            StartDateTime = new DateTime(2025, 2, 13, 14, 0, 0, 0, DateTimeKind.Local),
                             Status = 3,
                             Surname = "Brown"
                         },
@@ -484,7 +504,7 @@ namespace LudusAppoint.Migrations
                             Name = "Diana",
                             PhoneNumber = "+90 123 456 7894",
                             Price = 180m,
-                            StartDateTime = new DateTime(2025, 2, 9, 9, 45, 0, 0, DateTimeKind.Local),
+                            StartDateTime = new DateTime(2025, 2, 13, 9, 45, 0, 0, DateTimeKind.Local),
                             Status = 2,
                             Surname = "Prince"
                         },
@@ -500,7 +520,7 @@ namespace LudusAppoint.Migrations
                             Name = "Eve",
                             PhoneNumber = "+90 123 456 7895",
                             Price = 160m,
-                            StartDateTime = new DateTime(2025, 2, 9, 16, 15, 0, 0, DateTimeKind.Local),
+                            StartDateTime = new DateTime(2025, 2, 13, 16, 15, 0, 0, DateTimeKind.Local),
                             Status = 1,
                             Surname = "Adams"
                         },
@@ -516,7 +536,7 @@ namespace LudusAppoint.Migrations
                             Name = "Frank",
                             PhoneNumber = "+90 123 456 7896",
                             Price = 120m,
-                            StartDateTime = new DateTime(2025, 2, 7, 12, 30, 0, 0, DateTimeKind.Local),
+                            StartDateTime = new DateTime(2025, 2, 11, 12, 30, 0, 0, DateTimeKind.Local),
                             Status = 0,
                             Surname = "Miller"
                         },
@@ -532,7 +552,7 @@ namespace LudusAppoint.Migrations
                             Name = "Grace",
                             PhoneNumber = "+90 123 456 7897",
                             Price = 450m,
-                            StartDateTime = new DateTime(2025, 2, 7, 15, 0, 0, 0, DateTimeKind.Local),
+                            StartDateTime = new DateTime(2025, 2, 11, 15, 0, 0, 0, DateTimeKind.Local),
                             Status = 1,
                             Surname = "Hall"
                         },
@@ -548,7 +568,7 @@ namespace LudusAppoint.Migrations
                             Name = "Henry",
                             PhoneNumber = "+90 123 456 7898",
                             Price = 700m,
-                            StartDateTime = new DateTime(2025, 2, 7, 14, 30, 0, 0, DateTimeKind.Local),
+                            StartDateTime = new DateTime(2025, 2, 11, 14, 30, 0, 0, DateTimeKind.Local),
                             Status = 3,
                             Surname = "Ford"
                         },
@@ -564,7 +584,7 @@ namespace LudusAppoint.Migrations
                             Name = "Isabelle",
                             PhoneNumber = "+90 123 456 7899",
                             Price = 250m,
-                            StartDateTime = new DateTime(2025, 2, 7, 10, 0, 0, 0, DateTimeKind.Local),
+                            StartDateTime = new DateTime(2025, 2, 11, 10, 0, 0, 0, DateTimeKind.Local),
                             Status = 2,
                             Surname = "Clark"
                         },
@@ -580,7 +600,7 @@ namespace LudusAppoint.Migrations
                             Name = "Jack",
                             PhoneNumber = "+90 123 456 7890",
                             Price = 300m,
-                            StartDateTime = new DateTime(2025, 2, 8, 9, 15, 0, 0, DateTimeKind.Local),
+                            StartDateTime = new DateTime(2025, 2, 12, 9, 15, 0, 0, DateTimeKind.Local),
                             Status = 0,
                             Surname = "White"
                         });
@@ -702,24 +722,24 @@ namespace LudusAppoint.Migrations
                         {
                             EmployeeLeaveId = 1,
                             EmployeeId = 1,
-                            LeaveEndDateTime = new DateTime(2025, 2, 7, 18, 0, 0, 0, DateTimeKind.Local),
-                            LeaveStartDateTime = new DateTime(2025, 2, 7, 8, 0, 0, 0, DateTimeKind.Local),
+                            LeaveEndDateTime = new DateTime(2025, 2, 11, 18, 0, 0, 0, DateTimeKind.Local),
+                            LeaveStartDateTime = new DateTime(2025, 2, 11, 8, 0, 0, 0, DateTimeKind.Local),
                             Reason = "Sick"
                         },
                         new
                         {
                             EmployeeLeaveId = 2,
                             EmployeeId = 2,
-                            LeaveEndDateTime = new DateTime(2025, 2, 8, 18, 0, 0, 0, DateTimeKind.Local),
-                            LeaveStartDateTime = new DateTime(2025, 2, 8, 8, 0, 0, 0, DateTimeKind.Local),
+                            LeaveEndDateTime = new DateTime(2025, 2, 12, 18, 0, 0, 0, DateTimeKind.Local),
+                            LeaveStartDateTime = new DateTime(2025, 2, 12, 8, 0, 0, 0, DateTimeKind.Local),
                             Reason = "Vacation"
                         },
                         new
                         {
                             EmployeeLeaveId = 3,
                             EmployeeId = 3,
-                            LeaveEndDateTime = new DateTime(2025, 2, 9, 18, 0, 0, 0, DateTimeKind.Local),
-                            LeaveStartDateTime = new DateTime(2025, 2, 9, 8, 0, 0, 0, DateTimeKind.Local),
+                            LeaveEndDateTime = new DateTime(2025, 2, 13, 18, 0, 0, 0, DateTimeKind.Local),
+                            LeaveStartDateTime = new DateTime(2025, 2, 13, 8, 0, 0, 0, DateTimeKind.Local),
                             Reason = "Personal"
                         });
                 });
@@ -753,7 +773,7 @@ namespace LudusAppoint.Migrations
 
                     b.ToTable("OfferedServices", t =>
                         {
-                            t.HasCheckConstraint("CK_OfferedService_ApproximateDuration", "ApproximateDuration >= '00:01:00' AND ApproximateDuration <= '23:59:59'");
+                            t.HasCheckConstraint("CK_OfferedService_ApproximateDuration", "ApproximateDuration >= '00:01' AND ApproximateDuration <= '23:59'");
                         });
 
                     b.HasData(

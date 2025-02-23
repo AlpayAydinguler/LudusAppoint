@@ -7,6 +7,6 @@ namespace Entities.Models
         [Key]
         public string Key { get; set; }
         public string Value { get; set; }
-        public DateTime LastModified { get; set; } = DateTime.Now;
+        public DateTime LastModified { get; set; }
     }
 }

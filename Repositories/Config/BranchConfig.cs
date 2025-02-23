@@ -8,6 +8,7 @@ namespace Repositories.Config
     {
         public void Configure(EntityTypeBuilder<Branch> builder)
         {
+            
             var branch = new Branch
             {
                 BranchId = 1,
@@ -38,6 +39,7 @@ namespace Repositories.Config
                 Status = false
             };
             builder.HasData(branch, branch2);
+            
         }
     }
 }

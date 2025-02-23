@@ -29,7 +29,7 @@ namespace Repositories.Config
 
             var fixedDate = DateTime.Today; // A fixed base date
             var random = new Random(123); // Fixed seed
-
+            
             builder.HasData(
                 new CustomerAppointment
                 {
@@ -221,6 +221,7 @@ namespace Repositories.Config
                     BranchId = 1
                 }
             );
+            
         }
     }
 }

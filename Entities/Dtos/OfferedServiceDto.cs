@@ -14,8 +14,9 @@ namespace Entities.Dtos
         public String OfferedServiceName { get; init; }
         [Column(TypeName = "nvarchar(max)")]
         public List<Gender> Genders { get; init; } = new List<Gender>();
-        [Range(typeof(TimeSpan), "00:01:00", "24:00:00", ErrorMessageResourceType = typeof(Resources.Dtos.OfferedServiceDto), ErrorMessageResourceName = "TheDurationMustBeBetween1MinuteAnd24Hours")]
+        //[Range(typeof(TimeSpan), "00:01", "23:59", ErrorMessageResourceType = typeof(Resources.Dtos.OfferedServiceDto), ErrorMessageResourceName = "TheDurationMustBeBetween1MinuteAnd24Hours")]
         [Required(ErrorMessageResourceType = typeof(Resources.SharedResources), ErrorMessageResourceName = "MissingKeyOrValueAccessor")]
+        [DisplayFormat(DataFormatString = "{0:hh\\:mm}", ApplyFormatInEditMode = true)]
         public TimeSpan ApproximateDuration { get; init; }
         [Required(ErrorMessageResourceType = typeof(Resources.SharedResources), ErrorMessageResourceName = "MissingKeyOrValueAccessor")]
         [DataType(DataType.Currency)]

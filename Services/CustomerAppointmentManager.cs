@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Entities.Dtos;
 using Entities.Models;
+using Entities.Models.Enums;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
@@ -22,6 +23,18 @@ namespace Services
             _repositoryManager = repositoryManager;
             _mapper = mapper;
             _localizer = localizer;
+        }
+
+        public async Task ChangeStatusAsync(int id, CustomerAppointmentStatus newStatus)
+        {
+            var entity = await _repositoryManager.CustomerAppointmentRepository.FindByConditionAsync(x => x.CustomerAppointmentId == id, false);
+            if (entity == null)
+            {
+                throw new KeyNotFoundException(_localizer["CustomerAppointmentWithId {id} NotFound"] + ".");
+            }
+            entity.Status = newStatus;
+            _repositoryManager.CustomerAppointmentRepository.Update(entity);
+            await _repositoryManager.CustomerAppointmentRepository.SaveAsync();
         }
 
         public void CreateAppointment(CustomerAppointment customerAppointment, int[] offeredServiceIds)

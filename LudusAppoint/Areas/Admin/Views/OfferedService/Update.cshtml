@@ -23,7 +23,7 @@
 
                                     <div class="form-floating text-body-tertiary mb-3">
                                         <input asp-for="ApproximateDuration" class="form-control"
-                                               type="time" min="00:01" max="24:00" placeholder=" " />
+                                               type="time" min="00:01" max="23:59" placeholder=" " />
                                         <label asp-for="ApproximateDuration">@Localizer["ApproximateDuration(Minutes)"]</label>
                                         <span asp-validation-for="ApproximateDuration" class="text-danger small"></span>
                                     </div>
