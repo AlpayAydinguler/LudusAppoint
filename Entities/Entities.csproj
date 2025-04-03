@@ -7,8 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNet.Mvc" Version="5.3.0" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="9.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.3.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.3.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -56,6 +58,11 @@
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>OfferedServiceDto.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\Dtos\RegisterDto.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>RegisterDto.resx</DependentUpon>
     </Compile>
     <Compile Update="Resources\SharedResources.Designer.cs">
       <DesignTime>True</DesignTime>
@@ -105,6 +112,10 @@
     <EmbeddedResource Update="Resources\Dtos\OfferedServiceDto.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>OfferedServiceDto.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Dtos\RegisterDto.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>RegisterDto.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Update="Resources\SharedResources.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>

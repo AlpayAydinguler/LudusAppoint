@@ -9,5 +9,8 @@
         IBranchService BranchService { get; }
         IEmployeeLeaveService EmployeeLeaveService { get; }
         IApplicationSettingService ApplicationSettingService { get; }
+        IAccountService AccountService { get; }
+        IAuthService AuthService { get; }
+        IUserService UserService { get; }
     }
 }

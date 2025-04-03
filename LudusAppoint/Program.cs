@@ -26,6 +26,7 @@ builder.Services.Configure<RequestLocalizationOptions>(options =>
 });
 
 builder.Services.ConfigureDbContext(builder.Configuration);
+builder.Services.ConfigureIdentity();
 builder.Services.ConfigureSession();
 builder.Services.ConfigureRepositoryRegistration();
 builder.Services.ConfigureServiceRegistration();
@@ -50,13 +51,12 @@ app.UseStaticFiles();
 app.UseSession();
 app.UseRouting();
 
-app.UseAuthorization();
-
 app.UseRequestLocalization();
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
+app.UseAuthentication();
 app.UseAuthorization();
 app.UseRequestLocalization();
 
@@ -69,5 +69,6 @@ app.MapAreaControllerRoute(
 app.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}");
 
 app.ConfigureAndCheckMigration();
+app.ConfigureDefaultAdminUser();
 
 app.Run();

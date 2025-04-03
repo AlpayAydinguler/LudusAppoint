@@ -190,6 +190,60 @@
 		</li>
 	</ul>
 </li>
+<li class="nav-item @IsActive("Role")">
+	<a href="#" class="nav-link">
+		<i class="nav-icon bi bi-shield-lock-fill text-primary-emphasis"></i>
+		<p>
+			@Localizer["Roles"]
+			<i class="nav-arrow bi bi-chevron-right"></i>
+		</p>
+	</a>
+	<ul class="nav nav-treeview">
+		<li class="nav-item">
+			<a class="nav-link @IsActive("Role", "Index")" aria-current="page" asp-controller="Role" asp-action="Index">
+				<i class="fa-solid fa-user-shield"></i>
+				<p>
+					@Localizer["RolesList"]
+				</p>
+			</a>
+		</li>
+		<li class="nav-item">
+			<a asp-controller="Role" asp-action="Create" class="nav-link @IsActive("Role", "Create")">
+				<i class="bi bi-shield-plus"></i>
+				<p>
+					@Localizer["CreateRole"]
+				</p>
+			</a>
+		</li>
+	</ul>
+</li>
+<li class="nav-item @IsActive("User")">
+	<a href="#" class="nav-link">
+		<i class="nav-icon bi bi-person-rolodex text-primary-emphasis"></i>
+		<p>
+			@Localizer["Users"]
+			<i class="nav-arrow bi bi-chevron-right"></i>
+		</p>
+	</a>
+	<ul class="nav nav-treeview">
+		<li class="nav-item">
+			<a class="nav-link @IsActive("User", "Index")" aria-current="page" asp-controller="User" asp-action="Index">
+				<i class="fa-solid fa-address-book"></i>
+				<p>
+					@Localizer["UsersList"]
+				</p>
+			</a>
+		</li>
+		<li class="nav-item">
+			<a asp-controller="User" asp-action="Create" class="nav-link @IsActive("User", "Create")">
+				<i class="bi bi-plus-lg"></i>
+				<p>
+					@Localizer["CreateUser"]
+				</p>
+			</a>
+		</li>
+	</ul>
+</li>
 <li class="nav-item @IsActive("ApplicationSetting")">
 	<a href="#" class="nav-link">
 		<i class="nav-icon bi bi-gear text-primary-emphasis"></i>

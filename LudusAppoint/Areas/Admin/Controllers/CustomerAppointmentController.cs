@@ -1,6 +1,8 @@
 ﻿using Entities.Dtos;
 using Entities.Models;
 using Entities.Models.Enums;
+using LudusAppoint.Models.Enums;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 using Microsoft.IdentityModel.Tokens;
@@ -21,6 +23,7 @@ namespace LudusAppoint.Areas.Admin.Controllers
             _serviceManager = serviceManager;
             _localizer = localizer;
         }
+        [Authorize(Policy = nameof(Permissions.CustomerAppointment_Index))]
         public IActionResult Index()
         {
             var model = _serviceManager.CustomerAppointmentService.GetAllCustomerAppointments(false, System.Globalization.CultureInfo.CurrentCulture.Name);
@@ -67,6 +70,7 @@ namespace LudusAppoint.Areas.Admin.Controllers
             }
         }
 
+        [Authorize(Policy = nameof(Permissions.CustomerAppointment_Update))]
         public async Task<IActionResult> Update([FromRoute] int id)
         {
             var model = await _serviceManager.CustomerAppointmentService.GetCustomerAppointmentForUpdateAsync(id, false, System.Globalization.CultureInfo.CurrentCulture.Name);
@@ -76,6 +80,7 @@ namespace LudusAppoint.Areas.Admin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = nameof(Permissions.CustomerAppointment_Update))]
         public async Task<IActionResult> Update([FromForm] CustomerAppointmentDtoForUpdate customerAppointmentDtoForUpdate)
         {
             if (!ModelState.IsValid)

@@ -66,7 +66,7 @@ namespace Services
 
             if (existingAgeGroup != null && existingAgeGroup.AgeGroupId != ageGroupId)
             {
-                validationException.Add(new ValidationException("AnAgeGroupWithTheSameMinAgeAndMaxAgeAlreadyExists" + ".", new Exception() { Source = "Model" }));
+                validationException.Add(new ValidationException(_localizer["AnAgeGroupWithTheSameMinAgeAndMaxAgeAlreadyExists"] + ".", new Exception() { Source = "Model" }));
             }
 
             if (minAge < 0)

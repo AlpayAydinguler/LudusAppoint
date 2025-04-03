@@ -273,7 +273,7 @@ namespace LudusAppoint.Migrations
 
                     b.HasKey("Key");
 
-                    b.ToTable("ShopSettings");
+                    b.ToTable("ApplicationSetting");
 
                     b.HasData(
                         new
@@ -293,7 +293,96 @@ namespace LudusAppoint.Migrations
                             Key = "CompanyLogoURL",
                             LastModified = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Value = "\\assets\\img\\logo.jpg"
+                        },
+                        new
+                        {
+                            Key = "Currency",
+                            LastModified = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Value = "tr-TR"
                         });
+                });
+
+            modelBuilder.Entity("Entities.Models.ApplicationUser", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("AccessFailedCount")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Email")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<bool>("EmailConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("LastLogin")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("LockoutEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTimeOffset?>("LockoutEnd")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NormalizedEmail")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("NormalizedUserName")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("PasswordHash")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<bool>("PhoneNumberConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("SecurityStamp")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Surname")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("TwoFactorEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("UserName")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormalizedEmail")
+                        .HasDatabaseName("EmailIndex");
+
+                    b.HasIndex("NormalizedUserName")
+                        .IsUnique()
+                        .HasDatabaseName("UserNameIndex")
+                        .HasFilter("[NormalizedUserName] IS NOT NULL");
+
+                    b.HasIndex("PhoneNumber")
+                        .IsUnique()
+                        .HasFilter("[PhoneNumber] IS NOT NULL");
+
+                    b.ToTable("AspNetUsers", (string)null);
                 });
 
             modelBuilder.Entity("Entities.Models.Branch", b =>
@@ -395,8 +484,8 @@ namespace LudusAppoint.Migrations
                     b.Property<int>("BranchId")
                         .HasColumnType("int");
 
-                    b.Property<string>("CreatedById")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("EMail")
                         .HasColumnType("nvarchar(max)");
@@ -434,8 +523,6 @@ namespace LudusAppoint.Migrations
 
                     b.HasIndex("BranchId");
 
-                    b.HasIndex("CreatedById");
-
                     b.HasIndex("EmployeeId");
 
                     b.ToTable("CustomerAppointments");
@@ -453,7 +540,7 @@ namespace LudusAppoint.Migrations
                             Name = "Alice",
                             PhoneNumber = "+90 123 456 7891",
                             Price = 150m,
-                            StartDateTime = new DateTime(2025, 2, 13, 10, 0, 0, 0, DateTimeKind.Local),
+                            StartDateTime = new DateTime(2025, 4, 6, 10, 0, 0, 0, DateTimeKind.Local),
                             Status = 1,
                             Surname = "Smith"
                         },
@@ -469,7 +556,7 @@ namespace LudusAppoint.Migrations
                             Name = "Bob",
                             PhoneNumber = "+90 123 456 7892",
                             Price = 200m,
-                            StartDateTime = new DateTime(2025, 2, 13, 11, 30, 0, 0, DateTimeKind.Local),
+                            StartDateTime = new DateTime(2025, 4, 6, 11, 30, 0, 0, DateTimeKind.Local),
                             Status = 0,
                             Surname = "Johnson"
                         },
@@ -485,7 +572,7 @@ namespace LudusAppoint.Migrations
                             Name = "Charlie",
                             PhoneNumber = "+90 123 456 7893",
                             Price = 250m,
-                            StartDateTime = new DateTime(2025, 2, 13, 14, 0, 0, 0, DateTimeKind.Local),
+                            StartDateTime = new DateTime(2025, 4, 6, 14, 0, 0, 0, DateTimeKind.Local),
                             Status = 3,
                             Surname = "Brown"
                         },
@@ -501,7 +588,7 @@ namespace LudusAppoint.Migrations
                             Name = "Diana",
                             PhoneNumber = "+90 123 456 7894",
                             Price = 180m,
-                            StartDateTime = new DateTime(2025, 2, 13, 9, 45, 0, 0, DateTimeKind.Local),
+                            StartDateTime = new DateTime(2025, 4, 6, 9, 45, 0, 0, DateTimeKind.Local),
                             Status = 2,
                             Surname = "Prince"
                         },
@@ -517,7 +604,7 @@ namespace LudusAppoint.Migrations
                             Name = "Eve",
                             PhoneNumber = "+90 123 456 7895",
                             Price = 160m,
-                            StartDateTime = new DateTime(2025, 2, 13, 16, 15, 0, 0, DateTimeKind.Local),
+                            StartDateTime = new DateTime(2025, 4, 6, 16, 15, 0, 0, DateTimeKind.Local),
                             Status = 1,
                             Surname = "Adams"
                         },
@@ -533,7 +620,7 @@ namespace LudusAppoint.Migrations
                             Name = "Frank",
                             PhoneNumber = "+90 123 456 7896",
                             Price = 120m,
-                            StartDateTime = new DateTime(2025, 2, 11, 12, 30, 0, 0, DateTimeKind.Local),
+                            StartDateTime = new DateTime(2025, 4, 4, 12, 30, 0, 0, DateTimeKind.Local),
                             Status = 0,
                             Surname = "Miller"
                         },
@@ -549,7 +636,7 @@ namespace LudusAppoint.Migrations
                             Name = "Grace",
                             PhoneNumber = "+90 123 456 7897",
                             Price = 450m,
-                            StartDateTime = new DateTime(2025, 2, 11, 15, 0, 0, 0, DateTimeKind.Local),
+                            StartDateTime = new DateTime(2025, 4, 4, 15, 0, 0, 0, DateTimeKind.Local),
                             Status = 1,
                             Surname = "Hall"
                         },
@@ -565,7 +652,7 @@ namespace LudusAppoint.Migrations
                             Name = "Henry",
                             PhoneNumber = "+90 123 456 7898",
                             Price = 700m,
-                            StartDateTime = new DateTime(2025, 2, 11, 14, 30, 0, 0, DateTimeKind.Local),
+                            StartDateTime = new DateTime(2025, 4, 4, 14, 30, 0, 0, DateTimeKind.Local),
                             Status = 3,
                             Surname = "Ford"
                         },
@@ -581,7 +668,7 @@ namespace LudusAppoint.Migrations
                             Name = "Isabelle",
                             PhoneNumber = "+90 123 456 7899",
                             Price = 250m,
-                            StartDateTime = new DateTime(2025, 2, 11, 10, 0, 0, 0, DateTimeKind.Local),
+                            StartDateTime = new DateTime(2025, 4, 4, 10, 0, 0, 0, DateTimeKind.Local),
                             Status = 2,
                             Surname = "Clark"
                         },
@@ -597,7 +684,7 @@ namespace LudusAppoint.Migrations
                             Name = "Jack",
                             PhoneNumber = "+90 123 456 7890",
                             Price = 300m,
-                            StartDateTime = new DateTime(2025, 2, 12, 9, 15, 0, 0, DateTimeKind.Local),
+                            StartDateTime = new DateTime(2025, 4, 5, 9, 15, 0, 0, DateTimeKind.Local),
                             Status = 0,
                             Surname = "White"
                         });
@@ -719,24 +806,24 @@ namespace LudusAppoint.Migrations
                         {
                             EmployeeLeaveId = 1,
                             EmployeeId = 1,
-                            LeaveEndDateTime = new DateTime(2025, 2, 11, 18, 0, 0, 0, DateTimeKind.Local),
-                            LeaveStartDateTime = new DateTime(2025, 2, 11, 8, 0, 0, 0, DateTimeKind.Local),
+                            LeaveEndDateTime = new DateTime(2025, 4, 4, 18, 0, 0, 0, DateTimeKind.Local),
+                            LeaveStartDateTime = new DateTime(2025, 4, 4, 8, 0, 0, 0, DateTimeKind.Local),
                             Reason = "Sick"
                         },
                         new
                         {
                             EmployeeLeaveId = 2,
                             EmployeeId = 2,
-                            LeaveEndDateTime = new DateTime(2025, 2, 12, 18, 0, 0, 0, DateTimeKind.Local),
-                            LeaveStartDateTime = new DateTime(2025, 2, 12, 8, 0, 0, 0, DateTimeKind.Local),
+                            LeaveEndDateTime = new DateTime(2025, 4, 5, 18, 0, 0, 0, DateTimeKind.Local),
+                            LeaveStartDateTime = new DateTime(2025, 4, 5, 8, 0, 0, 0, DateTimeKind.Local),
                             Reason = "Vacation"
                         },
                         new
                         {
                             EmployeeLeaveId = 3,
                             EmployeeId = 3,
-                            LeaveEndDateTime = new DateTime(2025, 2, 13, 18, 0, 0, 0, DateTimeKind.Local),
-                            LeaveStartDateTime = new DateTime(2025, 2, 13, 8, 0, 0, 0, DateTimeKind.Local),
+                            LeaveEndDateTime = new DateTime(2025, 4, 6, 18, 0, 0, 0, DateTimeKind.Local),
+                            LeaveStartDateTime = new DateTime(2025, 4, 6, 8, 0, 0, 0, DateTimeKind.Local),
                             Reason = "Personal"
                         });
                 });
@@ -1057,56 +1144,163 @@ namespace LudusAppoint.Migrations
                         });
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUser", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("AccessFailedCount")
-                        .HasColumnType("int");
-
                     b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Email")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<string>("Name")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
-                    b.Property<bool>("EmailConfirmed")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("LockoutEnabled")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTimeOffset?>("LockoutEnd")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("NormalizedEmail")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("NormalizedUserName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PasswordHash")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PhoneNumber")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("PhoneNumberConfirmed")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("SecurityStamp")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("TwoFactorEnabled")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("UserName")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<string>("NormalizedName")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("IdentityUser");
+                    b.HasIndex("NormalizedName")
+                        .IsUnique()
+                        .HasDatabaseName("RoleNameIndex")
+                        .HasFilter("[NormalizedName] IS NOT NULL");
+
+                    b.ToTable("AspNetRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "1",
+                            Name = "Admin",
+                            NormalizedName = "ADMIN"
+                        },
+                        new
+                        {
+                            Id = "2",
+                            Name = "Owner",
+                            NormalizedName = "OWNER"
+                        },
+                        new
+                        {
+                            Id = "3",
+                            Name = "Editor",
+                            NormalizedName = "EDITOR"
+                        },
+                        new
+                        {
+                            Id = "4",
+                            Name = "User",
+                            NormalizedName = "USER"
+                        });
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ClaimType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ClaimValue")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RoleId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("AspNetRoleClaims", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ClaimType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ClaimValue")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("AspNetUserClaims", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
+                {
+                    b.Property<string>("LoginProvider")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ProviderKey")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ProviderDisplayName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("LoginProvider", "ProviderKey");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("AspNetUserLogins", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("RoleId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("UserId", "RoleId");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("AspNetUserRoles", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("LoginProvider")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Value")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("UserId", "LoginProvider", "Name");
+
+                    b.ToTable("AspNetUserTokens", (string)null);
                 });
 
             modelBuilder.Entity("OfferedServiceAgeGroups", b =>
@@ -1235,10 +1429,6 @@ namespace LudusAppoint.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "CreatedBy")
-                        .WithMany()
-                        .HasForeignKey("CreatedById");
-
                     b.HasOne("Entities.Models.Employee", "Employee")
                         .WithMany("CustomerAppointment")
                         .HasForeignKey("EmployeeId")
@@ -1248,8 +1438,6 @@ namespace LudusAppoint.Migrations
                     b.Navigation("AgeGroup");
 
                     b.Navigation("Branch");
-
-                    b.Navigation("CreatedBy");
 
                     b.Navigation("Employee");
                 });
@@ -1285,6 +1473,57 @@ namespace LudusAppoint.Migrations
                         .IsRequired();
 
                     b.Navigation("OfferedService");
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
+                {
+                    b.HasOne("Entities.Models.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
+                {
+                    b.HasOne("Entities.Models.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Entities.Models.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
+                {
+                    b.HasOne("Entities.Models.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("OfferedServiceAgeGroups", b =>

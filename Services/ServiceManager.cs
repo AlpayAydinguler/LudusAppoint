@@ -11,8 +11,20 @@ namespace Services
         private readonly IBranchService _branchService;
         private readonly IEmployeeLeaveService _employeeLeaveService;
         private readonly IApplicationSettingService _applicationSettingService;
+        private readonly IAccountService _accountService;
+        private readonly IAuthService _authService;
+        private readonly IUserService _userService;
 
-        public ServiceManager(IAgeGroupService ageGroupService, IEmployeeService employeeService, IOfferedServiceService offeredServiceService, ICustomerAppointmentService customerAppointmentService, IBranchService branchService, IEmployeeLeaveService employeeLeaveService, IApplicationSettingService applicationSettingService)
+        public ServiceManager(IAgeGroupService ageGroupService,
+                              IEmployeeService employeeService,
+                              IOfferedServiceService offeredServiceService,
+                              ICustomerAppointmentService customerAppointmentService,
+                              IBranchService branchService,
+                              IEmployeeLeaveService employeeLeaveService,
+                              IApplicationSettingService applicationSettingService,
+                              IAccountService accountService,
+                              IAuthService authService,
+                              IUserService userService)
         {
             _ageGroupService = ageGroupService;
             _employeeService = employeeService;
@@ -21,6 +33,9 @@ namespace Services
             _branchService = branchService;
             _employeeLeaveService = employeeLeaveService;
             _applicationSettingService = applicationSettingService;
+            _accountService = accountService;
+            _authService = authService;
+            _userService = userService;
         }
 
         public IAgeGroupService AgeGroupService => _ageGroupService;
@@ -30,5 +45,8 @@ namespace Services
         public IBranchService BranchService => _branchService;
         public IEmployeeLeaveService EmployeeLeaveService => _employeeLeaveService;
         public IApplicationSettingService ApplicationSettingService => _applicationSettingService;
+        public IAccountService AccountService => _accountService;
+        public IAuthService AuthService => _authService;
+        public IUserService UserService => _userService;
     }
 }

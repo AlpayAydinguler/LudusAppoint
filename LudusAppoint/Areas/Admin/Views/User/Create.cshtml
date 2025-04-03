@@ -1,0 +1,72 @@
+﻿@model UserDtoForInsert
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-8 col-lg-6">
+            <div class="card shadow-lg mt-5">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="mb-0">@Localizer["CreateUser"]</h3>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Create" method="post">
+                        <!-- Phone Number Input -->
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">+90</span>
+                            <div class="form-floating">
+                                <div class="input-group">
+                                    <div class="form-floating">
+                                        <input asp-for="PhoneNumber" class="form-control" type="tel" />
+                                        <label asp-for="PhoneNumber">@Localizer["PhoneNumber"]</label>
+                                        <span asp-validation-for="PhoneNumber" class="text-danger small"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Name Input -->
+                        <div class="form-floating mb-3">
+                            <input asp-for="Name"
+                                   class="form-control" />
+                            <label asp-for="Name"></label>
+                            <span asp-validation-for="Name" class="text-danger small"></span>
+                        </div>
+
+                        <!-- Surname Input -->
+                        <div class="form-floating mb-4">
+                            <input asp-for="Surname"
+                                   class="form-control" />
+                            <label asp-for="Surname"></label>
+                            <span asp-validation-for="Surname" class="text-danger small"></span>
+                        </div>
+
+						<!-- Email Input -->
+						<div class="form-floating mb-3">
+                            <input asp-for="Email"
+								   class="form-control" />
+							<label asp-for="Email"></label>
+							<span asp-validation-for="Email" class="text-danger small"></span>
+						</div>
+
+                        <!-- Submit Button -->
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                @Localizer["Register"]
+                            </button>
+                        </div>
+
+                        <div class="text-danger small mb-3" asp-validation-summary="All"></div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/5.0.9/jquery.inputmask.min.js" integrity="sha512-F5Ul1uuyFlGnIT1dk2c4kB4DBdi5wnBJjVhL7gQlGh46Xn0VhvD8kgxLtjdZ5YN83gybk/aASUAlpdoWUjRR3g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script>
+        $(document).ready(function(){
+                  $("#PhoneNumber").inputmask({"mask": "(999) 999 99 99"});
+                });
+    </script>
+}

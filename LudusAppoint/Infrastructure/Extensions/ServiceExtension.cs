@@ -4,6 +4,9 @@ using Repositories.Contracts;
 using Services.Contracts;
 using Services;
 using LudusAppoint.Dtos;
+using Microsoft.AspNetCore.Identity;
+using LudusAppoint.Models.Enums;
+using Entities.Models;
 
 namespace LudusAppoint.Infrastructure.Extensions
 {
@@ -13,12 +16,34 @@ namespace LudusAppoint.Infrastructure.Extensions
         {
             services.AddDbContext<RepositoryContext>(options =>
             {
-                /*
-                options.UseSqlite(configuration.GetConnectionString("sqlconnection"),
-                                  b => b.MigrationsAssembly("LudusAppoint"));
-                */
-                options.UseSqlServer(configuration.GetConnectionString("mssqlconnection"),
-                                  b => b.MigrationsAssembly("LudusAppoint"));
+                options.UseSqlServer(
+                    configuration.GetConnectionString("mssqlconnection"),
+                    sqlServerOptions =>
+                    {
+                        sqlServerOptions
+                            .EnableRetryOnFailure(
+                                maxRetryCount: 5,
+                                maxRetryDelay: TimeSpan.FromSeconds(30),
+                                errorNumbersToAdd: null)
+                            .MigrationsAssembly("LudusAppoint");
+                    });
+            });
+        }
+
+        public static void ConfigureIdentity(this IServiceCollection services)
+        {
+            services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+            {
+                options.SignIn.RequireConfirmedPhoneNumber = true;
+            }).AddEntityFrameworkStores<RepositoryContext>();
+
+            services.AddAuthorization(options =>
+            {
+                foreach (Permissions permission in Enum.GetValues(typeof(Permissions)))
+                {
+                    options.AddPolicy(permission.ToString(), policy =>
+                        policy.RequireClaim("permission", permission.ToString()));
+                }
             });
         }
 
@@ -59,6 +84,9 @@ namespace LudusAppoint.Infrastructure.Extensions
             services.AddScoped<IBranchService, BranchManager>();
             services.AddScoped<IEmployeeLeaveService, EmployeeLeaveManager>();
             services.AddScoped<IApplicationSettingService, ApplicationSettingManager>();
+            services.AddScoped<IAccountService, AccountManager>();
+            services.AddScoped<IAuthService, AuthManager>();
+            services.AddScoped<IUserService, UserManager>();
         }
     }
 }

@@ -1,0 +1,144 @@
+﻿@model IEnumerable<UserDto>
+
+<div class="card card-dark bg-dark border-black" data-bs-theme="dark">
+	<div class="card-header">
+		<h6 class="card-title">@Localizer["Users"]</h6>
+		<div class="d-flex justify-content-end">
+			<a asp-action="Create" class="btn btn-success">
+				<i class="bi bi-plus-lg"></i>
+				@Localizer["Create"]
+			</a>
+		</div>
+	</div>
+	<div class="card-body text-light">
+		<div class="table-responsive">
+			<table id="usersTable" class="table table-dark table-hover table-striped align-middle">
+				<thead class="table-secondary">
+					<tr>
+						<th class="text-center">@Localizer["UserId"]</th>
+						<th>@Localizer["UserName"]</th>
+						<th>@Localizer["Name"]</th>
+						<th>@Localizer["Surname"]</th>
+						<th>@Localizer["Email"]</th>
+						<th>@Localizer["IsActive"]</th>
+						<th class="text-center">@Localizer["Operations"]</th>
+					</tr>
+				</thead>
+				<tbody>
+					@foreach (var user in Model)
+					{
+						<tr>
+							<td class="text-center">@user.UserId</td>
+							<td>@user.UserName</td>
+							<td>@user.Name</td>
+							<td>@user.Surname</td>
+							<td>@user.Email</td>
+							<td class="text-center align-content-center">
+								@if (user.IsActive == true)
+								{
+									<span class="badge text-bg-success">
+										@Localizer["Active"]
+									</span>
+								}
+								else
+								{
+									<span class="badge text-bg-danger">
+										@Localizer["Passive"]
+									</span>
+								}
+							</td>
+							<td class="text-center align-content-center">
+								<div class="btn-group btn-group-sm" role="group">
+									<a asp-action="Update" asp-route-id="@user.UserId" class="btn btn-warning btn-sm rounded mx-1">
+										<i class="fa-solid fa-pen-to-square"></i>
+										@Localizer["Update"]
+									</a>
+									<button type="button" class="btn btn-danger btn-sm rounded mx-1" data-bs-toggle="modal" data-bs-target="#deleteModal-@user.UserId">
+										<i class="bi bi-trash3"></i>
+										@Localizer["Delete"]
+									</button>
+									<div class="modal fade" id="deleteModal-@user.UserId" tabindex="-1" aria-labelledby="deleteModalLabel-@user.UserId" aria-hidden="true">
+										<div class="modal-dialog modal-dialog-centered">
+											<div class="modal-content">
+												<div class="modal-header">
+													<h5 class="modal-title" id="deleteModalLabel-@user.UserId">@Localizer["ConfirmDeletion"]</h5>
+													<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+												</div>
+												<div class="modal-body">
+													<p>@Localizer["AreYouSureYouWantToDeleteThis{0}User", user?.Name + " " + user?.Surname]</p>
+												</div>
+												<div class="modal-footer">
+													<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">@Localizer["Cancel"]</button>
+													<form method="post" asp-action="Delete">
+														<input type="hidden" name="id" value="@user.UserId" />
+														<button type="submit" class="btn btn-danger rounded mx-1">
+															<i class="bi bi-trash3"></i>
+															@Localizer["Delete"]
+														</button>
+													</form>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</td>
+						</tr>
+					}
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+
+<div class="toast-container position-fixed bottom-0 end-0 p-3" data-bs-theme="dark">
+	@await Html.PartialAsync("_Toasts")
+</div>
+
+@section Scripts {
+	<script>
+		$(document).ready(function () {
+			$('#usersTable').DataTable({
+				columnDefs: [{
+					"orderable": false,
+					"targets": [ 5 ]
+				}],
+				responsive: true,
+				paging: true,
+				searching: true,
+				ordering: true,
+				lengthChange: true,
+				language: {
+					search: "@Localizer["Search"] : ",
+					lengthMenu: "@Localizer["Show _MENU_ entries"]",
+					info: "@Localizer["Showing _START_ to _END_ of _TOTAL_ entries"]",
+					paginate: {
+						previous: "@Localizer["Previous"]",
+						next: "@Localizer["Next"]"
+					}
+				}
+			});
+		});
+	</script>
+	<script>
+		$(document).ready(function () {
+			const successfullToast = document.getElementById('successfullToast');
+			const failureToast = document.getElementById('failureToast');
+			if(@(@TempData["OperationSuccessfull"] != null ? "true" : "false"))
+			{
+				if (@(@TempData["OperationMessage"] != null ? "true" : "false") && @Html.Raw(Json.Serialize(@TempData["OperationMessage"])) != "")
+				{
+					if(@Html.Raw(Json.Serialize(@TempData["OperationSuccessfull"])) == true)
+					{
+						const toastBootstrap = bootstrap.Toast.getOrCreateInstance(successfullToast);
+						toastBootstrap.show();
+					}
+					else
+					{
+						const toastBootstrap = bootstrap.Toast.getOrCreateInstance(failureToast);
+						toastBootstrap.show();
+					}
+				}
+			}
+		});
+	</script>
+}

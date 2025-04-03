@@ -1,0 +1,66 @@
+﻿@model UserDtoForUpdate
+
+<div class="container">
+    <div class="row justify-content-center my-5">
+        <div class="col-12 col-md-8 col-lg-6">
+            <div class="card card-dark bg-dark border-black">
+                <div class="card-header">
+					<h5 class="card-title mb-0">@Localizer["UpdateUser"]</h5>
+                    </div>
+				<div class="card-body text-light">
+                   <form method="post" asp-action="Update">
+                        <input type="hidden" asp-for="UserId" />
+						<div class="form-floating mb-4">
+							<input asp-for="Name"
+								   class="form-control"
+								   placeholder=" " />
+							<label asp-for="Name">@Localizer["Name"]</label>
+							<span asp-validation-for="Name" class="text-danger small"></span>
+						</div>
+						<div class="form-floating mb-4">
+							<input asp-for="Surname"
+								   class="form-control"
+								   placeholder=" " />
+							<label asp-for="Surname">@Localizer["Surname"]</label>
+							<span asp-validation-for="Surname" class="text-danger small"></span>
+						</div>
+						<div class="form-floating mb-4">
+							<input asp-for="Email"
+								   class="form-control"
+								   placeholder=" " />
+							<label asp-for="Email">@Localizer["Email"]</label>
+							<span asp-validation-for="Email" class="text-danger small"></span>
+						</div>
+						<div class="input-group mb-3">
+							<span class="input-group-text">+90</span>
+							<div class="form-floating">
+								<div class="input-group">
+									<div class="form-floating">
+										<input asp-for="PhoneNumber" class="form-control" type="tel" />
+										<label asp-for="PhoneNumber">@Localizer["PhoneNumber"]</label>
+										<span asp-validation-for="PhoneNumber" class="text-danger small"></span>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="text-danger small mb-3" asp-validation-summary="All"></div>
+						<div class="d-grid gap-2 d-md-flex justify-content-md-end mt-3">
+							<button type="submit" class="btn btn-primary w-100 w-sm-auto px-4 py-2">
+								<i class="bi bi-floppy me-2"></i>
+								@Localizer["SaveChanges"]
+							</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+@section Scripts {
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/5.0.9/jquery.inputmask.min.js" integrity="sha512-F5Ul1uuyFlGnIT1dk2c4kB4DBdi5wnBJjVhL7gQlGh46Xn0VhvD8kgxLtjdZ5YN83gybk/aASUAlpdoWUjRR3g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+	<script>
+		$(document).ready(function(){
+				  $("#PhoneNumber").inputmask({"mask": "(999) 999 99 99"});
+				});
+	</script>
+}

@@ -1,10 +1,12 @@
 ﻿using Entities.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 
 namespace Repositories
 {
-    public class RepositoryContext : DbContext
+    public class RepositoryContext : IdentityDbContext<ApplicationUser>
     {
         public DbSet<AgeGroup> AgeGroups { get; set; }
         public DbSet<Employee> Employees { get; set; }
@@ -23,6 +25,7 @@ namespace Repositories
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+            
 
             modelBuilder.Entity<CustomerAppointment>().HasOne(c => c.Employee)
                                                       .WithMany(h => h.CustomerAppointment)

@@ -60,7 +60,7 @@ namespace Entities.Dtos
                     ErrorMessageResourceName = "EmailFormat")]
         public string? EMail { get; init; }
 
-        public IdentityUser? CreatedBy { get; init; }
+        public ApplicationUser? CreatedBy { get; init; }
         public CustomerAppointmentStatus Status { get; init; } //= CustomerAppointmentStatus.CustomerConfirmed;
 
         // Foreign Keys

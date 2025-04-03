@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Entities.Dtos;
 using Entities.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace LudusAppoint.Infrastructure.Mapper
 {
@@ -42,6 +43,21 @@ namespace LudusAppoint.Infrastructure.Mapper
             CreateMap<ApplicationSettingDtoForInsert, ApplicationSetting>();
             CreateMap<ApplicationSettingDtoForUpdate, ApplicationSetting>().ReverseMap();
             CreateMap<ApplicationSetting, ApplicationSettingDto>();
+
+            CreateMap<UserDtoForInsert, ApplicationUser>();
+            CreateMap<UserDtoForUpdate, ApplicationUser>().ReverseMap()
+                                                          .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.Id));
+            CreateMap<ApplicationUser, UserDto>().ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.Id))
+                                                 .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.UserName));
+
+            CreateMap<RoleDtoForInsert, IdentityRole>().ForMember(dest => dest.Id, opt => opt.MapFrom(src => string.IsNullOrEmpty(src.RoleId) ? Guid.NewGuid().ToString() : src.RoleId))
+                                                       .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.RoleName))
+                                                       .ForMember(dest => dest.NormalizedName, opt => opt.MapFrom(src => src.RoleName.ToUpper()));
+            CreateMap<RoleDtoForUpdate, IdentityRole>().ReverseMap()
+                                                       .ForMember(dest => dest.RoleId, opt => opt.MapFrom(src => src.Id))
+                                                       .ForMember(dest => dest.RoleName, opt => opt.MapFrom(src => src.Name));
+            CreateMap<IdentityRole, RoleDto>().ForMember(dest => dest.RoleId, opt => opt.MapFrom(src => src.Id))
+                                              .ForMember(dest => dest.RoleName, opt => opt.MapFrom(src => src.Name));
         }
     }
 }

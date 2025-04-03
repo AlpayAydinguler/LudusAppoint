@@ -1,0 +1,52 @@
+﻿@model RoleDtoForUpdate
+
+<div class="container">
+    <div class="row justify-content-center my-5">
+        <div class="col-12 col-md-8 col-lg-6">
+            <div class="card card-dark bg-dark border-black">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">@Localizer["UpdateRole"]</h5>
+                </div>
+                <div class="card-body text-light">
+                    <form method="post" asp-action="Update">
+                        <input type="hidden" asp-for="RoleId" />
+                        <div class="form-floating mb-4">
+                            <input asp-for="RoleName"
+                                   class="form-control"
+                                   placeholder=" " />
+                            <label asp-for="RoleName">@Localizer["RoleName"]</label>
+                            <span asp-validation-for="RoleName" class="text-danger small"></span>
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label">@Localizer["Permissions"]</label>
+                            <div class="permissions-grid">
+                                @foreach (var permission in ViewBag.AllPermissions)
+                                {
+                                    <div class="form-check">
+                                        <input class="form-check-input"
+                                               type="checkbox"
+                                               name="Permissions"
+                                               value="@permission.Value"
+                                               id="perm_@permission.Value"
+                                        @(Model.Permissions.Contains(permission.Value) ? "checked" : "") />
+                                        <label class="form-check-label" for="perm_@permission.Value">
+                                            @permission.Text
+                                        </label>
+                                    </div>
+                                }
+                            </div>
+                            <span asp-validation-for="Permissions" class="text-danger small"></span>
+                        </div>
+                        <div class="text-danger small mb-3" asp-validation-summary="All"></div>
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-3">
+                            <button type="submit" class="btn btn-primary w-100 w-sm-auto px-4 py-2">
+                                <i class="bi bi-floppy me-2"></i>
+                                @Localizer["SaveChanges"]
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -17,7 +17,7 @@ namespace Entities.Models
         public DateTime EndDateTime => StartDateTime.Add(ApproximateDuration);
         public String PhoneNumber { get; set; }
         public String? EMail { get; set; }
-        public IdentityUser? CreatedBy { get; set; }
+        public String? CreatedBy { get; set; }
         public CustomerAppointmentStatus Status { get; set; }
 
         //Foreign Keys

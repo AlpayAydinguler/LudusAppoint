@@ -1,0 +1,46 @@
+﻿@if (User.Identity.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("Owner") || User.IsInRole("Editor") ))
+{
+	<li class="nav-item">
+		<a class="nav-link" asp-area="Admin" asp-controller="Dashboard" asp-action="Index">
+			<i class="fa-solid fa-gear"></i>
+			@Localizer["ControlPanel"]
+		</a>
+	</li>
+}
+
+@if (User.Identity.IsAuthenticated)
+{
+	<li class="nav-item">
+		<a class="nav-link" aria-current="page"
+		   asp-area=""
+		   asp-controller="Account"
+		   asp-route-returnUrl="@(Context.Request.QueryString.HasValue ? $"{Context.Request.Path}{Context.Request.QueryString}" : Context.Request.Path)"
+		   asp-action="Logout">
+			<i class="fa-solid fa-right-from-bracket"></i>
+			@Localizer["Logout"]
+		</a>
+	</li>
+}
+else
+{
+	<li class="nav-item">
+		<a class="nav-link" aria-current="page"
+		   asp-area=""
+		   asp-controller="Account"
+		   asp-route-returnUrl="@(Context.Request.QueryString.HasValue ? $"{Context.Request.Path}{Context.Request.QueryString}" : Context.Request.Path)"
+		   asp-action="Login">
+			<i class="bi bi-box-arrow-in-right"></i>
+			@Localizer["Login"]
+		</a>
+	</li>
+	<li class="nav-item">
+		<a class="nav-link" aria-current="page"
+		   asp-area=""
+		   asp-controller="Account"
+		   asp-route-returnUrl="@(Context.Request.QueryString.HasValue ? $"{Context.Request.Path}{Context.Request.QueryString}" : Context.Request.Path)"
+		   asp-action="Register">
+			<i class="bi bi-person-add"></i>
+			@Localizer["Register"]
+		</a>
+	</li>
+}
