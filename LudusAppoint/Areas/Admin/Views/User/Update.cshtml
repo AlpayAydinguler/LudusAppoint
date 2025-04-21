@@ -31,6 +31,11 @@
 							<label asp-for="Email">@Localizer["Email"]</label>
 							<span asp-validation-for="Email" class="text-danger small"></span>
 						</div>
+						<div class="form-check form-switch mb-4">
+							<input class="form-check-input" type="checkbox" role="switch"
+								   id="statusSwitch" asp-for="EmailConfirmed">
+							<label class="form-check-label" for="statusSwitch">@Localizer["EmailConfirmed"]</label>
+						</div>
 						<div class="input-group mb-3">
 							<span class="input-group-text">+90</span>
 							<div class="form-floating">
@@ -43,7 +48,16 @@
 								</div>
 							</div>
 						</div>
-						<div class="text-danger small mb-3" asp-validation-summary="All"></div>
+						<div class="form-check form-switch mb-4">
+							<input class="form-check-input" type="checkbox" role="switch"
+								   id="statusSwitch" asp-for="PhoneNumberConfirmed">
+							<label class="form-check-label" for="statusSwitch">@Localizer["PhoneNumberConfirmed"]</label>
+						</div>
+						<div class="form-check form-switch">
+							<input class="form-check-input" type="checkbox" role="switch"
+								   id="statusSwitch" asp-for="IsActive">
+							<label class="form-check-label" for="statusSwitch">@Localizer["IsActive"]</label>
+						</div>
 						<div class="d-grid gap-2 d-md-flex justify-content-md-end mt-3">
 							<button type="submit" class="btn btn-primary w-100 w-sm-auto px-4 py-2">
 								<i class="bi bi-floppy me-2"></i>

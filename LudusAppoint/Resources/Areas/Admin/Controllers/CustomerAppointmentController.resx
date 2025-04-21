@@ -69,4 +69,19 @@
   <data name="PleaseTryWithDifferentBranchOrOfferedServices" xml:space="preserve">
     <value>Please try with different branch or offered services</value>
   </data>
+  <data name="CustomerAppointmentCreatedSuccessfully" xml:space="preserve">
+    <value>Customer appointment created successfully</value>
+  </data>
+  <data name="CustomerAppointmentUpdatedSuccessfully" xml:space="preserve">
+    <value>Customer appointment updated successfully</value>
+  </data>
+  <data name="CustomerAppointmentApprovedSuccessfully" xml:space="preserve">
+    <value>Customer appointment approved successfully</value>
+  </data>
+  <data name="CancellationFailed" xml:space="preserve">
+    <value>Cancellation failed</value>
+  </data>
+  <data name="CustomerAppointmentCancelledSuccessfully" xml:space="preserve">
+    <value>Customer appointment cancelled successfully</value>
+  </data>
 </root>

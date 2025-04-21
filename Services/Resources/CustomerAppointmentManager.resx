@@ -1,0 +1,72 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>1.3</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral</value>
+  </resheader>
+  <metadata name="ResXFileCodeGenerator" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>PublicResXFileCodeGenerator</value>
+  </metadata>
+  <data name="CustomerAppointmentWithId {id} NotFound" xml:space="preserve">
+    <value>CustomerAppointmentWithId {id} NotFound</value>
+  </data>
+  <data name="GetReservedDaysTimesDidNotReturnAJsonResult" xml:space="preserve">
+    <value>Get reserved days times did not return a json result</value>
+  </data>
+  <data name="TheJsonResultsValueIsNull" xml:space="preserve">
+    <value>The json results value ıs null</value>
+  </data>
+  <data name="TheCommitmentsObjectDoesNotContainAn 'employeeLeaves' Property" xml:space="preserve">
+    <value>TheCommitmentsObjectDoesNotContainAn 'employeeLeaves' Property</value>
+  </data>
+  <data name="TheEmployeeLeavesPropertyIsNotAnEnumerable" xml:space="preserve">
+    <value>The employee leaves property ıs not an enumerable</value>
+  </data>
+  <data name="LeaveObjectDoesNotHaveTheExpectedProperties" xml:space="preserve">
+    <value>Leave object does not have the expected properties</value>
+  </data>
+  <data name="TheCommitmentsObjectDoesNotContainA 'reservedDaysTimes' Property" xml:space="preserve">
+    <value>TheCommitmentsObjectDoesNotContainA 'reservedDaysTimes' Property</value>
+  </data>
+  <data name="TheReservedDaysTimesPropertyIsNotAnEnumerable" xml:space="preserve">
+    <value>The reserved days times property ıs not an enumerable</value>
+  </data>
+  <data name="ReservationObjectDoesNotHaveTheExpectedProperties" xml:space="preserve">
+    <value>Reservation object does not have the expected properties</value>
+  </data>
+</root>

@@ -63,4 +63,7 @@
   <data name="AgeGroupCannotBeDeletedBecauseItIsUsedInAnotherEntity" xml:space="preserve">
     <value>Başka bir kuruluşta kullanıldığı için yaş grubu silinemiyor</value>
   </data>
+  <data name="AnAgeGroupWithTheSameMinAgeAndMaxAgeAlreadyExists" xml:space="preserve">
+    <value>Aynı minimum yaş ve maksimum yaşa sahip bir yaş grubu zaten var</value>
+  </data>
 </root>

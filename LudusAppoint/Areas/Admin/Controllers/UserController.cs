@@ -13,9 +13,10 @@ namespace LudusAppoint.Areas.Admin.Controllers
         private readonly IServiceManager _serviceManager;
         private readonly IStringLocalizer<UserController> _localizer;
 
-        public UserController(IServiceManager serviceManager)
+        public UserController(IServiceManager serviceManager, IStringLocalizer<UserController> localizer)
         {
             _serviceManager = serviceManager;
+            _localizer = localizer;
         }
 
         [Authorize(Policy = nameof(Permissions.User_Index))]
@@ -53,6 +54,8 @@ namespace LudusAppoint.Areas.Admin.Controllers
                 {
                     ModelState.AddModelError(exception?.InnerException?.Source?.ToString() ?? string.Empty, exception?.Message ?? string.Empty);
                 }
+                TempData["OperationSuccessfull"] = false;
+                TempData["OperationMessage"] = _localizer["UserCreationFailed"].ToString() + ".";
                 return View(userDtoForInsert);
             }
         }
@@ -68,6 +71,12 @@ namespace LudusAppoint.Areas.Admin.Controllers
         [Authorize(Policy = nameof(Permissions.User_Update))]
         public async Task<IActionResult> Update(UserDtoForUpdate userDtoForUpdate)
         {
+            if (userDtoForUpdate.UserId.Equals("LaAdmin"))
+            {
+                TempData["OperationSuccessfull"] = false;
+                TempData["OperationMessage"] = _localizer["AdminUserCannotBeDeleted"].ToString() + ".";
+                return RedirectToAction("Index");
+            }
             if (!ModelState.IsValid)
             {
                 return View(userDtoForUpdate);
@@ -85,7 +94,39 @@ namespace LudusAppoint.Areas.Admin.Controllers
                 {
                     ModelState.AddModelError(exception?.InnerException?.Source?.ToString() ?? string.Empty, exception?.Message ?? string.Empty);
                 }
+                TempData["OperationSuccessfull"] = false;
+                TempData["OperationMessage"] = _localizer["UserUpdateFailed"].ToString() + ".";
                 return View(userDtoForUpdate);
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Policy = nameof(Permissions.User_Delete))]
+        public async Task<IActionResult> Delete([FromForm] string id)
+        {
+            if (id.Equals("LaAdmin"))
+            {
+                TempData["OperationSuccessfull"] = false;
+                TempData["OperationMessage"] = _localizer["AdminUserCannotBeDeleted"].ToString() + ".";
+                return RedirectToAction("Index");
+            }
+            try
+            {
+                await _serviceManager.AccountService.DeleteUserAsync(id);
+                TempData["OperationSuccessfull"] = true;
+                TempData["OperationMessage"] = _localizer["UserDeletedSuccessfully"].ToString() + ".";
+                return RedirectToAction(nameof(Index));
+            }
+            catch (AggregateException exceptions)
+            {
+                foreach (var exception in exceptions.InnerExceptions)
+                {
+                    ModelState.AddModelError(exception?.InnerException?.Source?.ToString() ?? string.Empty, exception?.Message ?? string.Empty);
+                }
+                TempData["OperationSuccessfull"] = false;
+                TempData["OperationMessage"] = _localizer["UserDeletionFailed"].ToString() + ".";
+                return RedirectToAction(nameof(Index));
             }
         }
     }

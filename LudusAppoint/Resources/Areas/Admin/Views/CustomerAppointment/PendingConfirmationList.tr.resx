@@ -135,4 +135,7 @@
   <data name="Next" xml:space="preserve">
     <value>Sonraki</value>
   </data>
+  <data name="PendingConfirmationAppointments" xml:space="preserve">
+    <value>Onay randevuları bekleniyor</value>
+  </data>
 </root>

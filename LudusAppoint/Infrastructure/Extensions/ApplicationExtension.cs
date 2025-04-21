@@ -36,6 +36,7 @@ namespace LudusAppoint.Infrastructure.Extensions
             {
                 user = new ApplicationUser()
                 {
+                    Id = adminUser,
                     UserName = adminUser,
                     Email = "alpayaydinguler@gmail.com",
                     EmailConfirmed = true,

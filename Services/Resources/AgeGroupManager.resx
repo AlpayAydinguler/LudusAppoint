@@ -66,4 +66,7 @@
   <data name="AgeGroupCannotBeDeletedBecauseItIsUsedInAnotherEntity" xml:space="preserve">
     <value>Age group cannot be deleted because ıt ıs used ın another entity</value>
   </data>
+  <data name="AnAgeGroupWithTheSameMinAgeAndMaxAgeAlreadyExists" xml:space="preserve">
+    <value>An age group with the same min age and max age already exists</value>
+  </data>
 </root>

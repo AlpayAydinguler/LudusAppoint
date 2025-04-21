@@ -17,6 +17,7 @@ namespace Entities.Dtos
                   ErrorMessageResourceType = typeof(Resources.Dtos.RegisterDto),
                   ErrorMessageResourceName = "PhoneFormat")]
         public String? PhoneNumber { get; init; }
+        public bool PhoneNumberConfirmed { get; init; }
 
         [Required(ErrorMessageResourceType = typeof(Resources.SharedResources),
                   ErrorMessageResourceName = "MissingKeyOrValueAccessor")]
@@ -34,6 +35,7 @@ namespace Entities.Dtos
         public string UserName => $"{Name}{Surname}";
         [EmailAddress]
         public string Email { get; init; }
-        public bool? IsActive { get; init; }
+        public bool EmailConfirmed { get; init; }
+        public bool IsActive { get; init; }
     }
 }

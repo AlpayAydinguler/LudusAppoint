@@ -125,6 +125,9 @@ namespace LudusAppoint.Models.Enums
         User_Create,
 
         [Display(Name = "Update User", Description = "Have access to Update in User")]
-        User_Update
+        User_Update,
+
+        [Display(Name = "Delete User", Description = "Have access to Delete in User")]
+        User_Delete
     }
 }

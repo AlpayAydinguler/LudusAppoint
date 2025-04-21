@@ -72,4 +72,19 @@
   <data name="Close" xml:space="preserve">
     <value>Close</value>
   </data>
+  <data name="Search" xml:space="preserve">
+    <value>Search</value>
+  </data>
+  <data name="Show _MENU_ entries" xml:space="preserve">
+    <value>Show _MENU_ entries</value>
+  </data>
+  <data name="Showing _START_ to _END_ of _TOTAL_ entries" xml:space="preserve">
+    <value>Showing _START_ to _END_ of _TOTAL_ entries</value>
+  </data>
+  <data name="Previous" xml:space="preserve">
+    <value>Previous</value>
+  </data>
+  <data name="Next" xml:space="preserve">
+    <value>Next</value>
+  </data>
 </root>

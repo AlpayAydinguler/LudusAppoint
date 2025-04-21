@@ -138,4 +138,7 @@
   <data name="Next" xml:space="preserve">
     <value>Next</value>
   </data>
+  <data name="PendingConfirmationAppointments" xml:space="preserve">
+    <value>Pending confirmation appointments</value>
+  </data>
 </root>

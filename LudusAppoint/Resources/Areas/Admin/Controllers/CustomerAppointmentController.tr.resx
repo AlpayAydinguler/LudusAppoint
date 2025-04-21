@@ -66,4 +66,19 @@
   <data name="PleaseTryWithDifferentBranchOrOfferedServices" xml:space="preserve">
     <value>Lütfen farklı bir şubeyle veya sunulan hizmetlerle deneyin</value>
   </data>
+  <data name="CustomerAppointmentCreatedSuccessfully" xml:space="preserve">
+    <value>Müşteri randevusu başarıyla oluşturuldu</value>
+  </data>
+  <data name="CustomerAppointmentUpdatedSuccessfully" xml:space="preserve">
+    <value>Müşteri randevusu başarıyla güncellendi</value>
+  </data>
+  <data name="CustomerAppointmentApprovedSuccessfully" xml:space="preserve">
+    <value>Müşteri randevusu başarıyla onaylandı</value>
+  </data>
+  <data name="CancellationFailed" xml:space="preserve">
+    <value>İptal işlemi başarısız oldu:</value>
+  </data>
+  <data name="CustomerAppointmentCancelledSuccessfully" xml:space="preserve">
+    <value>Müşteri randevusu başarıyla iptal edildi</value>
+  </data>
 </root>

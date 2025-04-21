@@ -46,6 +46,7 @@ namespace Services
                     applicationUser.PasswordHash = new PasswordHasher<ApplicationUser>().HashPassword(applicationUser, "0000");
                     applicationUser.PhoneNumber = applicationUser.PhoneNumber.NormalizePhoneNumber();
                     applicationUser.PhoneNumberConfirmed = true;
+                    applicationUser.IsActive = true;
                     var result = await _userManager.CreateAsync(applicationUser);
 
                     if (!result.Succeeded)
@@ -82,6 +83,37 @@ namespace Services
             }
         }
 
+        public Task DeleteUserAsync(string id)
+        {
+            var validationException = new List<ValidationException>();
+            if (id.Equals("LaAdmin"))
+            {
+                validationException.Add(new ValidationException(_localizer["AdminUserCannotBeDeleted"] + ".",
+                                                                new Exception() { Source = "Model" }));
+            }
+            else
+            {
+                var user = _userManager.Users.FirstOrDefault(x => x.Id == id);
+                if (user != null)
+                {
+                    var result = _userManager.DeleteAsync(user);
+                    if (!result.Result.Succeeded)
+                    {
+                        foreach (var error in result.Result.Errors)
+                        {
+                            validationException.Add(new ValidationException(_localizer["UserDeletionFailed"] + "." + error.Description,
+                                                                            new Exception() { Source = "Model" }));
+                        }
+                    }
+                }
+            }
+            if (validationException.Count != 0)
+            {
+                throw new AggregateException(validationException);
+            }
+            return Task.CompletedTask;
+        }
+
         public async Task UpdateUserAsync(UserDtoForUpdate userDtoForUpdate)
         {
             var validationException = new List<ValidationException>();
@@ -96,7 +128,8 @@ namespace Services
                 var emailExists = await _userManager.EmailExistsAsync(userDtoForUpdate.Email, userDtoForUpdate.UserId);
                 if (!phoneNumberExists && !emailExists)
                 {
-                    var applicationUser = await _userManager.Users.FirstOrDefaultAsync(u => u.Id == userDtoForUpdate.UserId);
+                    var applicationUser = await _userManager.Users.FirstOrDefaultAsync(_userManager => _userManager.Id == userDtoForUpdate.UserId);
+                    _mapper.Map(userDtoForUpdate, applicationUser);
                     var result = _userManager.UpdateAsync(applicationUser);
                     if (!result.Result.Succeeded)
                     {

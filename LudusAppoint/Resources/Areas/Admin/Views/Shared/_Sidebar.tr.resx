@@ -183,4 +183,31 @@
   <data name="SiteSettingsList" xml:space="preserve">
     <value>Site Ayarları </value>
   </data>
+  <data name="Roles" xml:space="preserve">
+    <value>Görevleri</value>
+  </data>
+  <data name="RolesList" xml:space="preserve">
+    <value>Seçilen roldeki kullanıcılar</value>
+  </data>
+  <data name="CreateRole" xml:space="preserve">
+    <value>Rol oluştur</value>
+  </data>
+  <data name="Users" xml:space="preserve">
+    <value>Kullanıcılar</value>
+  </data>
+  <data name="UsersList" xml:space="preserve">
+    <value>Kullanıcı listesi</value>
+  </data>
+  <data name="CreateUser" xml:space="preserve">
+    <value>Kullanıcı oluştur</value>
+  </data>
+  <data name="ApplicationSetting" xml:space="preserve">
+    <value>uygulama ayarı</value>
+  </data>
+  <data name="ApplicationSettingList" xml:space="preserve">
+    <value>uygulama ayarı</value>
+  </data>
+  <data name="CreateApplicationSetting" xml:space="preserve">
+    <value>Uygulama ayarı oluştur</value>
+  </data>
 </root>
