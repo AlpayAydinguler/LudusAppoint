@@ -10,6 +10,8 @@ namespace Repositories.Contracts
         IBranchRepository BranchRepository { get; }
         IEmployeeLeaveRepository EmployeeLeaveRepository { get; }
         IApplicationSettingRepository ApplicationSettingRepository { get; }
+        ITenantRepository TenantRepository { get; }
+        IBookingFlowConfigRepository BookingFlowConfigRepository { get; }
 
         Task BeginTransactionAsync();
         void Save();

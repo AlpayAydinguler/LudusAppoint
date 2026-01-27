@@ -1,7 +1,9 @@
 ﻿using Entities.Models;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 using System.Reflection;
 
 namespace Repositories
@@ -16,6 +18,9 @@ namespace Repositories
         public DbSet<Branch> Branches { get; set; }
         public DbSet<ApplicationSetting> ApplicationSetting { get; set; }
         public DbSet<EmployeeLeave> EmployeeLeaves { get; set; }
+        public DbSet<Tenant> Tenants { get; set; }
+        public DbSet<BookingFlowConfig> BookingFlowConfigs { get; set; }
+
 
         public RepositoryContext(DbContextOptions<RepositoryContext> options) : base(options)
         {
@@ -25,7 +30,6 @@ namespace Repositories
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            
 
             modelBuilder.Entity<CustomerAppointment>().HasOne(c => c.Employee)
                                                       .WithMany(h => h.CustomerAppointment)

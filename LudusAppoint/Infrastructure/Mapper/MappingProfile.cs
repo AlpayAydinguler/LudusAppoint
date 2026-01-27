@@ -58,6 +58,12 @@ namespace LudusAppoint.Infrastructure.Mapper
                                                        .ForMember(dest => dest.RoleName, opt => opt.MapFrom(src => src.Name));
             CreateMap<IdentityRole, RoleDto>().ForMember(dest => dest.RoleId, opt => opt.MapFrom(src => src.Id))
                                               .ForMember(dest => dest.RoleName, opt => opt.MapFrom(src => src.Name));
+            CreateMap<TenantDtoForInsert, Tenant>();
+            CreateMap<TenantDtoForUpdate, Tenant>().ReverseMap();
+            CreateMap<Tenant, TenantDto>();
+            CreateMap<BookingFlowConfigDtoForInsert, BookingFlowConfig>();
+            CreateMap<BookingFlowConfigDtoForUpdate, BookingFlowConfig>().ReverseMap();
+            CreateMap<BookingFlowConfig, BookingFlowConfigDto>();
         }
     }
 }

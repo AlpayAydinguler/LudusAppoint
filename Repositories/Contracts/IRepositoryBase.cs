@@ -15,6 +15,8 @@ namespace Repositories.Contracts
                                       bool trackChanges,
                                       Func<IQueryable<T>,
                                       IIncludableQueryable<T, object>>? include = null);
+        Task CreateAsync(T entity);
+        Task DeleteAsync(T entity);
         Task<IEnumerable<T>> GetAllAsync(bool trackChanges);
         Task<IEnumerable<T>> GetAllByConditionAsync(Expression<Func<T, bool>> expression, bool trackChanges);
         Task SaveAsync();

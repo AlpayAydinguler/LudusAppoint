@@ -1,6 +1,7 @@
 ﻿using Entities.Models.Enums;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Entities.Models
@@ -8,6 +9,8 @@ namespace Entities.Models
     public class CustomerAppointment
     {
         public int CustomerAppointmentId { get; set; }
+        [ForeignKey("Tenant")]
+        public Guid TenantId { get; set; }
         public String Name { get; set; }
         public String Surname { get; set; }
         public Gender Gender { get; set; }
@@ -37,5 +40,6 @@ namespace Entities.Models
         public Branch Branch { get; set; }
         [ValidateNever]
         public Employee Employee { get; set; }
+        public Tenant Tenant { get; set; }
     }
 }

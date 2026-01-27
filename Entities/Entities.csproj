@@ -34,6 +34,11 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>ApplicationSettingDto.resx</DependentUpon>
     </Compile>
+    <Compile Update="Resources\Dtos\BookingFlowConfigDto.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>BookingFlowConfigDto.resx</DependentUpon>
+    </Compile>
     <Compile Update="Resources\Dtos\BranchDto.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -64,6 +69,11 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>RegisterDto.resx</DependentUpon>
     </Compile>
+    <Compile Update="Resources\Dtos\TenantDto.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>TenantDto.resx</DependentUpon>
+    </Compile>
     <Compile Update="Resources\SharedResources.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -93,6 +103,10 @@
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>ApplicationSettingDto.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Dtos\BookingFlowConfigDto.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>BookingFlowConfigDto.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Update="Resources\Dtos\BranchDto.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>BranchDto.Designer.cs</LastGenOutput>
@@ -116,6 +130,10 @@
     <EmbeddedResource Update="Resources\Dtos\RegisterDto.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>RegisterDto.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Dtos\TenantDto.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>TenantDto.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Update="Resources\SharedResources.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>

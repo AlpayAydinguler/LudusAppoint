@@ -1,0 +1,21 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">@Localizer["Welcome"]</h1>
+    @{
+        var currentCulture = System.Globalization.CultureInfo.CurrentCulture.Name;
+        var localizedString = Localizer["Welcome"];
+
+        // Log the current culture
+        System.Diagnostics.Debug.WriteLine($"Current culture debug: {currentCulture}");
+        System.Diagnostics.Debug.WriteLine($"Localized string for 'Welcome': {localizedString}");
+    }
+    <p> <i class="fa-solid fa-address-book bg-secondary text-white p-3  rounded-5 my-3"></i>Current Culture: @System.Threading.Thread.CurrentThread.CurrentUICulture.Name</p>
+    @*@<h1 class="display-4">@((ViewContext.HttpContext.Features.Get<IRequestCultureFeature>()?.RequestCulture.UICulture.Name))</h1>
+    <p>Debug: @Localizer.GetAllStrings().FirstOrDefault()?.Name</p>*@
+
+    Customer 1
+    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core </a>.</p>
+</div>

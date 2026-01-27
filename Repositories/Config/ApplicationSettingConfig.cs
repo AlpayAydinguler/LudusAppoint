@@ -13,12 +13,16 @@ namespace Repositories.Config
     {
         public void Configure(EntityTypeBuilder<ApplicationSetting> builder)
         {
-            
+            builder.HasOne(e => e.Tenant)
+                   .WithMany()
+                   .HasForeignKey(e => e.TenantId)
+                   .OnDelete(DeleteBehavior.Restrict);
+
             builder.HasData(
-                            new ApplicationSetting { Key = "SupportedGenders", Value = "Male,Female" },
-                            new ApplicationSetting { Key = "CompanyName", Value = "Hair Center" },
-                            new ApplicationSetting { Key = "CompanyLogoURL", Value = "\\assets\\img\\logo.jpg" },
-                            new ApplicationSetting { Key = "Currency", Value = "tr-TR" }
+                            new ApplicationSetting { Key = "SupportedGenders", Value = "Male,Female", TenantId = Guid.Parse("11111111-1111-1111-1111-111111111111") },
+                            new ApplicationSetting { Key = "CompanyName", Value = "Hair Center", TenantId = Guid.Parse("11111111-1111-1111-1111-111111111111") },
+                            new ApplicationSetting { Key = "CompanyLogoURL", Value = "\\assets\\img\\logo.jpg", TenantId = Guid.Parse("11111111-1111-1111-1111-111111111111") },
+                            new ApplicationSetting { Key = "Currency", Value = "tr-TR", TenantId = Guid.Parse("11111111-1111-1111-1111-111111111111") }
                         );
             
         }

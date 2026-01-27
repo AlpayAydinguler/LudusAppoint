@@ -1,0 +1,31 @@
+﻿@{
+	var requestCulture = Context.Features.Get<IRequestCultureFeature>();
+	var cultureItems = LocOptions.Value.SupportedUICultures?
+		.Select(c => new SelectListItem { Value = c.Name, Text = c.DisplayName })
+		.ToList();
+	var returnUrl = string.IsNullOrEmpty(Context.Request.Path) ? "~/" : $"~{Context.Request.Path.Value}";
+}
+
+<div class="btn-group">
+	<button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+		<img src="/assets/img/countryFlags/@String.Concat(@System.Threading.Thread.CurrentThread.CurrentUICulture.Name.Substring(0,2), ".svg")"
+			 class="me-2"
+			 style="width: 16px; height: 16px;"
+			 alt="flag" />
+		@System.Threading.Thread.CurrentThread.CurrentUICulture.NativeName	
+	</button>
+	<ul class="dropdown-menu col-xs-1">
+		@foreach (var cultureItem in cultureItems)
+		{
+			<li>
+				<a class="dropdown-item d-flex align-items-center" asp-controller="Language" asp-action="Change" asp-route-culture="@cultureItem.Value" asp-route-returnUrl="@returnUrl">					
+					<img src="/assets/img/countryFlags/@String.Concat(cultureItem.Value.Substring(0,2), ".svg")"
+						 class="me-2"
+						 style="width: 16px; height: 16px;"
+						 alt="flag" />
+					@cultureItem.Text
+				</a>
+			</li>
+		}
+	</ul>
+</div>

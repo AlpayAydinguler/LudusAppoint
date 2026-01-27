@@ -26,7 +26,7 @@ namespace Services
         {
             ValidateAgeGroup(ageGroupDtoForInsert, null);
             AgeGroup ageGroup = _mapper.Map<AgeGroup>(ageGroupDtoForInsert);
-            _repositoryManager.AgeGroupRepository.CreateAgeGroup(ageGroup);
+            _repositoryManager.AgeGroupRepository.CreateAgeGroupByTenantAsync(ageGroup);
             _repositoryManager.Save();
 
         }

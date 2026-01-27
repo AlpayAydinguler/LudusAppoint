@@ -1,0 +1,81 @@
+﻿@model LoginModel
+
+<div class="container">
+	<div class="row justify-content-center">
+		<div class="col-12 col-md-8 col-lg-6">
+			<div class="card shadow-lg mt-5">
+				<div class="card-header bg-primary text-white">
+					<h3 class="mb-0">
+						<i class="bi bi-box-arrow-in-right"></i>
+						Login
+					</h3>
+				</div>
+				<div class="card-body">
+					<form asp-action="Login" method="post">
+						<input type="hidden" asp-for="ReturnUrl" />
+
+						<!-- Phone Number Input -->
+						<div class="input-group mb-3">
+							<span class="input-group-text">+90</span>
+							<div class="form-floating">
+								<input asp-for="PhoneNumber"
+									   class="form-control"
+									   type="tel"
+									   placeholder="@Html.DisplayNameFor(m => m.PhoneNumber)" />
+								<label asp-for="PhoneNumber"></label>
+								<span asp-validation-for="PhoneNumber" class="text-danger small"></span>
+							</div>
+						</div>
+
+						<!-- OTP Input -->
+						<div class="form-floating mb-4">
+							<input asp-for="OneTimePassword"
+								   class="form-control"
+								   type="text"
+								   placeholder="@Html.DisplayNameFor(m => m.OneTimePassword)" />
+							<label asp-for="OneTimePassword"></label>
+							<span asp-validation-for="OneTimePassword" class="text-danger small"></span>
+							<div class="form-text">Enter the 4-digit code sent to your phone</div>
+						</div>
+
+						<!-- Submit Button -->
+						<div class="d-grid gap-2">
+							<button type="submit" class="btn btn-primary btn-lg">
+								<i class="fa-solid fa-right-to-bracket"></i>
+								Sign In
+							</button>
+						</div>
+
+						<!-- Registration Link -->
+						<div class="text-center mt-4">
+							<a class="text-decoration-none">
+								Don't have an account? 
+							</a>
+							<a class="btn btn-secondary btn-sm"
+							   asp-area=""
+							   asp-controller="Account"
+							   asp-route-returnUrl="@(Context.Request.QueryString.HasValue ? $"{Context.Request.Query["returnUrl"].ToString()}" : "/")"
+							   asp-action="Register">
+								<i class="bi bi-person-add"></i>
+								@Localizer["Register"]
+							</a>
+							<a class="text-decoration-none">
+								 here
+							</a>
+						</div>
+						<div class="text-danger small mb-3" asp-validation-summary="All"></div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+@section Scripts {
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/5.0.9/jquery.inputmask.min.js" integrity="sha512-F5Ul1uuyFlGnIT1dk2c4kB4DBdi5wnBJjVhL7gQlGh46Xn0VhvD8kgxLtjdZ5YN83gybk/aASUAlpdoWUjRR3g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+	<script>
+		$(document).ready(function(){
+		  $("#PhoneNumber").inputmask({"mask": "(999) 999 99 99"});
+		});
+	</script>
+}

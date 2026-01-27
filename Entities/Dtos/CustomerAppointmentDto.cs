@@ -10,7 +10,10 @@ namespace Entities.Dtos
     public record CustomerAppointmentDto
     {
         public int CustomerAppointmentId { get; init; }
-
+        [Required(ErrorMessageResourceType = typeof(Resources.SharedResources),
+                  ErrorMessageResourceName = "MissingKeyOrValueAccessor")]
+        [ForeignKey("Tenant")]
+        public Guid TenantId { get; init; }
         [Required(ErrorMessageResourceType = typeof(Resources.SharedResources),
                   ErrorMessageResourceName = "MissingKeyOrValueAccessor")]
         [StringLength(50, MinimumLength = 2,
@@ -97,5 +100,6 @@ namespace Entities.Dtos
 
         [ValidateNever]
         public Branch Branch { get; init; }
+        public TenantDto? Tenant { get; init; }
     }
 }

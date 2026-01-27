@@ -12,5 +12,7 @@
         IAccountService AccountService { get; }
         IAuthService AuthService { get; }
         IUserService UserService { get; }
+        ITenantService TenantService { get; }
+        IBookingFlowConfigService BookingFlowConfigService { get; }
     }
 }

@@ -1,11 +1,16 @@
 ﻿using Entities.Models;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Entities.Dtos
 {
     public record BranchDto
     {
         public int BranchId { get; init; }
+        [Required(ErrorMessageResourceType = typeof(Resources.SharedResources),
+                  ErrorMessageResourceName = "MissingKeyOrValueAccessor")]
+        [ForeignKey("Tenant")]
+        public Guid TenantId { get; init; }
         [Required(ErrorMessageResourceType = typeof(Resources.SharedResources), ErrorMessageResourceName = "MissingKeyOrValueAccessor")]
         [StringLength(100, ErrorMessageResourceType = typeof(Resources.Dtos.BranchDto), ErrorMessageResourceName = "BranchNameCannotExceed100Characters")]
         public String BranchName { get; init; }
@@ -34,5 +39,6 @@ namespace Entities.Dtos
         [Range(1, 365, ErrorMessageResourceType = typeof(Resources.Dtos.BranchDto), ErrorMessageResourceName = "ReservationInAdvanceDayLimitMustBeBetween1And365")]
         public int ReservationInAdvanceDayLimit { get; init; } = 60;
         public bool Status { get; init; } = true;
+        public TenantDto? Tenant { get; init; }
     }
 }

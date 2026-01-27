@@ -7,6 +7,8 @@ using Repositories.Contracts;
 using Services;
 using Services.Contracts;
 using LudusAppoint.Infrastructure.Extensions;
+using LudusAppoint.Infrastructure;
+using LudusAppoint.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,6 +26,13 @@ builder.Services.Configure<RequestLocalizationOptions>(options =>
         .AddSupportedCultures(supportedCultures)
         .AddSupportedUICultures(supportedCultures);
 });
+
+/*
+builder.Services.Configure<RazorViewEngineOptions>(options =>
+{
+    options.ViewLocationExpanders.Add(new TenantViewLocationExpander());
+});
+*/
 
 builder.Services.ConfigureDbContext(builder.Configuration);
 builder.Services.ConfigureIdentity();
@@ -50,7 +59,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseSession();
 app.UseRouting();
-
+app.UseMiddleware<TenantResolutionMiddleware>();
 app.UseRequestLocalization();
 
 app.UseHttpsRedirection();

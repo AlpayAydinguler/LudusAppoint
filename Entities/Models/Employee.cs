@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Entities.Models
 {
@@ -6,6 +8,8 @@ namespace Entities.Models
     {
         public int EmployeeId { get; set; }
         public String? IdentityUserId { get; set; }
+        [ForeignKey("Tenant")]
+        public Guid TenantId { get; set; }
         public int BranchId { get; set; }
         public String EmployeeName { get; set; }
         public String EmployeeSurname { get; set; }
@@ -23,5 +27,6 @@ namespace Entities.Models
         //Navigation Properties
         public ICollection<CustomerAppointment>? CustomerAppointment { get; set; }
         public ICollection<EmployeeLeave>? EmployeesLeaves { get; set; }
+        public Tenant Tenant { get; set; }
     }
 }

@@ -1,8 +1,13 @@
-﻿namespace Entities.Models
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace Entities.Models
 {
     public class Branch
     {
         public int BranchId { get; set; }
+        [ForeignKey("Tenant")]
+        public Guid TenantId { get; set; }
         public String BranchName { get; set; }
         public String Country { get; set; }
         public String City { get; set; }
@@ -18,5 +23,6 @@
         //Navigation Properties
         public ICollection<Employee>? Employee { get; set; }
         public ICollection<CustomerAppointment>? CustomerAppointment { get; set; }
+        public Tenant Tenant { get; set; }
     }
 }

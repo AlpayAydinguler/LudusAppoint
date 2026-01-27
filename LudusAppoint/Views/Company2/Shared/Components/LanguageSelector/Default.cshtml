@@ -1,0 +1,26 @@
+﻿@model LanguageSelectorViewModel
+
+<div class="btn-group">
+    <button class="btn btn-secondary btn-sm dropdown-toggle" type="button"
+            data-bs-toggle="dropdown" aria-expanded="false">
+        <img src="/assets/img/countryFlags/@(Model.CurrentCulture.Name.Substring(0,2)).svg"
+             class="me-2" style="width: 16px; height: 16px;" alt="flag" />
+        @Model.CurrentCulture.NativeName
+    </button>
+    <ul class="dropdown-menu col-xs-1">
+        @foreach (var culture in Model.SupportedCultures)
+        {
+            <li>
+                <form asp-controller="Language" asp-action="Change" method="post">
+                    <input type="hidden" name="culture" value="@culture.Name" />
+                    <input type="hidden" name="returnUrl" value="@Model.ReturnUrl" />
+                    <button type="submit" class="dropdown-item d-flex align-items-center">
+                        <img src="/assets/img/countryFlags/@(culture.Name.Substring(0,2)).svg"
+                             class="me-2" style="width: 16px; height: 16px;" alt="flag" />
+                        @culture.DisplayName
+                    </button>
+                </form>
+            </li>
+        }
+    </ul>
+</div>

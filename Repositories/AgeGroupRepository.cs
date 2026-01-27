@@ -9,19 +9,19 @@ namespace Repositories
         {
         }
 
-        public void CreateAgeGroup(AgeGroup ageGroup)
-        {
-            Create(ageGroup);
-        }
+        public async Task CreateAgeGroupByTenantAsync(AgeGroup ageGroup)
+            => await CreateAsync(ageGroup);
 
-        public AgeGroup GetAgeGroup(int id, bool trackChanges)
-        {
-            return FindByCondition(x => x.AgeGroupId.Equals(id), trackChanges) ?? new AgeGroup();
-        }
+        public async Task<AgeGroup?> GetAgeGroupByTenantAsync(int id, Guid tenantId, bool trackChanges)
+            => await FindByConditionAsync(x => x.AgeGroupId.Equals(id) && x.TenantId == tenantId, trackChanges);
 
-        public void UpdateAgeGroup(AgeGroup model)
+        public async Task UpdateAgeGroupByTenantAsync(AgeGroup model)
         {
             Update(model);
+            await SaveAsync();
         }
+
+        public async Task<IEnumerable<AgeGroup>> GetAllAgeGroupsByTenantAsync(Guid tenantId, bool trackChanges)
+            => await GetAllByConditionAsync(x => x.TenantId == tenantId, trackChanges);
     }
 }

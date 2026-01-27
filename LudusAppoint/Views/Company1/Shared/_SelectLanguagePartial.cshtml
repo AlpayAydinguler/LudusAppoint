@@ -1,0 +1,36 @@
+﻿@{
+	var requestCulture = Context.Features.Get<IRequestCultureFeature>();
+	var cultureItems = LocOptions.Value.SupportedUICultures?
+		.Select(c => new SelectListItem { Value = c.Name, Text = c.DisplayName })
+		.ToList();
+	var returnUrl = string.IsNullOrEmpty(Context.Request.Path) ? "~/" : $"~{Context.Request.Path.Value}";
+}
+
+<div class="btn-group">
+	<button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+		<img src="/assets/img/countryFlags/@String.Concat(@System.Threading.Thread.CurrentThread.CurrentUICulture.Name.Substring(0,2), ".svg")"
+			 class="me-2"
+			 style="width: 16px; height: 16px;"
+			 alt="flag" />
+		@System.Threading.Thread.CurrentThread.CurrentUICulture.NativeName	
+	</button>
+	<ul class="dropdown-menu col-xs-1">
+		@foreach (var cultureItem in cultureItems)
+		{
+			<li>
+				<form method="post" asp-controller="Language" asp-action="Change" class="d-inline">
+					<input type="hidden" name="culture" value="@cultureItem.Value" />
+					<input type="hidden" name="returnUrl" value="@returnUrl" />
+					@Html.AntiForgeryToken()
+					<button type="submit" class="dropdown-item d-flex align-items-center w-100 border-0 bg-transparent">
+						<img src="/assets/img/countryFlags/@String.Concat(cultureItem.Value.Substring(0,2), ".svg")"
+							 class="me-2"
+							 style="width: 16px; height: 16px;"
+							 alt="flag" />
+						@cultureItem.Text
+					</button>
+				</form>
+			</li>
+		}
+	</ul>
+</div>

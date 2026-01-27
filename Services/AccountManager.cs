@@ -2,6 +2,7 @@
 using Entities.Dtos;
 using Entities.Models;
 using Infrastructure.Extensions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
@@ -11,7 +12,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -23,22 +23,40 @@ namespace Services
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IStringLocalizer<AccountManager> _localizer;
         private readonly IAuthService _authService;
+        private readonly IServiceManager _serviceManager;
 
-        public AccountManager(IMapper mapper, UserManager<ApplicationUser> userManager, IStringLocalizer<AccountManager> localizer, IAuthService authService)
+        public AccountManager(
+            IMapper mapper,
+            UserManager<ApplicationUser> userManager,
+            IStringLocalizer<AccountManager> localizer,
+            IAuthService authService,
+            IServiceManager serviceManager)
         {
             _mapper = mapper;
             _userManager = userManager;
             _localizer = localizer;
             _authService = authService;
+            _serviceManager = serviceManager;
         }
 
         public async Task CreateUserAsync(UserDtoForInsert userDtoForInsert)
         {
             var validationException = new List<ValidationException>();
+
+            // Get current tenant from HttpContext
+            var currentTenant = await _serviceManager.TenantService.GetCurrentTenantAsync();
+            if (currentTenant == null)
+            {
+                validationException.Add(new ValidationException(_localizer["NoTenantContextAvailable"],
+                    new Exception() { Source = "Tenant" }));
+                throw new AggregateException(validationException);
+            }
+
             if (userDtoForInsert.PhoneNumber != null)
             {
                 var phoneNumberExists = await _userManager.PhoneNumberExistsAsync(userDtoForInsert.PhoneNumber.NormalizePhoneNumber());
                 var emailExists = await _userManager.EmailExistsAsync(userDtoForInsert.Email);
+
                 if (!phoneNumberExists && !emailExists)
                 {
                     var applicationUser = _mapper.Map<ApplicationUser>(userDtoForInsert);
@@ -47,14 +65,19 @@ namespace Services
                     applicationUser.PhoneNumber = applicationUser.PhoneNumber.NormalizePhoneNumber();
                     applicationUser.PhoneNumberConfirmed = true;
                     applicationUser.IsActive = true;
+
+                    // Set tenant ID for the user
+                    applicationUser.TenantId = currentTenant.Id;
+
                     var result = await _userManager.CreateAsync(applicationUser);
 
                     if (!result.Succeeded)
                     {
                         foreach (var error in result.Errors)
                         {
-                            validationException.Add(new ValidationException(_localizer["UserCreationFailed"] + "." + error.Description,
-                                                                            new Exception() { Source = "Model" }));
+                            validationException.Add(new ValidationException(
+                                _localizer["UserCreationFailed"] + "." + error.Description,
+                                new Exception() { Source = "Model" }));
                         }
                     }
                     else
@@ -62,90 +85,144 @@ namespace Services
                         var roleResult = await _userManager.AddToRoleAsync(applicationUser, "User");
                         if (!roleResult.Succeeded)
                         {
-                            foreach (var error in result.Errors)
+                            foreach (var error in roleResult.Errors)
                             {
-                                validationException.Add(new ValidationException(_localizer["UserRoleCreationFailed"] + "." + error.Description,
-                                                                                new Exception() { Source = "Model" }));
+                                validationException.Add(new ValidationException(
+                                    _localizer["UserRoleCreationFailed"] + "." + error.Description,
+                                    new Exception() { Source = "Model" }));
                             }
                         }
                     }
                 }
                 else
                 {
-                    validationException.Add(new ValidationException(_localizer["PhoneNumberOrEmailAlreadyExists"] + ".",
-                                                                    new Exception() { Source = "Model" }));
+                    validationException.Add(new ValidationException(
+                        _localizer["PhoneNumberOrEmailAlreadyExists"] + ".",
+                        new Exception() { Source = "Model" }));
                 }
             }
 
             if (validationException.Count != 0)
-            { 
+            {
                 throw new AggregateException(validationException);
             }
         }
 
-        public Task DeleteUserAsync(string id)
+        public async Task DeleteUserAsync(string id)
         {
             var validationException = new List<ValidationException>();
+
+            // Get current tenant from HttpContext
+            var currentTenant = await _serviceManager.TenantService.GetCurrentTenantAsync();
+            if (currentTenant == null)
+            {
+                validationException.Add(new ValidationException(_localizer["NoTenantContextAvailable"],
+                    new Exception() { Source = "Tenant" }));
+                throw new AggregateException(validationException);
+            }
+
             if (id.Equals("LaAdmin"))
             {
-                validationException.Add(new ValidationException(_localizer["AdminUserCannotBeDeleted"] + ".",
-                                                                new Exception() { Source = "Model" }));
+                validationException.Add(new ValidationException(
+                    _localizer["AdminUserCannotBeDeleted"] + ".",
+                    new Exception() { Source = "Model" }));
             }
             else
             {
-                var user = _userManager.Users.FirstOrDefault(x => x.Id == id);
+                // Filter by tenant ID for regular users
+                var user = await _userManager.Users
+                    .FirstOrDefaultAsync(x => x.Id == id && x.TenantId == currentTenant.Id);
+
                 if (user != null)
                 {
-                    var result = _userManager.DeleteAsync(user);
-                    if (!result.Result.Succeeded)
+                    var result = await _userManager.DeleteAsync(user);
+                    if (!result.Succeeded)
                     {
-                        foreach (var error in result.Result.Errors)
+                        foreach (var error in result.Errors)
                         {
-                            validationException.Add(new ValidationException(_localizer["UserDeletionFailed"] + "." + error.Description,
-                                                                            new Exception() { Source = "Model" }));
-                        }
-                    }
-                }
-            }
-            if (validationException.Count != 0)
-            {
-                throw new AggregateException(validationException);
-            }
-            return Task.CompletedTask;
-        }
-
-        public async Task UpdateUserAsync(UserDtoForUpdate userDtoForUpdate)
-        {
-            var validationException = new List<ValidationException>();
-            if (userDtoForUpdate.PhoneNumber.IsNullOrEmpty() || userDtoForUpdate.Email.IsNullOrEmpty() )
-            {
-                validationException.Add(new ValidationException(_localizer["PhoneNumberAndEmailIsRequired"] + ".",
-                                                                new Exception() { Source = "Model" }));
-            }
-            else
-            {
-                var phoneNumberExists = await _userManager.PhoneNumberExistsAsync(userDtoForUpdate.PhoneNumber.NormalizePhoneNumber(), userDtoForUpdate.UserId);
-                var emailExists = await _userManager.EmailExistsAsync(userDtoForUpdate.Email, userDtoForUpdate.UserId);
-                if (!phoneNumberExists && !emailExists)
-                {
-                    var applicationUser = await _userManager.Users.FirstOrDefaultAsync(_userManager => _userManager.Id == userDtoForUpdate.UserId);
-                    _mapper.Map(userDtoForUpdate, applicationUser);
-                    var result = _userManager.UpdateAsync(applicationUser);
-                    if (!result.Result.Succeeded)
-                    {
-                        foreach (var error in result.Result.Errors)
-                        {
-                            validationException.Add(new ValidationException(_localizer["UserUpdateFailed"] + "." + error.Description,
-                                                                            new Exception() { Source = "Model" }));
+                            validationException.Add(new ValidationException(
+                                _localizer["UserDeletionFailed"] + "." + error.Description,
+                                new Exception() { Source = "Model" }));
                         }
                     }
                 }
                 else
                 {
-                    validationException.Add(new ValidationException(_localizer["PhoneNumberOrEmailAlreadyExists"] + ".",
-                                                                    new Exception() { Source = "Model" }));
+                    validationException.Add(new ValidationException(
+                        _localizer["UserNotFound"] + ".",
+                        new Exception() { Source = "Model" }));
                 }
             }
+
+            if (validationException.Count != 0)
+            {
+                throw new AggregateException(validationException);
+            }
+        }
+
+        public async Task UpdateUserAsync(UserDtoForUpdate userDtoForUpdate)
+        {
+            var validationException = new List<ValidationException>();
+
+            // Get current tenant from HttpContext
+            var currentTenant = await _serviceManager.TenantService.GetCurrentTenantAsync();
+            if (currentTenant == null)
+            {
+                validationException.Add(new ValidationException(_localizer["NoTenantContextAvailable"],
+                    new Exception() { Source = "Tenant" }));
+                throw new AggregateException(validationException);
+            }
+
+            if (userDtoForUpdate.PhoneNumber.IsNullOrEmpty() || userDtoForUpdate.Email.IsNullOrEmpty())
+            {
+                validationException.Add(new ValidationException(
+                    _localizer["PhoneNumberAndEmailIsRequired"] + ".",
+                    new Exception() { Source = "Model" }));
+            }
+            else
+            {
+                var phoneNumberExists = await _userManager.PhoneNumberExistsAsync(
+                    userDtoForUpdate.PhoneNumber.NormalizePhoneNumber(), userDtoForUpdate.UserId);
+
+                var emailExists = await _userManager.EmailExistsAsync(
+                    userDtoForUpdate.Email, userDtoForUpdate.UserId);
+
+                if (!phoneNumberExists && !emailExists)
+                {
+                    // Filter by tenant ID
+                    var applicationUser = await _userManager.Users
+                        .FirstOrDefaultAsync(u => u.Id == userDtoForUpdate.UserId && u.TenantId == currentTenant.Id);
+
+                    if (applicationUser == null)
+                    {
+                        validationException.Add(new ValidationException(
+                            _localizer["UserNotFound"] + ".",
+                            new Exception() { Source = "Model" }));
+                    }
+                    else
+                    {
+                        _mapper.Map(userDtoForUpdate, applicationUser);
+                        var result = await _userManager.UpdateAsync(applicationUser);
+
+                        if (!result.Succeeded)
+                        {
+                            foreach (var error in result.Errors)
+                            {
+                                validationException.Add(new ValidationException(
+                                    _localizer["UserUpdateFailed"] + "." + error.Description,
+                                    new Exception() { Source = "Model" }));
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    validationException.Add(new ValidationException(
+                        _localizer["PhoneNumberOrEmailAlreadyExists"] + ".",
+                        new Exception() { Source = "Model" }));
+                }
+            }
+
             if (validationException.Count != 0)
             {
                 throw new AggregateException(validationException);

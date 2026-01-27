@@ -27,12 +27,21 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>offeredServiceManager.resx</DependentUpon>
     </Compile>
+    <Compile Update="Resources\TenantManager.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>TenantManager.resx</DependentUpon>
+    </Compile>
   </ItemGroup>
 
   <ItemGroup>
     <EmbeddedResource Update="Resources\offeredServiceManager.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>offeredServiceManager.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\TenantManager.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>TenantManager.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
 

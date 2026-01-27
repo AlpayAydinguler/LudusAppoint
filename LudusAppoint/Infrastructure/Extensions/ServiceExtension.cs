@@ -7,6 +7,8 @@ using LudusAppoint.Dtos;
 using Microsoft.AspNetCore.Identity;
 using LudusAppoint.Models.Enums;
 using Entities.Models;
+using Microsoft.AspNetCore.Mvc.Razor;
+using Microsoft.Extensions.Localization;
 
 namespace LudusAppoint.Infrastructure.Extensions
 {
@@ -72,6 +74,8 @@ namespace LudusAppoint.Infrastructure.Extensions
             services.AddScoped<IBranchRepository, BranchRepository>();
             services.AddScoped<IEmployeeLeaveRepository, EmployeeLeaveRepository>();
             services.AddScoped<IApplicationSettingRepository, ApplicationSettingRepository>();
+            services.AddScoped<ITenantRepository, TenantRepository>();
+            services.AddScoped<IBookingFlowConfigRepository, BookingFlowConfigRepository>();
         }
 
         public static void ConfigureServiceRegistration(this IServiceCollection services)
@@ -87,6 +91,20 @@ namespace LudusAppoint.Infrastructure.Extensions
             services.AddScoped<IAccountService, AccountManager>();
             services.AddScoped<IAuthService, AuthManager>();
             services.AddScoped<IUserService, UserManager>();
+            services.AddScoped<ITenantService, TenantManager>();
+            services.Configure<RazorViewEngineOptions>(options =>
+            {
+                options.ViewLocationExpanders.Add(new TenantViewLocationExpander());
+            });
+            services.AddSingleton<ResourceManagerStringLocalizerFactory>();
+
+            // Register our fallback factory as the IStringLocalizerFactory
+            services.AddSingleton<IStringLocalizerFactory>(sp =>
+            {
+                var inner = sp.GetRequiredService<ResourceManagerStringLocalizerFactory>();
+                return new LudusAppoint.Infrastructure.Localization.FallbackStringLocalizerFactory(inner);
+            });
+            services.AddScoped<IBookingFlowConfigService, BookingFlowConfigManager>();
         }
     }
 }

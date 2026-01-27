@@ -43,7 +43,8 @@ namespace LudusAppoint.Infrastructure.Extensions
                     PhoneNumber = "+905395166223",
                     PhoneNumberConfirmed = true,
                     Name = "Alpay",
-                    Surname = "Aydinguler"
+                    Surname = "Aydinguler",
+                    TenantId = Guid.Parse("11111111-1111-1111-1111-111111111111")
                 };
                 var result = await userManager.CreateAsync(user, adminPassword);
                 if (!result.Succeeded)

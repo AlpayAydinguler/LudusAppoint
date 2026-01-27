@@ -7,6 +7,8 @@ namespace Entities.Models
     public class OfferedService
     {
         public int OfferedServiceId { get; set; }
+        [ForeignKey("Tenant")]
+        public Guid TenantId { get; set; }
         public String OfferedServiceName { get; set; }
         public List<Gender> Genders { get; set; } = new List<Gender>();
         public TimeSpan ApproximateDuration { get; set; }
@@ -20,6 +22,7 @@ namespace Entities.Models
         //Navigation Properties
         public ICollection<Employee>? Employees { get; set; }
         public ICollection<CustomerAppointment>? CustomerAppointments { get; set; }
+        public Tenant Tenant { get; set; }
 
     }
 }

@@ -16,6 +16,10 @@ namespace Repositories.Config
         {
             builder.HasIndex(u => u.PhoneNumber)
                    .IsUnique();
+            builder.HasOne(e => e.Tenant)
+                   .WithMany()
+                   .HasForeignKey(e => e.TenantId)
+                   .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

@@ -1,0 +1,96 @@
+﻿@model CustomerAppointment
+
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-6">
+			@Localizer["Book"]
+			<form method="post" asp-controller="CustomerAppointment" asp-action="Book">
+				<div class="form-group">
+					<label asp-for="Gender">@Localizer["SelectGender"]</label>
+					<select asp-for="Gender" asp-items="Html.GetEnumSelectList<Gender>()" class="form-control form-select"></select>
+				</div>
+				<div class="form-group">
+					<label asp-for="AgeGroup">@Localizer["AgeGroup"]</label>
+					<select asp-for="AgeGroup" asp-items="@ViewBag.AgeGroups" class="form-control form-select">
+					</select>
+				</div>
+
+				<div class="form-group">
+					<label>@Localizer["OfferedServices"]</label>
+					<div class="d-flex">
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label asp-for="Employee">@Localizer["Employee"] :</label>
+					<select asp-for="Employee" class="form-control">
+						<option value="1">Aydın</option>
+						<option value="2">Alpay</option>
+					</select>
+				</div>
+				<div class="form-group">
+					<label asp-for="Name">@Localizer["Name"] :</label>
+					<input asp-for="Name" class="form-control" />
+				</div>
+				<div class="form-group">
+					<label asp-for="Surname">@Localizer["Surname"] :</label>
+					<input asp-for="Surname" class="form-control" />
+				</div>
+				<input type="hidden" id="DateTime" asp-for="StartDateTime" class="form-control">
+
+				<div class="form-group">
+					<label asp-for="EMail">@Localizer["EMail"] :</label>
+					<input asp-for="EMail" class="form-control" />
+				</div>
+				<button type="submit" class="btn btn-primary my-1">
+					<i class="fa-solid fa-calendar-check"></i>
+					@Localizer["Book"]
+				</button>
+			</form>
+		</div>
+
+		<div class="col-6">
+			<div id="calendar-container">
+				<h2>Select a Date</h2>
+				<div id="calendar" class="row"></div>
+			</div>
+
+			<div id="time-selector-container" style="display: none;">
+				<h2>Select a Time</h2>
+				<div id="time-selector" class="row"></div>
+				<p id="warning-text" style="color: red; display: none;">Not enough time available for your selection.</p>
+			</div>
+
+			<form id="appointment-form" method="post" action="/SubmitAppointment">
+				<input type="hidden" id="selected-datetime" name="selectedDatetime" />
+				<button type="submit" id="submit-button" style="display: none;">Confirm Appointment</button>
+			</form>
+
+			@section Scripts {
+				<script src="~/js/Areas/Admin/Views/CreateCustomerAppointment.js"></script>
+			}
+
+			<style>
+				#calendar-container, #time-selector-container {
+					display: flex;
+					flex-wrap: wrap;
+				}
+
+				.calendar-day, .time-slot {
+					border-radius: 5px;
+					width: auto;
+					text-align: center;
+				}
+
+					.calendar-day.selectable:hover, .time-slot.selectable:hover {
+						opacity: 0.8;
+					}
+
+					.calendar-day.bg-primary, .time-slot.bg-primary {
+						background-color: blue !important;
+					}
+			</style>
+
+		</div>
+	</div>
+</div>

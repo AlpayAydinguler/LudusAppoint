@@ -9,6 +9,8 @@ namespace Entities.Dtos
     public record OfferedServiceDto
     {
         public int OfferedServiceId { get; init; }
+        [ForeignKey("Tenant")]
+        public Guid TenantId { get; init; }
         [Required(ErrorMessageResourceType = typeof(Resources.SharedResources), ErrorMessageResourceName = "MissingKeyOrValueAccessor")]
         [StringLength(100, MinimumLength = 3, ErrorMessageResourceType = typeof(Resources.Dtos.OfferedServiceDto), ErrorMessageResourceName = "ServiceNameIsRequired")]
         public String OfferedServiceName { get; init; }
@@ -33,5 +35,6 @@ namespace Entities.Dtos
         //Navigation Properties
         public ICollection<Employee>? Employees { get; init; }
         public ICollection<CustomerAppointment>? CustomerAppointments { get; init; }
+        public TenantDto? Tenant { get; init; }
     }
 }

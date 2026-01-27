@@ -5,6 +5,8 @@ namespace Entities.Models
     public class EmployeeLeave
     {
         public int EmployeeLeaveId { get; set; }
+        [ForeignKey("Tenant")]
+        public Guid TenantId { get; set; }
         public DateTime LeaveStartDateTime { get; set; } = System.DateTime.Today.AddDays(1) + new TimeSpan(8, 0, 0);
         public DateTime LeaveEndDateTime { get; set; } = System.DateTime.Today.AddDays(1) + new TimeSpan(18, 0, 0);
         public string? Reason { get; set; }
@@ -15,5 +17,6 @@ namespace Entities.Models
 
         // Navigarion Property
         public Employee Employee { get; set; }
+        public Tenant Tenant { get; set; }
     }
 }

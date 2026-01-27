@@ -96,5 +96,14 @@ namespace LudusAppoint.Controllers
                 return View(model);
             }
         }
+        [HttpGet]
+        public async Task<IActionResult> GenerateDummyOTP(string phoneNumber)
+        {
+            // In production: Replace with real SMS service integration
+            var dummyOTP = new Random().Next(1000, 9999).ToString();
+            TempData["OTP"] = dummyOTP;
+            TempData["OTPPhone"] = phoneNumber;
+            return Content(dummyOTP);
+        }
     }
 }

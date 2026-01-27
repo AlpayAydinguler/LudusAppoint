@@ -12,7 +12,7 @@ using Repositories;
 namespace LudusAppoint.Migrations
 {
     [DbContext(typeof(RepositoryContext))]
-    [Migration("20250404102418_Init")]
+    [Migration("20260115141911_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -231,7 +231,12 @@ namespace LudusAppoint.Migrations
                     b.Property<bool>("Status")
                         .HasColumnType("bit");
 
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("AgeGroupId");
+
+                    b.HasIndex("TenantId");
 
                     b.HasIndex("MinAge", "MaxAge")
                         .IsUnique();
@@ -244,21 +249,24 @@ namespace LudusAppoint.Migrations
                             AgeGroupId = 1,
                             MaxAge = 17,
                             MinAge = 0,
-                            Status = true
+                            Status = true,
+                            TenantId = new Guid("11111111-1111-1111-1111-111111111111")
                         },
                         new
                         {
                             AgeGroupId = 2,
                             MaxAge = 75,
                             MinAge = 18,
-                            Status = true
+                            Status = true,
+                            TenantId = new Guid("11111111-1111-1111-1111-111111111111")
                         },
                         new
                         {
                             AgeGroupId = 3,
                             MaxAge = 125,
                             MinAge = 76,
-                            Status = true
+                            Status = true,
+                            TenantId = new Guid("11111111-1111-1111-1111-111111111111")
                         });
                 });
 
@@ -270,11 +278,16 @@ namespace LudusAppoint.Migrations
                     b.Property<DateTime>("LastModified")
                         .HasColumnType("datetime2");
 
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("Value")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Key");
+
+                    b.HasIndex("TenantId");
 
                     b.ToTable("ApplicationSetting");
 
@@ -283,24 +296,28 @@ namespace LudusAppoint.Migrations
                         {
                             Key = "SupportedGenders",
                             LastModified = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            TenantId = new Guid("11111111-1111-1111-1111-111111111111"),
                             Value = "Male,Female"
                         },
                         new
                         {
                             Key = "CompanyName",
                             LastModified = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            TenantId = new Guid("11111111-1111-1111-1111-111111111111"),
                             Value = "Hair Center"
                         },
                         new
                         {
                             Key = "CompanyLogoURL",
                             LastModified = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            TenantId = new Guid("11111111-1111-1111-1111-111111111111"),
                             Value = "\\assets\\img\\logo.jpg"
                         },
                         new
                         {
                             Key = "Currency",
                             LastModified = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            TenantId = new Guid("11111111-1111-1111-1111-111111111111"),
                             Value = "tr-TR"
                         });
                 });
@@ -364,6 +381,9 @@ namespace LudusAppoint.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("bit");
 
@@ -385,7 +405,53 @@ namespace LudusAppoint.Migrations
                         .IsUnique()
                         .HasFilter("[PhoneNumber] IS NOT NULL");
 
+                    b.HasIndex("TenantId");
+
                     b.ToTable("AspNetUsers", (string)null);
+                });
+
+            modelBuilder.Entity("Entities.Models.BookingFlowConfig", b =>
+                {
+                    b.Property<int>("BookingFlowConfigId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("BookingFlowConfigId"));
+
+                    b.Property<string>("AllStepsInOrder")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("nvarchar(max)")
+                        .HasDefaultValue("[\"Services\", \"DateTime\", \"RoomSelection\", \"Employee\"]");
+
+                    b.Property<int>("BranchId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETUTCDATE()");
+
+                    b.Property<string>("EnabledStepsInOrder")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("nvarchar(max)")
+                        .HasDefaultValue("[\"Services\", \"DateTime\", \"RoomSelection\", \"Employee\"]");
+
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("BookingFlowConfigId");
+
+                    b.HasIndex("BranchId");
+
+                    b.HasIndex("TenantId", "BranchId")
+                        .IsUnique();
+
+                    b.ToTable("BookingFlowConfigs");
                 });
 
             modelBuilder.Entity("Entities.Models.Branch", b =>
@@ -433,7 +499,12 @@ namespace LudusAppoint.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("BranchId");
+
+                    b.HasIndex("TenantId");
 
                     b.ToTable("Branches");
 
@@ -451,7 +522,8 @@ namespace LudusAppoint.Migrations
                             Neighbourhood = "Hacıhalil",
                             ReservationInAdvanceDayLimit = 60,
                             Status = true,
-                            Street = "Kızılay caddesi, 1203. Sk."
+                            Street = "Kızılay caddesi, 1203. Sk.",
+                            TenantId = new Guid("11111111-1111-1111-1111-111111111111")
                         },
                         new
                         {
@@ -466,7 +538,8 @@ namespace LudusAppoint.Migrations
                             Neighbourhood = "Osman Yılmaz",
                             ReservationInAdvanceDayLimit = 60,
                             Status = false,
-                            Street = "Kızılay Cd."
+                            Street = "Kızılay Cd.",
+                            TenantId = new Guid("11111111-1111-1111-1111-111111111111")
                         });
                 });
 
@@ -520,6 +593,9 @@ namespace LudusAppoint.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("CustomerAppointmentId");
 
                     b.HasIndex("AgeGroupId");
@@ -527,6 +603,8 @@ namespace LudusAppoint.Migrations
                     b.HasIndex("BranchId");
 
                     b.HasIndex("EmployeeId");
+
+                    b.HasIndex("TenantId");
 
                     b.ToTable("CustomerAppointments");
 
@@ -543,9 +621,10 @@ namespace LudusAppoint.Migrations
                             Name = "Alice",
                             PhoneNumber = "+90 123 456 7891",
                             Price = 150m,
-                            StartDateTime = new DateTime(2025, 4, 7, 10, 0, 0, 0, DateTimeKind.Local),
+                            StartDateTime = new DateTime(2026, 1, 18, 10, 0, 0, 0, DateTimeKind.Local),
                             Status = 1,
-                            Surname = "Smith"
+                            Surname = "Smith",
+                            TenantId = new Guid("11111111-1111-1111-1111-111111111111")
                         },
                         new
                         {
@@ -559,9 +638,10 @@ namespace LudusAppoint.Migrations
                             Name = "Bob",
                             PhoneNumber = "+90 123 456 7892",
                             Price = 200m,
-                            StartDateTime = new DateTime(2025, 4, 7, 11, 30, 0, 0, DateTimeKind.Local),
+                            StartDateTime = new DateTime(2026, 1, 18, 11, 30, 0, 0, DateTimeKind.Local),
                             Status = 0,
-                            Surname = "Johnson"
+                            Surname = "Johnson",
+                            TenantId = new Guid("11111111-1111-1111-1111-111111111111")
                         },
                         new
                         {
@@ -575,9 +655,10 @@ namespace LudusAppoint.Migrations
                             Name = "Charlie",
                             PhoneNumber = "+90 123 456 7893",
                             Price = 250m,
-                            StartDateTime = new DateTime(2025, 4, 7, 14, 0, 0, 0, DateTimeKind.Local),
+                            StartDateTime = new DateTime(2026, 1, 18, 14, 0, 0, 0, DateTimeKind.Local),
                             Status = 3,
-                            Surname = "Brown"
+                            Surname = "Brown",
+                            TenantId = new Guid("11111111-1111-1111-1111-111111111111")
                         },
                         new
                         {
@@ -591,9 +672,10 @@ namespace LudusAppoint.Migrations
                             Name = "Diana",
                             PhoneNumber = "+90 123 456 7894",
                             Price = 180m,
-                            StartDateTime = new DateTime(2025, 4, 7, 9, 45, 0, 0, DateTimeKind.Local),
+                            StartDateTime = new DateTime(2026, 1, 18, 9, 45, 0, 0, DateTimeKind.Local),
                             Status = 2,
-                            Surname = "Prince"
+                            Surname = "Prince",
+                            TenantId = new Guid("11111111-1111-1111-1111-111111111111")
                         },
                         new
                         {
@@ -607,9 +689,10 @@ namespace LudusAppoint.Migrations
                             Name = "Eve",
                             PhoneNumber = "+90 123 456 7895",
                             Price = 160m,
-                            StartDateTime = new DateTime(2025, 4, 7, 16, 15, 0, 0, DateTimeKind.Local),
+                            StartDateTime = new DateTime(2026, 1, 18, 16, 15, 0, 0, DateTimeKind.Local),
                             Status = 1,
-                            Surname = "Adams"
+                            Surname = "Adams",
+                            TenantId = new Guid("11111111-1111-1111-1111-111111111111")
                         },
                         new
                         {
@@ -623,9 +706,10 @@ namespace LudusAppoint.Migrations
                             Name = "Frank",
                             PhoneNumber = "+90 123 456 7896",
                             Price = 120m,
-                            StartDateTime = new DateTime(2025, 4, 5, 12, 30, 0, 0, DateTimeKind.Local),
+                            StartDateTime = new DateTime(2026, 1, 16, 12, 30, 0, 0, DateTimeKind.Local),
                             Status = 0,
-                            Surname = "Miller"
+                            Surname = "Miller",
+                            TenantId = new Guid("11111111-1111-1111-1111-111111111111")
                         },
                         new
                         {
@@ -639,9 +723,10 @@ namespace LudusAppoint.Migrations
                             Name = "Grace",
                             PhoneNumber = "+90 123 456 7897",
                             Price = 450m,
-                            StartDateTime = new DateTime(2025, 4, 5, 15, 0, 0, 0, DateTimeKind.Local),
+                            StartDateTime = new DateTime(2026, 1, 16, 15, 0, 0, 0, DateTimeKind.Local),
                             Status = 1,
-                            Surname = "Hall"
+                            Surname = "Hall",
+                            TenantId = new Guid("11111111-1111-1111-1111-111111111111")
                         },
                         new
                         {
@@ -655,9 +740,10 @@ namespace LudusAppoint.Migrations
                             Name = "Henry",
                             PhoneNumber = "+90 123 456 7898",
                             Price = 700m,
-                            StartDateTime = new DateTime(2025, 4, 5, 14, 30, 0, 0, DateTimeKind.Local),
+                            StartDateTime = new DateTime(2026, 1, 16, 14, 30, 0, 0, DateTimeKind.Local),
                             Status = 3,
-                            Surname = "Ford"
+                            Surname = "Ford",
+                            TenantId = new Guid("11111111-1111-1111-1111-111111111111")
                         },
                         new
                         {
@@ -671,9 +757,10 @@ namespace LudusAppoint.Migrations
                             Name = "Isabelle",
                             PhoneNumber = "+90 123 456 7899",
                             Price = 250m,
-                            StartDateTime = new DateTime(2025, 4, 5, 10, 0, 0, 0, DateTimeKind.Local),
+                            StartDateTime = new DateTime(2026, 1, 16, 10, 0, 0, 0, DateTimeKind.Local),
                             Status = 2,
-                            Surname = "Clark"
+                            Surname = "Clark",
+                            TenantId = new Guid("11111111-1111-1111-1111-111111111111")
                         },
                         new
                         {
@@ -687,9 +774,10 @@ namespace LudusAppoint.Migrations
                             Name = "Jack",
                             PhoneNumber = "+90 123 456 7890",
                             Price = 300m,
-                            StartDateTime = new DateTime(2025, 4, 6, 9, 15, 0, 0, DateTimeKind.Local),
+                            StartDateTime = new DateTime(2026, 1, 17, 9, 15, 0, 0, DateTimeKind.Local),
                             Status = 0,
-                            Surname = "White"
+                            Surname = "White",
+                            TenantId = new Guid("11111111-1111-1111-1111-111111111111")
                         });
                 });
 
@@ -730,9 +818,14 @@ namespace LudusAppoint.Migrations
                     b.Property<bool>("Status")
                         .HasColumnType("bit");
 
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("EmployeeId");
 
                     b.HasIndex("BranchId");
+
+                    b.HasIndex("TenantId");
 
                     b.ToTable("Employees");
 
@@ -748,7 +841,8 @@ namespace LudusAppoint.Migrations
                             EndOfWorkingHours = new TimeSpan(0, 19, 0, 0, 0),
                             IdentityUserId = "1",
                             StartOfWorkingHours = new TimeSpan(0, 10, 0, 0, 0),
-                            Status = true
+                            Status = true,
+                            TenantId = new Guid("11111111-1111-1111-1111-111111111111")
                         },
                         new
                         {
@@ -761,7 +855,8 @@ namespace LudusAppoint.Migrations
                             EndOfWorkingHours = new TimeSpan(0, 19, 0, 0, 0),
                             IdentityUserId = "2",
                             StartOfWorkingHours = new TimeSpan(0, 10, 0, 0, 0),
-                            Status = true
+                            Status = true,
+                            TenantId = new Guid("11111111-1111-1111-1111-111111111111")
                         },
                         new
                         {
@@ -774,7 +869,8 @@ namespace LudusAppoint.Migrations
                             EndOfWorkingHours = new TimeSpan(0, 19, 0, 0, 0),
                             IdentityUserId = "3",
                             StartOfWorkingHours = new TimeSpan(0, 10, 0, 0, 0),
-                            Status = true
+                            Status = true,
+                            TenantId = new Guid("11111111-1111-1111-1111-111111111111")
                         });
                 });
 
@@ -798,9 +894,14 @@ namespace LudusAppoint.Migrations
                     b.Property<string>("Reason")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("EmployeeLeaveId");
 
                     b.HasIndex("EmployeeId");
+
+                    b.HasIndex("TenantId");
 
                     b.ToTable("EmployeeLeaves");
 
@@ -809,25 +910,28 @@ namespace LudusAppoint.Migrations
                         {
                             EmployeeLeaveId = 1,
                             EmployeeId = 1,
-                            LeaveEndDateTime = new DateTime(2025, 4, 5, 18, 0, 0, 0, DateTimeKind.Local),
-                            LeaveStartDateTime = new DateTime(2025, 4, 5, 8, 0, 0, 0, DateTimeKind.Local),
-                            Reason = "Sick"
+                            LeaveEndDateTime = new DateTime(2026, 1, 16, 18, 0, 0, 0, DateTimeKind.Local),
+                            LeaveStartDateTime = new DateTime(2026, 1, 16, 8, 0, 0, 0, DateTimeKind.Local),
+                            Reason = "Sick",
+                            TenantId = new Guid("11111111-1111-1111-1111-111111111111")
                         },
                         new
                         {
                             EmployeeLeaveId = 2,
                             EmployeeId = 2,
-                            LeaveEndDateTime = new DateTime(2025, 4, 6, 18, 0, 0, 0, DateTimeKind.Local),
-                            LeaveStartDateTime = new DateTime(2025, 4, 6, 8, 0, 0, 0, DateTimeKind.Local),
-                            Reason = "Vacation"
+                            LeaveEndDateTime = new DateTime(2026, 1, 17, 18, 0, 0, 0, DateTimeKind.Local),
+                            LeaveStartDateTime = new DateTime(2026, 1, 17, 8, 0, 0, 0, DateTimeKind.Local),
+                            Reason = "Vacation",
+                            TenantId = new Guid("11111111-1111-1111-1111-111111111111")
                         },
                         new
                         {
                             EmployeeLeaveId = 3,
                             EmployeeId = 3,
-                            LeaveEndDateTime = new DateTime(2025, 4, 7, 18, 0, 0, 0, DateTimeKind.Local),
-                            LeaveStartDateTime = new DateTime(2025, 4, 7, 8, 0, 0, 0, DateTimeKind.Local),
-                            Reason = "Personal"
+                            LeaveEndDateTime = new DateTime(2026, 1, 18, 18, 0, 0, 0, DateTimeKind.Local),
+                            LeaveStartDateTime = new DateTime(2026, 1, 18, 8, 0, 0, 0, DateTimeKind.Local),
+                            Reason = "Personal",
+                            TenantId = new Guid("11111111-1111-1111-1111-111111111111")
                         });
                 });
 
@@ -856,7 +960,12 @@ namespace LudusAppoint.Migrations
                     b.Property<bool>("Status")
                         .HasColumnType("bit");
 
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("OfferedServiceId");
+
+                    b.HasIndex("TenantId");
 
                     b.ToTable("OfferedServices", t =>
                         {
@@ -871,7 +980,8 @@ namespace LudusAppoint.Migrations
                             Genders = "[0]",
                             OfferedServiceName = "HairCut",
                             Price = 100m,
-                            Status = true
+                            Status = true,
+                            TenantId = new Guid("11111111-1111-1111-1111-111111111111")
                         },
                         new
                         {
@@ -880,7 +990,8 @@ namespace LudusAppoint.Migrations
                             Genders = "[0]",
                             OfferedServiceName = "RazorShave",
                             Price = 200m,
-                            Status = true
+                            Status = true,
+                            TenantId = new Guid("11111111-1111-1111-1111-111111111111")
                         },
                         new
                         {
@@ -889,7 +1000,8 @@ namespace LudusAppoint.Migrations
                             Genders = "[0]",
                             OfferedServiceName = "HairColoring",
                             Price = 300m,
-                            Status = true
+                            Status = true,
+                            TenantId = new Guid("11111111-1111-1111-1111-111111111111")
                         },
                         new
                         {
@@ -898,7 +1010,8 @@ namespace LudusAppoint.Migrations
                             Genders = "[0,1]",
                             OfferedServiceName = "BrowShaping",
                             Price = 400m,
-                            Status = true
+                            Status = true,
+                            TenantId = new Guid("11111111-1111-1111-1111-111111111111")
                         },
                         new
                         {
@@ -907,7 +1020,8 @@ namespace LudusAppoint.Migrations
                             Genders = "[0,1]",
                             OfferedServiceName = "BeardGrooming",
                             Price = 500m,
-                            Status = true
+                            Status = true,
+                            TenantId = new Guid("11111111-1111-1111-1111-111111111111")
                         },
                         new
                         {
@@ -916,7 +1030,8 @@ namespace LudusAppoint.Migrations
                             Genders = "[0,1]",
                             OfferedServiceName = "ChildShave",
                             Price = 600m,
-                            Status = true
+                            Status = true,
+                            TenantId = new Guid("11111111-1111-1111-1111-111111111111")
                         },
                         new
                         {
@@ -925,7 +1040,8 @@ namespace LudusAppoint.Migrations
                             Genders = "[0,1]",
                             OfferedServiceName = "PermHair",
                             Price = 700m,
-                            Status = false
+                            Status = false,
+                            TenantId = new Guid("11111111-1111-1111-1111-111111111111")
                         },
                         new
                         {
@@ -934,7 +1050,8 @@ namespace LudusAppoint.Migrations
                             Genders = "[0,1]",
                             OfferedServiceName = "Manicure",
                             Price = 800m,
-                            Status = false
+                            Status = false,
+                            TenantId = new Guid("11111111-1111-1111-1111-111111111111")
                         },
                         new
                         {
@@ -943,7 +1060,8 @@ namespace LudusAppoint.Migrations
                             Genders = "[0,1]",
                             OfferedServiceName = "Pedicure",
                             Price = 900m,
-                            Status = false
+                            Status = false,
+                            TenantId = new Guid("11111111-1111-1111-1111-111111111111")
                         },
                         new
                         {
@@ -952,7 +1070,8 @@ namespace LudusAppoint.Migrations
                             Genders = "[0]",
                             OfferedServiceName = "GroomsCut",
                             Price = 1000m,
-                            Status = true
+                            Status = true,
+                            TenantId = new Guid("11111111-1111-1111-1111-111111111111")
                         },
                         new
                         {
@@ -961,7 +1080,8 @@ namespace LudusAppoint.Migrations
                             Genders = "[1]",
                             OfferedServiceName = "Makeup(Bride)",
                             Price = 1100m,
-                            Status = false
+                            Status = false,
+                            TenantId = new Guid("11111111-1111-1111-1111-111111111111")
                         });
                 });
 
@@ -984,9 +1104,14 @@ namespace LudusAppoint.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("OfferedServiceLocalizationId");
 
                     b.HasIndex("OfferedServiceId");
+
+                    b.HasIndex("TenantId");
 
                     b.ToTable("OfferedServiceLocalizations");
 
@@ -996,154 +1121,223 @@ namespace LudusAppoint.Migrations
                             OfferedServiceLocalizationId = 1,
                             Language = "en-GB",
                             OfferedServiceId = 1,
-                            OfferedServiceLocalizationName = "Hair Cut"
+                            OfferedServiceLocalizationName = "Hair Cut",
+                            TenantId = new Guid("11111111-1111-1111-1111-111111111111")
                         },
                         new
                         {
                             OfferedServiceLocalizationId = 2,
                             Language = "tr-TR",
                             OfferedServiceId = 1,
-                            OfferedServiceLocalizationName = "Saç Kesimi"
+                            OfferedServiceLocalizationName = "Saç Kesimi",
+                            TenantId = new Guid("11111111-1111-1111-1111-111111111111")
                         },
                         new
                         {
                             OfferedServiceLocalizationId = 3,
                             Language = "en-GB",
                             OfferedServiceId = 2,
-                            OfferedServiceLocalizationName = "Razor Shave"
+                            OfferedServiceLocalizationName = "Razor Shave",
+                            TenantId = new Guid("11111111-1111-1111-1111-111111111111")
                         },
                         new
                         {
                             OfferedServiceLocalizationId = 4,
                             Language = "tr-TR",
                             OfferedServiceId = 2,
-                            OfferedServiceLocalizationName = "Jilet Traşı"
+                            OfferedServiceLocalizationName = "Jilet Traşı",
+                            TenantId = new Guid("11111111-1111-1111-1111-111111111111")
                         },
                         new
                         {
                             OfferedServiceLocalizationId = 5,
                             Language = "en-GB",
                             OfferedServiceId = 3,
-                            OfferedServiceLocalizationName = "Hair Coloring"
+                            OfferedServiceLocalizationName = "Hair Coloring",
+                            TenantId = new Guid("11111111-1111-1111-1111-111111111111")
                         },
                         new
                         {
                             OfferedServiceLocalizationId = 6,
                             Language = "tr-TR",
                             OfferedServiceId = 3,
-                            OfferedServiceLocalizationName = "Saç Boyama"
+                            OfferedServiceLocalizationName = "Saç Boyama",
+                            TenantId = new Guid("11111111-1111-1111-1111-111111111111")
                         },
                         new
                         {
                             OfferedServiceLocalizationId = 7,
                             Language = "en-GB",
                             OfferedServiceId = 4,
-                            OfferedServiceLocalizationName = "Brow Shaping"
+                            OfferedServiceLocalizationName = "Brow Shaping",
+                            TenantId = new Guid("11111111-1111-1111-1111-111111111111")
                         },
                         new
                         {
                             OfferedServiceLocalizationId = 8,
                             Language = "tr-TR",
                             OfferedServiceId = 4,
-                            OfferedServiceLocalizationName = "Kaş Şekillendirme"
+                            OfferedServiceLocalizationName = "Kaş Şekillendirme",
+                            TenantId = new Guid("11111111-1111-1111-1111-111111111111")
                         },
                         new
                         {
                             OfferedServiceLocalizationId = 9,
                             Language = "en-GB",
                             OfferedServiceId = 5,
-                            OfferedServiceLocalizationName = "Beard Grooming"
+                            OfferedServiceLocalizationName = "Beard Grooming",
+                            TenantId = new Guid("11111111-1111-1111-1111-111111111111")
                         },
                         new
                         {
                             OfferedServiceLocalizationId = 10,
                             Language = "tr-TR",
                             OfferedServiceId = 5,
-                            OfferedServiceLocalizationName = "Sakal Bakımı"
+                            OfferedServiceLocalizationName = "Sakal Bakımı",
+                            TenantId = new Guid("11111111-1111-1111-1111-111111111111")
                         },
                         new
                         {
                             OfferedServiceLocalizationId = 11,
                             Language = "en-GB",
                             OfferedServiceId = 6,
-                            OfferedServiceLocalizationName = "Child Shave"
+                            OfferedServiceLocalizationName = "Child Shave",
+                            TenantId = new Guid("11111111-1111-1111-1111-111111111111")
                         },
                         new
                         {
                             OfferedServiceLocalizationId = 12,
                             Language = "tr-TR",
                             OfferedServiceId = 6,
-                            OfferedServiceLocalizationName = "Çocuk Tıraşı"
+                            OfferedServiceLocalizationName = "Çocuk Tıraşı",
+                            TenantId = new Guid("11111111-1111-1111-1111-111111111111")
                         },
                         new
                         {
                             OfferedServiceLocalizationId = 13,
                             Language = "en-GB",
                             OfferedServiceId = 7,
-                            OfferedServiceLocalizationName = "Perm Hair"
+                            OfferedServiceLocalizationName = "Perm Hair",
+                            TenantId = new Guid("11111111-1111-1111-1111-111111111111")
                         },
                         new
                         {
                             OfferedServiceLocalizationId = 14,
                             Language = "tr-TR",
                             OfferedServiceId = 7,
-                            OfferedServiceLocalizationName = "Perma Saç"
+                            OfferedServiceLocalizationName = "Perma Saç",
+                            TenantId = new Guid("11111111-1111-1111-1111-111111111111")
                         },
                         new
                         {
                             OfferedServiceLocalizationId = 15,
                             Language = "en-GB",
                             OfferedServiceId = 8,
-                            OfferedServiceLocalizationName = "Manicure"
+                            OfferedServiceLocalizationName = "Manicure",
+                            TenantId = new Guid("11111111-1111-1111-1111-111111111111")
                         },
                         new
                         {
                             OfferedServiceLocalizationId = 16,
                             Language = "tr-TR",
                             OfferedServiceId = 8,
-                            OfferedServiceLocalizationName = "Manikür"
+                            OfferedServiceLocalizationName = "Manikür",
+                            TenantId = new Guid("11111111-1111-1111-1111-111111111111")
                         },
                         new
                         {
                             OfferedServiceLocalizationId = 17,
                             Language = "en-GB",
                             OfferedServiceId = 9,
-                            OfferedServiceLocalizationName = "Pedicure"
+                            OfferedServiceLocalizationName = "Pedicure",
+                            TenantId = new Guid("11111111-1111-1111-1111-111111111111")
                         },
                         new
                         {
                             OfferedServiceLocalizationId = 18,
                             Language = "tr-TR",
                             OfferedServiceId = 9,
-                            OfferedServiceLocalizationName = "Pedikür"
+                            OfferedServiceLocalizationName = "Pedikür",
+                            TenantId = new Guid("11111111-1111-1111-1111-111111111111")
                         },
                         new
                         {
                             OfferedServiceLocalizationId = 19,
                             Language = "en-GB",
                             OfferedServiceId = 10,
-                            OfferedServiceLocalizationName = "Groom's Cut"
+                            OfferedServiceLocalizationName = "Groom's Cut",
+                            TenantId = new Guid("11111111-1111-1111-1111-111111111111")
                         },
                         new
                         {
                             OfferedServiceLocalizationId = 20,
                             Language = "tr-TR",
                             OfferedServiceId = 10,
-                            OfferedServiceLocalizationName = "Damat Kesimi"
+                            OfferedServiceLocalizationName = "Damat Kesimi",
+                            TenantId = new Guid("11111111-1111-1111-1111-111111111111")
                         },
                         new
                         {
                             OfferedServiceLocalizationId = 21,
                             Language = "en-GB",
                             OfferedServiceId = 11,
-                            OfferedServiceLocalizationName = "Makeup (Bride)"
+                            OfferedServiceLocalizationName = "Makeup (Bride)",
+                            TenantId = new Guid("11111111-1111-1111-1111-111111111111")
                         },
                         new
                         {
                             OfferedServiceLocalizationId = 22,
                             Language = "tr-TR",
                             OfferedServiceId = 11,
-                            OfferedServiceLocalizationName = "Makyaj (Gelin)"
+                            OfferedServiceLocalizationName = "Makyaj (Gelin)",
+                            TenantId = new Guid("11111111-1111-1111-1111-111111111111")
+                        });
+                });
+
+            modelBuilder.Entity("Entities.Models.Tenant", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Hostname")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Tenants");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-000000000001"),
+                            CreatedAt = new DateTime(2023, 11, 17, 11, 37, 29, 0, DateTimeKind.Utc),
+                            Hostname = "localhost",
+                            Name = "Default Tenant"
+                        },
+                        new
+                        {
+                            Id = new Guid("11111111-1111-1111-1111-111111111111"),
+                            CreatedAt = new DateTime(2024, 11, 17, 11, 37, 29, 0, DateTimeKind.Utc),
+                            Hostname = "company1.com",
+                            Name = "Company1"
+                        },
+                        new
+                        {
+                            Id = new Guid("22222222-2222-2222-2222-222222222222"),
+                            CreatedAt = new DateTime(2025, 11, 17, 11, 37, 29, 0, DateTimeKind.Utc),
+                            Hostname = "company2.com",
+                            Name = "Company2"
                         });
                 });
 
@@ -1418,6 +1612,69 @@ namespace LudusAppoint.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Entities.Models.AgeGroup", b =>
+                {
+                    b.HasOne("Entities.Models.Tenant", "Tenant")
+                        .WithMany()
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Tenant");
+                });
+
+            modelBuilder.Entity("Entities.Models.ApplicationSetting", b =>
+                {
+                    b.HasOne("Entities.Models.Tenant", "Tenant")
+                        .WithMany()
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Tenant");
+                });
+
+            modelBuilder.Entity("Entities.Models.ApplicationUser", b =>
+                {
+                    b.HasOne("Entities.Models.Tenant", "Tenant")
+                        .WithMany()
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Tenant");
+                });
+
+            modelBuilder.Entity("Entities.Models.BookingFlowConfig", b =>
+                {
+                    b.HasOne("Entities.Models.Branch", "Branch")
+                        .WithMany()
+                        .HasForeignKey("BranchId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Entities.Models.Tenant", "Tenant")
+                        .WithMany()
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Branch");
+
+                    b.Navigation("Tenant");
+                });
+
+            modelBuilder.Entity("Entities.Models.Branch", b =>
+                {
+                    b.HasOne("Entities.Models.Tenant", "Tenant")
+                        .WithMany()
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Tenant");
+                });
+
             modelBuilder.Entity("Entities.Models.CustomerAppointment", b =>
                 {
                     b.HasOne("Entities.Models.AgeGroup", "AgeGroup")
@@ -1438,11 +1695,19 @@ namespace LudusAppoint.Migrations
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
+                    b.HasOne("Entities.Models.Tenant", "Tenant")
+                        .WithMany()
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.Navigation("AgeGroup");
 
                     b.Navigation("Branch");
 
                     b.Navigation("Employee");
+
+                    b.Navigation("Tenant");
                 });
 
             modelBuilder.Entity("Entities.Models.Employee", b =>
@@ -1453,7 +1718,15 @@ namespace LudusAppoint.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Entities.Models.Tenant", "Tenant")
+                        .WithMany()
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.Navigation("Branch");
+
+                    b.Navigation("Tenant");
                 });
 
             modelBuilder.Entity("Entities.Models.EmployeeLeave", b =>
@@ -1464,7 +1737,26 @@ namespace LudusAppoint.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Entities.Models.Tenant", "Tenant")
+                        .WithMany()
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.Navigation("Employee");
+
+                    b.Navigation("Tenant");
+                });
+
+            modelBuilder.Entity("Entities.Models.OfferedService", b =>
+                {
+                    b.HasOne("Entities.Models.Tenant", "Tenant")
+                        .WithMany()
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Tenant");
                 });
 
             modelBuilder.Entity("Entities.Models.OfferedServiceLocalization", b =>
@@ -1475,7 +1767,15 @@ namespace LudusAppoint.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Entities.Models.Tenant", "Tenant")
+                        .WithMany()
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.Navigation("OfferedService");
+
+                    b.Navigation("Tenant");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

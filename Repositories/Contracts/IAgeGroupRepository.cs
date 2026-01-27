@@ -4,8 +4,9 @@ namespace Repositories.Contracts
 {
     public interface IAgeGroupRepository : IRepositoryBase<AgeGroup>
     {
-        void CreateAgeGroup(AgeGroup ageGroup);
-        AgeGroup GetAgeGroup(int id, bool trackChanges);
-        void UpdateAgeGroup(AgeGroup model);
+        Task CreateAgeGroupByTenantAsync(AgeGroup ageGroup);
+        Task<AgeGroup?> GetAgeGroupByTenantAsync(int id, Guid tenantId, bool trackChanges);
+        Task UpdateAgeGroupByTenantAsync(AgeGroup model);
+        Task<IEnumerable<AgeGroup>> GetAllAgeGroupsByTenantAsync(Guid tenantId, bool trackChanges);
     }
 }

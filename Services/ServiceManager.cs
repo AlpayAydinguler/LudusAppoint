@@ -14,6 +14,8 @@ namespace Services
         private readonly IAccountService _accountService;
         private readonly IAuthService _authService;
         private readonly IUserService _userService;
+        private readonly ITenantService _tenantService;
+        private readonly IBookingFlowConfigService _bookingFlowConfigService;
 
         public ServiceManager(IAgeGroupService ageGroupService,
                               IEmployeeService employeeService,
@@ -24,7 +26,9 @@ namespace Services
                               IApplicationSettingService applicationSettingService,
                               IAccountService accountService,
                               IAuthService authService,
-                              IUserService userService)
+                              IUserService userService,
+                              ITenantService tenantService,
+                              IBookingFlowConfigService bookingFlowConfigService)
         {
             _ageGroupService = ageGroupService;
             _employeeService = employeeService;
@@ -36,6 +40,8 @@ namespace Services
             _accountService = accountService;
             _authService = authService;
             _userService = userService;
+            _tenantService = tenantService;
+            _bookingFlowConfigService = bookingFlowConfigService;
         }
 
         public IAgeGroupService AgeGroupService => _ageGroupService;
@@ -48,5 +54,7 @@ namespace Services
         public IAccountService AccountService => _accountService;
         public IAuthService AuthService => _authService;
         public IUserService UserService => _userService;
+        public ITenantService TenantService => _tenantService;
+        public IBookingFlowConfigService BookingFlowConfigService => _bookingFlowConfigService;
     }
 }

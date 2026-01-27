@@ -63,6 +63,15 @@ namespace Repositories
             return await query.FirstOrDefaultAsync(expression);
         }
 
+        public async Task CreateAsync(T entity)
+        {
+            await _repositoryContext.Set<T>().AddAsync(entity);
+        }
+        public async Task DeleteAsync(T entity)
+        {
+            await Task.Run(() => _repositoryContext.Set<T>().Remove(entity));
+        }
+
         public async Task<IEnumerable<T>> GetAllAsync(bool trackChanges)
             => await (trackChanges
                 ? _repositoryContext.Set<T>()

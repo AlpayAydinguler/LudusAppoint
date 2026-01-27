@@ -26,6 +26,10 @@ namespace Repositories.Config
                    .WithMany(ag => ag.CustomerAppointments)
                    .HasForeignKey(ca => ca.AgeGroupId)
                    .OnDelete(DeleteBehavior.Restrict); // Restrict deletion
+            builder.HasOne(e => e.Tenant)
+                   .WithMany()
+                   .HasForeignKey(e => e.TenantId)
+                   .OnDelete(DeleteBehavior.Restrict);
 
             var fixedDate = DateTime.Today; // A fixed base date
             var random = new Random(123); // Fixed seed
@@ -47,7 +51,8 @@ namespace Repositories.Config
                     EMail = "alice.smith@example.com",
                     CreatedBy = null,
                     Status = CustomerAppointmentStatus.Confirmed,
-                    BranchId = 1
+                    BranchId = 1,
+                    TenantId = Guid.Parse("11111111-1111-1111-1111-111111111111")
                 },
 
                 new CustomerAppointment
@@ -66,7 +71,8 @@ namespace Repositories.Config
                     EMail = "bob.johnson@example.com",
                     CreatedBy = null,
                     Status = CustomerAppointmentStatus.AwaitingApproval,
-                    BranchId = 1
+                    BranchId = 1,
+                    TenantId = Guid.Parse("11111111-1111-1111-1111-111111111111")
                 },
 
                 new CustomerAppointment
@@ -85,7 +91,8 @@ namespace Repositories.Config
                     EMail = "charlie.brown@example.com",
                     CreatedBy = null,
                     Status = CustomerAppointmentStatus.Completed,
-                    BranchId = 1
+                    BranchId = 1,
+                    TenantId = Guid.Parse("11111111-1111-1111-1111-111111111111")
                 },
 
                 new CustomerAppointment
@@ -104,7 +111,8 @@ namespace Repositories.Config
                     EMail = "diana.prince@example.com",
                     CreatedBy = null,
                     Status = CustomerAppointmentStatus.Cancelled,
-                    BranchId = 1
+                    BranchId = 1,
+                    TenantId = Guid.Parse("11111111-1111-1111-1111-111111111111")
                 },
 
                 new CustomerAppointment
@@ -123,7 +131,8 @@ namespace Repositories.Config
                     EMail = "eve.adams@example.com",
                     CreatedBy = null,
                     Status = CustomerAppointmentStatus.Confirmed,
-                    BranchId = 1
+                    BranchId = 1,
+                    TenantId = Guid.Parse("11111111-1111-1111-1111-111111111111")
                 },
 
                 new CustomerAppointment
@@ -142,7 +151,8 @@ namespace Repositories.Config
                     EMail = "frank.miller@example.com",
                     CreatedBy = null,
                     Status = CustomerAppointmentStatus.AwaitingApproval,
-                    BranchId = 1
+                    BranchId = 1,
+                    TenantId = Guid.Parse("11111111-1111-1111-1111-111111111111")
                 },
 
                 new CustomerAppointment
@@ -161,7 +171,8 @@ namespace Repositories.Config
                     EMail = "grace.hall@example.com",
                     CreatedBy = null,
                     Status = CustomerAppointmentStatus.Confirmed,
-                    BranchId = 1
+                    BranchId = 1,
+                    TenantId = Guid.Parse("11111111-1111-1111-1111-111111111111")
                 },
 
                 new CustomerAppointment
@@ -180,7 +191,8 @@ namespace Repositories.Config
                     EMail = "henry.ford@example.com",
                     CreatedBy = null,
                     Status = CustomerAppointmentStatus.Completed,
-                    BranchId = 1
+                    BranchId = 1,
+                    TenantId = Guid.Parse("11111111-1111-1111-1111-111111111111")
                 },
 
                 new CustomerAppointment
@@ -199,7 +211,8 @@ namespace Repositories.Config
                     EMail = "isabelle.clark@example.com",
                     CreatedBy = null,
                     Status = CustomerAppointmentStatus.Cancelled,
-                    BranchId = 1
+                    BranchId = 1,
+                    TenantId = Guid.Parse("11111111-1111-1111-1111-111111111111")
                 },
 
                 new CustomerAppointment
@@ -218,7 +231,8 @@ namespace Repositories.Config
                     EMail = "jack.white@example.com",
                     CreatedBy = null,
                     Status = CustomerAppointmentStatus.AwaitingApproval,
-                    BranchId = 1
+                    BranchId = 1,
+                    TenantId = Guid.Parse("11111111-1111-1111-1111-111111111111")
                 }
             );
             
