@@ -2,7 +2,6 @@
 using Entities.Models.Enums;
 using Microsoft.EntityFrameworkCore;
 using Repositories.Contracts;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Repositories
 {
@@ -51,7 +50,7 @@ namespace Repositories
                                                                                           ca.Status == CustomerAppointmentStatus.Confirmed))
                                                                                   .AsNoTracking()
                                                                                   .ToListAsync();
-            
+
             return employeesAppointments.AsEnumerable().Any(ca =>
             {
                 var appointmentEndTime = ca.StartDateTime.Add(ca.ApproximateDuration);

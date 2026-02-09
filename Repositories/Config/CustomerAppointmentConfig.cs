@@ -33,7 +33,7 @@ namespace Repositories.Config
 
             var fixedDate = DateTime.Today; // A fixed base date
             var random = new Random(123); // Fixed seed
-            
+
             builder.HasData(
                 new CustomerAppointment
                 {
@@ -235,7 +235,7 @@ namespace Repositories.Config
                     TenantId = Guid.Parse("11111111-1111-1111-1111-111111111111")
                 }
             );
-            
+
         }
     }
 }

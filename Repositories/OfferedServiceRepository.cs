@@ -1,7 +1,6 @@
 ﻿using Entities.Models;
 using Entities.Models.Enums;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 using Repositories.Contracts;
 
 namespace Repositories

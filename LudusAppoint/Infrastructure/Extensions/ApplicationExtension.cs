@@ -1,5 +1,4 @@
 ﻿using Entities.Models;
-using LudusAppoint.Models;
 using LudusAppoint.Models.Enums;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;

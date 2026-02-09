@@ -1,10 +1,7 @@
 ﻿using Entities.Models;
 using Entities.Models.Enums;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System.Globalization;
-using System.Text.Json;
 
 namespace Repositories.Config
 {
@@ -29,19 +26,19 @@ namespace Repositories.Config
                    .OnDelete(DeleteBehavior.Restrict);
 
             builder.ToTable(t => t.HasCheckConstraint("CK_OfferedService_ApproximateDuration", "ApproximateDuration >= '00:01' AND ApproximateDuration <= '23:59'"));
-            
-            var offeredService1 = new OfferedService { OfferedServiceId = 1, OfferedServiceName = "HairCut", Genders = { Gender.Male }, ApproximateDuration = new TimeSpan(0, 20, 0), Price = 100, Status = true , TenantId = Guid.Parse("11111111-1111-1111-1111-111111111111") };
-            var offeredService2 = new OfferedService { OfferedServiceId = 2, OfferedServiceName = "RazorShave", Genders = { Gender.Male }, ApproximateDuration = new TimeSpan(0, 40, 0), Price = 200, Status = true , TenantId = Guid.Parse("11111111-1111-1111-1111-111111111111") };
-            var offeredService3 = new OfferedService { OfferedServiceId = 3, OfferedServiceName = "HairColoring", Genders = { Gender.Male }, ApproximateDuration = new TimeSpan(0, 60, 0), Price = 300, Status = true , TenantId = Guid.Parse("11111111-1111-1111-1111-111111111111") };
-            var offeredService4 = new OfferedService { OfferedServiceId = 4, OfferedServiceName = "BrowShaping", Genders = { Gender.Male, Gender.Female }, ApproximateDuration = new TimeSpan(0, 80, 0), Price = 400, Status = true , TenantId = Guid.Parse("11111111-1111-1111-1111-111111111111") };
-            var offeredService5 = new OfferedService { OfferedServiceId = 5, OfferedServiceName = "BeardGrooming", Genders = { Gender.Male, Gender.Female }, ApproximateDuration = new TimeSpan(0, 100, 0), Price = 500, Status = true , TenantId = Guid.Parse("11111111-1111-1111-1111-111111111111") };
-            var offeredService6 = new OfferedService { OfferedServiceId = 6, OfferedServiceName = "ChildShave", Genders = { Gender.Male, Gender.Female }, ApproximateDuration = new TimeSpan(0, 120, 0), Price = 600, Status = true , TenantId = Guid.Parse("11111111-1111-1111-1111-111111111111") };
+
+            var offeredService1 = new OfferedService { OfferedServiceId = 1, OfferedServiceName = "HairCut", Genders = { Gender.Male }, ApproximateDuration = new TimeSpan(0, 20, 0), Price = 100, Status = true, TenantId = Guid.Parse("11111111-1111-1111-1111-111111111111") };
+            var offeredService2 = new OfferedService { OfferedServiceId = 2, OfferedServiceName = "RazorShave", Genders = { Gender.Male }, ApproximateDuration = new TimeSpan(0, 40, 0), Price = 200, Status = true, TenantId = Guid.Parse("11111111-1111-1111-1111-111111111111") };
+            var offeredService3 = new OfferedService { OfferedServiceId = 3, OfferedServiceName = "HairColoring", Genders = { Gender.Male }, ApproximateDuration = new TimeSpan(0, 60, 0), Price = 300, Status = true, TenantId = Guid.Parse("11111111-1111-1111-1111-111111111111") };
+            var offeredService4 = new OfferedService { OfferedServiceId = 4, OfferedServiceName = "BrowShaping", Genders = { Gender.Male, Gender.Female }, ApproximateDuration = new TimeSpan(0, 80, 0), Price = 400, Status = true, TenantId = Guid.Parse("11111111-1111-1111-1111-111111111111") };
+            var offeredService5 = new OfferedService { OfferedServiceId = 5, OfferedServiceName = "BeardGrooming", Genders = { Gender.Male, Gender.Female }, ApproximateDuration = new TimeSpan(0, 100, 0), Price = 500, Status = true, TenantId = Guid.Parse("11111111-1111-1111-1111-111111111111") };
+            var offeredService6 = new OfferedService { OfferedServiceId = 6, OfferedServiceName = "ChildShave", Genders = { Gender.Male, Gender.Female }, ApproximateDuration = new TimeSpan(0, 120, 0), Price = 600, Status = true, TenantId = Guid.Parse("11111111-1111-1111-1111-111111111111") };
             var offeredService7 = new OfferedService { OfferedServiceId = 7, OfferedServiceName = "PermHair", Genders = { Gender.Male, Gender.Female }, ApproximateDuration = new TimeSpan(0, 140, 0), Price = 700, Status = false, TenantId = Guid.Parse("11111111-1111-1111-1111-111111111111") };
             var offeredService8 = new OfferedService { OfferedServiceId = 8, OfferedServiceName = "Manicure", Genders = { Gender.Male, Gender.Female }, ApproximateDuration = new TimeSpan(0, 150, 0), Price = 800, Status = false, TenantId = Guid.Parse("11111111-1111-1111-1111-111111111111") };
             var offeredService9 = new OfferedService { OfferedServiceId = 9, OfferedServiceName = "Pedicure", Genders = { Gender.Male, Gender.Female }, ApproximateDuration = new TimeSpan(0, 160, 0), Price = 900, Status = false, TenantId = Guid.Parse("11111111-1111-1111-1111-111111111111") };
             var offeredService10 = new OfferedService { OfferedServiceId = 10, OfferedServiceName = "GroomsCut", Genders = { Gender.Male }, ApproximateDuration = new TimeSpan(0, 180, 0), Price = 1000, Status = true, TenantId = Guid.Parse("11111111-1111-1111-1111-111111111111") };
             var offeredService11 = new OfferedService { OfferedServiceId = 11, OfferedServiceName = "Makeup(Bride)", Genders = { Gender.Female }, ApproximateDuration = new TimeSpan(0, 200, 0), Price = 1100, Status = false, TenantId = Guid.Parse("11111111-1111-1111-1111-111111111111") };
-           
+
             List<OfferedService> offeredServices = new List<OfferedService>();
             offeredServices.Add(offeredService1);
             offeredServices.Add(offeredService2);
@@ -56,7 +53,7 @@ namespace Repositories.Config
             offeredServices.Add(offeredService11);
 
             builder.HasData(offeredServices);
-            
+
         }
     }
 }

@@ -5,12 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Localization;
 using Repositories.Contracts;
 using Services.Contracts;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Services
 {
@@ -24,7 +19,7 @@ namespace Services
         public TenantManager(IMapper mapper,
                              IRepositoryManager repositoryManager,
                              IStringLocalizer<TenantManager> localizer,
-                             IHttpContextAccessor httpContextAccessor )
+                             IHttpContextAccessor httpContextAccessor)
         {
             _mapper = mapper;
             _repositoryManager = repositoryManager;

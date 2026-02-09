@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using Entities.Dtos;
 using Entities.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Localization;
 using Repositories.Contracts;

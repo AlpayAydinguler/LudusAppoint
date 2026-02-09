@@ -1,9 +1,6 @@
 ﻿using Entities.Dtos;
 using Entities.Models;
 using Entities.Models.Enums;
-using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Services.Contracts
 {

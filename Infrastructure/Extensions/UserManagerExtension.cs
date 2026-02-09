@@ -1,7 +1,6 @@
 ﻿using Entities.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using System;
 
 namespace Infrastructure.Extensions
 {

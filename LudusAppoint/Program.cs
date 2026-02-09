@@ -1,16 +1,8 @@
-using Entities.Dtos;
-using LudusAppoint.Dtos;
-using LudusAppoint.Infrastructure;
 using LudusAppoint.Infrastructure.Extensions;
 using LudusAppoint.Infrastructure.Mapper;
 using LudusAppoint.Middleware;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.EntityFrameworkCore;
-using Repositories;
-using Repositories.Contracts;
-using Services;
-using Services.Contracts;
-using AutoMapper;
 
 var builder = WebApplication.CreateBuilder(args);
 

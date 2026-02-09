@@ -1,15 +1,13 @@
-﻿using Entities.Models;
-using Microsoft.Extensions.Caching.Memory;
-using Services.Contracts;
-using Microsoft.EntityFrameworkCore;
-using System.Text.Json;
-using Repositories.Contracts;
+﻿using AutoMapper;
 using Entities.Dtos;
-using AutoMapper;
+using Entities.Models;
 using Microsoft.Data.SqlClient;
-using System.ComponentModel.DataAnnotations;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Localization;
-using System.Linq.Expressions;
+using Repositories.Contracts;
+using Services.Contracts;
+using System.ComponentModel.DataAnnotations;
 
 namespace Services
 {

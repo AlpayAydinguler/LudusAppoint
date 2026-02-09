@@ -26,9 +26,9 @@ namespace Repositories
                                   _repositoryContext.Set<T>().Where(expression).AsNoTracking();
         }
 
-        public async Task<T?> FindByConditionAsync(Expression<Func<T, bool>> expression, 
+        public async Task<T?> FindByConditionAsync(Expression<Func<T, bool>> expression,
                                                    bool trackChanges,
-                                                   Func<IQueryable<T>, 
+                                                   Func<IQueryable<T>,
                                                    IIncludableQueryable<T, object>>? include = null)
         {
             IQueryable<T> query = _repositoryContext.Set<T>();

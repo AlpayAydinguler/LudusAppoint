@@ -1,7 +1,5 @@
 ﻿using Entities.Dtos;
 using Entities.Models;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Services.Contracts
 {

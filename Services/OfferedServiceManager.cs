@@ -5,10 +5,8 @@ using Entities.Models.Enums;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
-using Repositories;
 using Repositories.Contracts;
 using Services.Contracts;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace Services

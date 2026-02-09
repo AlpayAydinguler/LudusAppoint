@@ -1,6 +1,4 @@
 ﻿using Entities.Dtos;
-using Entities.Models;
-using Entities.Models.Enums;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Options;

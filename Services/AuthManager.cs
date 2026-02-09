@@ -5,16 +5,9 @@ using Infrastructure.Extensions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
-using Repositories.Contracts;
 using Services.Contracts;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Services
 {
@@ -56,11 +49,13 @@ namespace Services
             // Use the extension method with tenant filtering
             var userInTenant = await _userManager.FindByPhoneAsync(phoneNumber, currentTenant.Id);
 
-            if (userInTenant == null) return false;
+            if (userInTenant == null)
+                return false;
 
             // Sign in user
             var result = await _signInManager.PasswordSignInAsync(userInTenant, password, false, false);
-            if (!result.Succeeded) return false;
+            if (!result.Succeeded)
+                return false;
 
             // Process permissions and update last login
             await ProcessUserLoginAsync(userInTenant);
@@ -171,7 +166,8 @@ namespace Services
         public async Task<RoleDtoForUpdate> GetRoleByIdAsync(string id)
         {
             var role = await _roleManager.Roles.AsNoTracking().FirstOrDefaultAsync(r => r.Id == id);
-            if (role == null) return null;
+            if (role == null)
+                return null;
 
             var roleClaims = await _roleManager.GetClaimsAsync(role);
             var roleDto = _mapper.Map<RoleDtoForUpdate>(role);
@@ -239,7 +235,8 @@ namespace Services
                 }
             }
 
-            if (validationException.Any()) throw new AggregateException(validationException);
+            if (validationException.Any())
+                throw new AggregateException(validationException);
 
             // Add new permissions
             var (permissionsSuccess, addedPermissions) = await AddPermissionsToRoleAsync(role, roleDtoForUpdate.Permissions);

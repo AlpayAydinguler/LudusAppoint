@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Entities.Models;
+﻿using Entities.Models;
 using LudusAppoint.Dtos;
 using LudusAppoint.Models.Enums;
 using Microsoft.AspNetCore.Identity;

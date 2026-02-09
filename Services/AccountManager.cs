@@ -2,18 +2,11 @@
 using Entities.Dtos;
 using Entities.Models;
 using Infrastructure.Extensions;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
-using Microsoft.IdentityModel.Tokens;
 using Services.Contracts;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Services
 {

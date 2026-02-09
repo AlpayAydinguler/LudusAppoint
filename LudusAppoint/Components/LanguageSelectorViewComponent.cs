@@ -1,6 +1,5 @@
 ﻿using LudusAppoint.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Options;
 using Services.Contracts;
 using System.Globalization;

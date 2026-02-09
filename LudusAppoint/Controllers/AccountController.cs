@@ -1,8 +1,5 @@
 ﻿using Entities.Dtos;
-using Entities.Models;
-using Infrastructure.Extensions;
 using LudusAppoint.Models;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 using Services.Contracts;

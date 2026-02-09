@@ -45,7 +45,7 @@ namespace Repositories.Config
                             // Makeup(Bride)
                             new OfferedServiceLocalization { OfferedServiceLocalizationId = 21, OfferedServiceId = 11, Language = "en-GB", OfferedServiceLocalizationName = "Makeup (Bride)", TenantId = Guid.Parse("11111111-1111-1111-1111-111111111111") },
                             new OfferedServiceLocalization { OfferedServiceLocalizationId = 22, OfferedServiceId = 11, Language = "tr-TR", OfferedServiceLocalizationName = "Makyaj (Gelin)", TenantId = Guid.Parse("11111111-1111-1111-1111-111111111111") });
-            
+
         }
     }
 }

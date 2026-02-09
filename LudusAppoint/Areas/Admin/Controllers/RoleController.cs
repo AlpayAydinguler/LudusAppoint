@@ -105,7 +105,7 @@ namespace LudusAppoint.Areas.Admin.Controllers
                 }
                 return View(roleDtoForUpdate);
             }
-            
+
         }
 
         [HttpPost]

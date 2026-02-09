@@ -2,10 +2,8 @@
 using Entities.Dtos;
 using Entities.Models;
 using Entities.Models.Enums;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
-using Newtonsoft.Json;
 using Repositories.Contracts;
 using Services.Contracts;
 using System.ComponentModel.DataAnnotations;
