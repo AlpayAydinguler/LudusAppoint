@@ -167,7 +167,7 @@ namespace LudusAppoint.Areas.Admin.Controllers
                     .GetAllForCustomerAppointmentAsync(gender, ageGroupId, false, System.Globalization.CultureInfo.CurrentCulture.Name))
                     .ToList();
             }
-            if (!offeredServices.IsNullOrEmpty())
+            if (offeredServices != null && offeredServices.Count > 0)
             {
                 return Json(offeredServices);
             }
@@ -184,12 +184,13 @@ namespace LudusAppoint.Areas.Admin.Controllers
                 .Select(int.Parse)
                 .ToList() ?? new List<int>();
             var employees = await _serviceManager.EmployeeService.GetEmployeesForCustomerAppointmentAsync(branchId, serviceIds ?? new List<int>(), false);
-            return employees.IsNullOrEmpty()? Json(new {
-                                                           Result = false,
-                                                           Message = _localizer["NoEmployeesAvailable"] + ". " +
-                                                                    _localizer["PleaseTryWithDifferentBranchOrOfferedServices"] + "."
-                                                       })
-                                                       : Json(employees);
+            return (employees == null || !employees.Any()) ? Json(new
+            {
+                Result = false,
+                Message = _localizer["NoEmployeesAvailable"] + ". " +
+                                                                            _localizer["PleaseTryWithDifferentBranchOrOfferedServices"] + "."
+            })
+                                                           : Json(employees);
         }
 
         public async Task<IActionResult> GetReservedDaysTimes(int employeeId, int branchId)

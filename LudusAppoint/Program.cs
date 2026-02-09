@@ -1,14 +1,16 @@
 using Entities.Dtos;
 using LudusAppoint.Dtos;
+using LudusAppoint.Infrastructure;
+using LudusAppoint.Infrastructure.Extensions;
+using LudusAppoint.Infrastructure.Mapper;
+using LudusAppoint.Middleware;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.EntityFrameworkCore;
 using Repositories;
 using Repositories.Contracts;
 using Services;
 using Services.Contracts;
-using LudusAppoint.Infrastructure.Extensions;
-using LudusAppoint.Infrastructure;
-using LudusAppoint.Middleware;
+using AutoMapper;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -42,7 +44,11 @@ builder.Services.ConfigureServiceRegistration();
 
 builder.Services.AddMemoryCache();
 
-builder.Services.AddAutoMapper(typeof(Program));
+builder.Services.AddAutoMapper(config =>
+{
+    config.AddProfile<MappingProfile>();
+    // Add other profiles here if you have more
+}, typeof(Program).Assembly);
 
 var app = builder.Build();
 

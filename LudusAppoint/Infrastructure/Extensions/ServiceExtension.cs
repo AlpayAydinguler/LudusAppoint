@@ -1,14 +1,15 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Entities.Models;
+using LudusAppoint.Dtos;
+using LudusAppoint.Models.Enums;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.Razor;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 using Repositories;
 using Repositories.Contracts;
-using Services.Contracts;
 using Services;
-using LudusAppoint.Dtos;
-using Microsoft.AspNetCore.Identity;
-using LudusAppoint.Models.Enums;
-using Entities.Models;
-using Microsoft.AspNetCore.Mvc.Razor;
-using Microsoft.Extensions.Localization;
+using Services.Contracts;
 
 namespace LudusAppoint.Infrastructure.Extensions
 {
