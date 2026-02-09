@@ -5,11 +5,11 @@ namespace Services.Contracts
 {
     public interface IBranchService
     {
-        void CreateBranch(BranchDtoForInsert branchDtoForInsert);
-        void DeleteBranch(int id);
-        IEnumerable<BranchDto> GetAllActiveBranches(bool trackChanges);
-        public IEnumerable<BranchDto> GetAllBranches(bool trackChanges);
-        BranchDtoForUpdate? GetBranchForUpdate(int id, bool trackChanges);
-        public void UpdateBranch(BranchDtoForUpdate branchDtoForUpdate);
+        Task CreateBranchAsync(BranchDtoForInsert branchDtoForInsert);
+        Task DeleteBranchAsync(int id);
+        Task<IEnumerable<BranchDto>> GetAllActiveBranchesAsync(bool trackChanges);
+        Task<IEnumerable<BranchDto>> GetAllBranchesAsync(bool trackChanges);
+        Task<BranchDtoForUpdate?> GetBranchForUpdateAsync(int id, bool trackChanges);
+        Task UpdateBranchAsync(BranchDtoForUpdate branchDtoForUpdate);
     }
 }

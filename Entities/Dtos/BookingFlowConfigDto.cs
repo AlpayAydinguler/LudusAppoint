@@ -12,11 +12,6 @@ namespace Entities.Dtos
 
         [Required(ErrorMessageResourceType = typeof(Resources.SharedResources),
                   ErrorMessageResourceName = "MissingKeyOrValueAccessor")]
-        [ForeignKey("Tenant")]
-        public Guid TenantId { get; init; }
-
-        [Required(ErrorMessageResourceType = typeof(Resources.SharedResources),
-                  ErrorMessageResourceName = "MissingKeyOrValueAccessor")]
         [Range(1, int.MaxValue,
               ErrorMessageResourceType = typeof(Resources.Dtos.BookingFlowConfigDto),
               ErrorMessageResourceName = "InvalidBranch")]
@@ -51,7 +46,6 @@ namespace Entities.Dtos
         public DateTime CreatedAt { get; init; }
         public DateTime? UpdatedAt { get; init; }
 
-        public TenantDto? Tenant { get; init; }
         public BranchDto? Branch { get; init; }
     }
 }

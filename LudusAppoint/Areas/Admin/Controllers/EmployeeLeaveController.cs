@@ -19,37 +19,38 @@ namespace LudusAppoint.Areas.Admin.Controllers
             _localizer = localizer;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var model = _serviceManager.EmployeeLeaveService.GetAllEmployeeLeaves(false);
+            var model = await _serviceManager.EmployeeLeaveService.GetAllEmployeeLeavesAsync(false);
             return View(model);
         }
 
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
             var model = new EmployeeLeaveDtoForInsert();
-            PopulateViewBag();
+            await PopulateViewBagAsync();
             return View(model);
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create([FromForm] EmployeeLeaveDtoForInsert employeeLeaveDtoForInsert)
+        public async Task<IActionResult> Create([FromForm] EmployeeLeaveDtoForInsert employeeLeaveDtoForInsert)
         {
             if (!ModelState.IsValid)
             {
-                PopulateViewBag();
+                await PopulateViewBagAsync();
                 return View(employeeLeaveDtoForInsert);
             }
             try
             {
-                _serviceManager.EmployeeLeaveService.CreateEmployeeLeave(employeeLeaveDtoForInsert);
+                await _serviceManager.EmployeeLeaveService.CreateEmployeeLeaveAsync(employeeLeaveDtoForInsert);
                 TempData["OperationSuccessfull"] = true;
                 TempData["OperationMessage"] = _localizer["EmployeeLeaveCreatedSuccessfully"] + ".";
                 return RedirectToAction("Index");
             }
             catch (AggregateException exceptions)
             {
-                PopulateViewBag();
+                await PopulateViewBagAsync();
                 foreach (var exception in exceptions.InnerExceptions)
                 {
                     ModelState.AddModelError(exception?.InnerException?.Source?.ToString() ?? string.Empty, exception?.Message ?? string.Empty);
@@ -58,31 +59,32 @@ namespace LudusAppoint.Areas.Admin.Controllers
             }
         }
 
-        public IActionResult Update([FromRoute] int id)
+        public async Task<IActionResult> Update([FromRoute] int id)
         {
-            var model = _serviceManager.EmployeeLeaveService.GetEmployeeLeaveForUpdate(id);
-            PopulateViewBag();
+            var model = await _serviceManager.EmployeeLeaveService.GetEmployeeLeaveForUpdateAsync(id);
+            await PopulateViewBagAsync();
             return View(model);
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Update([FromForm] EmployeeLeaveDtoForUpdate employeeLeaveDtoForUpdate)
+        public async Task<IActionResult> Update([FromForm] EmployeeLeaveDtoForUpdate employeeLeaveDtoForUpdate)
         {
             if (!ModelState.IsValid)
             {
-                PopulateViewBag();
+                await PopulateViewBagAsync();
                 return View(employeeLeaveDtoForUpdate);
             }
             try
             {
-                _serviceManager.EmployeeLeaveService.UpdateEmployeeLeave(employeeLeaveDtoForUpdate);
+                await _serviceManager.EmployeeLeaveService.UpdateEmployeeLeaveAsync(employeeLeaveDtoForUpdate);
                 TempData["OperationSuccessfull"] = true;
                 TempData["OperationMessage"] = _localizer["EmployeeLeaveUpdatedSuccessfully"] + ".";
                 return RedirectToAction("Index");
             }
             catch (AggregateException exceptions)
             {
-                PopulateViewBag();
+                await PopulateViewBagAsync();
                 foreach (var exception in exceptions.InnerExceptions)
                 {
                     ModelState.AddModelError(exception?.InnerException?.Source?.ToString() ?? string.Empty, exception?.Message ?? string.Empty);
@@ -90,13 +92,14 @@ namespace LudusAppoint.Areas.Admin.Controllers
                 return View(employeeLeaveDtoForUpdate);
             }
         }
+
         [HttpGet]
         [AutoValidateAntiforgeryToken]
-        public IActionResult Delete([FromRoute] int id)
+        public async Task<IActionResult> Delete([FromRoute] int id)
         {
             try
             {
-                _serviceManager.EmployeeLeaveService.DeleteEmployeeLeave(id);
+                await _serviceManager.EmployeeLeaveService.DeleteEmployeeLeaveAsync(id);
                 TempData["OperationSuccessfull"] = true;
                 TempData["OperationMessage"] = _localizer["EmployeeLeaveDeletedSuccessfully"] + ".";
                 return RedirectToAction("Index");
@@ -108,9 +111,11 @@ namespace LudusAppoint.Areas.Admin.Controllers
                 return RedirectToAction("Index");
             }
         }
-        private void PopulateViewBag()
+
+        private async Task PopulateViewBagAsync()
         {
-            ViewBag.Employees = new SelectList(_serviceManager.EmployeeService.GetAllEmployees(false), "EmployeeId", "EmployeeFullName");
+            var employees = await _serviceManager.EmployeeService.GetAllEmployeesAsync(false);
+            ViewBag.Employees = new SelectList(employees, "EmployeeId", "EmployeeFullName");
         }
     }
 }

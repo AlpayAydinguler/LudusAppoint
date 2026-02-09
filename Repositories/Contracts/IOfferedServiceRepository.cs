@@ -5,14 +5,13 @@ namespace Repositories.Contracts
 {
     public interface IOfferedServiceRepository : IRepositoryBase<OfferedService>
     {
-        OfferedService GetofferedService(int id, bool trackChanges);
-        List<OfferedService> GetAllOfferedServices(bool trackChanges, string language = "en");
-        IEnumerable<OfferedService> GetActiveOfferedServices(bool trackChanges, string language);
-        void CreateofferedService(OfferedService offeredService);
-        IEnumerable<OfferedService> GetAllForCustomerAppointment(Gender gender, int ageGroupId, bool trackChanges, string language);
-        int GetMinApproximateDuration();
-        void AttachAsUnchanged(OfferedService offeredService);
-        OfferedService GetOfferedServiceForUpdate(int id, bool trackChanges);
-        void Update(OfferedService offeredService, List<int> ageGroupIds);
+        Task<OfferedService> GetofferedServiceAsync(int id, bool trackChanges);
+        Task<List<OfferedService>> GetAllOfferedServicesAsync(bool trackChanges, string language = "en");
+        Task<IEnumerable<OfferedService>> GetActiveOfferedServicesAsync(bool trackChanges, string language);
+        Task<IEnumerable<OfferedService>> GetAllForCustomerAppointmentAsync(Gender gender, int ageGroupId, bool trackChanges, string language);
+        Task<int> GetMinApproximateDurationAsync();
+        Task AttachAsUnchangedAsync(OfferedService offeredService);
+        Task<OfferedService> GetOfferedServiceForUpdateAsync(int id, bool trackChanges);
+        Task UpdateAsync(OfferedService offeredService, List<int> ageGroupIds);
     }
 }

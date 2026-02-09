@@ -23,20 +23,20 @@ namespace Services
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IStringLocalizer<AccountManager> _localizer;
         private readonly IAuthService _authService;
-        private readonly IServiceManager _serviceManager;
+        private readonly ITenantService _tenantService;
 
         public AccountManager(
             IMapper mapper,
             UserManager<ApplicationUser> userManager,
             IStringLocalizer<AccountManager> localizer,
             IAuthService authService,
-            IServiceManager serviceManager)
+            ITenantService tenantService)
         {
             _mapper = mapper;
             _userManager = userManager;
             _localizer = localizer;
             _authService = authService;
-            _serviceManager = serviceManager;
+            _tenantService = tenantService;
         }
 
         public async Task CreateUserAsync(UserDtoForInsert userDtoForInsert)
@@ -44,7 +44,7 @@ namespace Services
             var validationException = new List<ValidationException>();
 
             // Get current tenant from HttpContext
-            var currentTenant = await _serviceManager.TenantService.GetCurrentTenantAsync();
+            var currentTenant = await _tenantService.GetCurrentTenantAsync();
             if (currentTenant == null)
             {
                 validationException.Add(new ValidationException(_localizer["NoTenantContextAvailable"],
@@ -54,8 +54,14 @@ namespace Services
 
             if (userDtoForInsert.PhoneNumber != null)
             {
-                var phoneNumberExists = await _userManager.PhoneNumberExistsAsync(userDtoForInsert.PhoneNumber.NormalizePhoneNumber());
-                var emailExists = await _userManager.EmailExistsAsync(userDtoForInsert.Email);
+                // Pass tenantId to extension methods
+                var phoneNumberExists = await _userManager.PhoneNumberExistsAsync(
+                    userDtoForInsert.PhoneNumber.NormalizePhoneNumber(),
+                    currentTenant.Id);
+
+                var emailExists = await _userManager.EmailExistsAsync(
+                    userDtoForInsert.Email,
+                    currentTenant.Id);
 
                 if (!phoneNumberExists && !emailExists)
                 {
@@ -113,7 +119,7 @@ namespace Services
             var validationException = new List<ValidationException>();
 
             // Get current tenant from HttpContext
-            var currentTenant = await _serviceManager.TenantService.GetCurrentTenantAsync();
+            var currentTenant = await _tenantService.GetCurrentTenantAsync();
             if (currentTenant == null)
             {
                 validationException.Add(new ValidationException(_localizer["NoTenantContextAvailable"],
@@ -165,7 +171,7 @@ namespace Services
             var validationException = new List<ValidationException>();
 
             // Get current tenant from HttpContext
-            var currentTenant = await _serviceManager.TenantService.GetCurrentTenantAsync();
+            var currentTenant = await _tenantService.GetCurrentTenantAsync();
             if (currentTenant == null)
             {
                 validationException.Add(new ValidationException(_localizer["NoTenantContextAvailable"],
@@ -181,11 +187,16 @@ namespace Services
             }
             else
             {
+                // Pass tenantId to extension methods
                 var phoneNumberExists = await _userManager.PhoneNumberExistsAsync(
-                    userDtoForUpdate.PhoneNumber.NormalizePhoneNumber(), userDtoForUpdate.UserId);
+                    userDtoForUpdate.PhoneNumber.NormalizePhoneNumber(),
+                    currentTenant.Id,
+                    userDtoForUpdate.UserId);
 
                 var emailExists = await _userManager.EmailExistsAsync(
-                    userDtoForUpdate.Email, userDtoForUpdate.UserId);
+                    userDtoForUpdate.Email,
+                    currentTenant.Id,
+                    userDtoForUpdate.UserId);
 
                 if (!phoneNumberExists && !emailExists)
                 {

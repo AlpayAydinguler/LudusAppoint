@@ -22,6 +22,16 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Resources\AccountManager.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>AccountManager.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\AgeGroupManager.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>AgeGroupManager.resx</DependentUpon>
+    </Compile>
     <Compile Update="Resources\offeredServiceManager.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -35,6 +45,14 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Update="Resources\AccountManager.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>AccountManager.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\AgeGroupManager.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>AgeGroupManager.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Update="Resources\offeredServiceManager.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>offeredServiceManager.Designer.cs</LastGenOutput>

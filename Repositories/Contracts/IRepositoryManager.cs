@@ -1,5 +1,4 @@
-﻿
-namespace Repositories.Contracts
+﻿namespace Repositories.Contracts
 {
     public interface IRepositoryManager
     {
@@ -15,5 +14,6 @@ namespace Repositories.Contracts
 
         Task BeginTransactionAsync();
         void Save();
+        Task SaveAsync();
     }
 }

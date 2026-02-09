@@ -10,23 +10,17 @@ namespace Repositories
         {
         }
 
-        public void CreateBranch(Branch branch)
+        public async Task CreateBranchAsync(Branch branch)
         {
-            Create(branch);
+            await CreateAsync(branch);
         }
 
-        public IEnumerable<Branch> GetAllBranches(bool trackChanges)
+        public async Task<int> GetReservationInAdvanceDayLimitAsync(int branchId)
         {
-            return GetAll(trackChanges);
-        }
-
-        public int GetReservationInAdvanceDayLimit(int branchId)
-        {
-            return _repositoryContext.Branches.Where(b => b.BranchId == branchId)
+            return await _repositoryContext.Branches.Where(b => b.BranchId == branchId)
                                               .AsNoTracking()
                                               .Select(b => b.ReservationInAdvanceDayLimit)
-                                              .FirstOrDefault();
-
+                                              .FirstOrDefaultAsync();
         }
     }
 }

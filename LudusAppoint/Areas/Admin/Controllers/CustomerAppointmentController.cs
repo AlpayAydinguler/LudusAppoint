@@ -23,15 +23,17 @@ namespace LudusAppoint.Areas.Admin.Controllers
             _serviceManager = serviceManager;
             _localizer = localizer;
         }
+
         [Authorize(Policy = nameof(Permissions.CustomerAppointment_Index))]
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var model = _serviceManager.CustomerAppointmentService.GetAllCustomerAppointments(false, System.Globalization.CultureInfo.CurrentCulture.Name);
+            var model = await _serviceManager.CustomerAppointmentService.GetAllCustomerAppointmentsAsync(false, System.Globalization.CultureInfo.CurrentCulture.Name);
             return View(model);
         }
-        public IActionResult PendingConfirmationList()
+
+        public async Task<IActionResult> PendingConfirmationList()
         {
-            var model = _serviceManager.CustomerAppointmentService.GetPendingCustomerAppointments(false, System.Globalization.CultureInfo.CurrentCulture.Name);
+            var model = await _serviceManager.CustomerAppointmentService.GetPendingCustomerAppointmentsAsync(false, System.Globalization.CultureInfo.CurrentCulture.Name);
             return View(model);
         }
 
@@ -102,11 +104,14 @@ namespace LudusAppoint.Areas.Admin.Controllers
                     ModelState.AddModelError(exception?.InnerException?.Source?.ToString() ?? string.Empty, exception?.Message ?? string.Empty);
                 }
                 await PopulateBranchesAndAgeGroupsAsync();
-                ViewBag.AllServices = _serviceManager.OfferedServiceService.GetAllOfferedServices(false, System.Globalization.CultureInfo.CurrentCulture.Name).ToList();
-                ViewBag.AllEmployees = _serviceManager.EmployeeService.GetAllEmployees(false).ToList();
+                var offeredServices = await _serviceManager.OfferedServiceService.GetAllOfferedServicesAsync(false, System.Globalization.CultureInfo.CurrentCulture.Name);
+                ViewBag.AllServices = offeredServices.ToList();
+                var employees = await _serviceManager.EmployeeService.GetAllEmployeesAsync(false);
+                ViewBag.AllEmployees = employees.ToList();
                 return View(customerAppointmentDtoForUpdate);
             }
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ApproveAppointment([FromRoute] int id)
@@ -129,6 +134,7 @@ namespace LudusAppoint.Areas.Admin.Controllers
                 return RedirectToAction("PendingConfirmationList");
             }
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CancelAppointment([FromRoute] int id)
@@ -152,13 +158,13 @@ namespace LudusAppoint.Areas.Admin.Controllers
             }
         }
 
-        public IActionResult GetOfferedServices(string genderValue, int ageGroupId)
+        public async Task<IActionResult> GetOfferedServices(string genderValue, int ageGroupId)
         {
             List<OfferedService> offeredServices = new List<OfferedService>();
             if (Enum.TryParse<Gender>(genderValue, out var gender))
             {
-                offeredServices = _serviceManager.OfferedServiceService
-                    .GetAllForCustomerAppointment(gender, ageGroupId, false, System.Globalization.CultureInfo.CurrentCulture.Name)
+                offeredServices = (await _serviceManager.OfferedServiceService
+                    .GetAllForCustomerAppointmentAsync(gender, ageGroupId, false, System.Globalization.CultureInfo.CurrentCulture.Name))
                     .ToList();
             }
             if (!offeredServices.IsNullOrEmpty())
@@ -171,14 +177,13 @@ namespace LudusAppoint.Areas.Admin.Controllers
             }
         }
 
-        public IActionResult GetEmployees(int branchId, string offeredServiceIds)
+        public async Task<IActionResult> GetEmployees(int branchId, string offeredServiceIds)
         {
-            // Split comma-separated string into list of integers
             var serviceIds = offeredServiceIds?
                 .Split(',', StringSplitOptions.RemoveEmptyEntries)
                 .Select(int.Parse)
                 .ToList() ?? new List<int>();
-            var employees = _serviceManager.EmployeeService.GetEmployeesForCustomerAppointment(branchId, serviceIds ?? new List<int>(), false);
+            var employees = await _serviceManager.EmployeeService.GetEmployeesForCustomerAppointmentAsync(branchId, serviceIds ?? new List<int>(), false);
             return employees.IsNullOrEmpty()? Json(new {
                                                            Result = false,
                                                            Message = _localizer["NoEmployeesAvailable"] + ". " +
@@ -187,17 +192,20 @@ namespace LudusAppoint.Areas.Admin.Controllers
                                                        : Json(employees);
         }
 
-        public IActionResult GetReservedDaysTimes(int employeeId, int branchId)
+        public async Task<IActionResult> GetReservedDaysTimes(int employeeId, int branchId)
         {
-            return _serviceManager.CustomerAppointmentService.GetReservedDaysTimes(employeeId, branchId);
+            var reservedDaysTimes = await _serviceManager.CustomerAppointmentService.GetReservedDaysTimesAsync(employeeId, branchId);
+            return Json(reservedDaysTimes);
         }
 
         private async Task PopulateBranchesAndAgeGroupsAsync()
         {
             var supportedGendersSetting = await _serviceManager.ApplicationSettingService.GetSettingEntityAsync("SupportedGenders", false);
             ViewBag.SupportedGenders = supportedGendersSetting.Value;
-            ViewBag.AllBranches = _serviceManager.BranchService.GetAllActiveBranches(false).ToList();
-            ViewBag.AllAgeGroups = _serviceManager.AgeGroupService.GetAllAgeGroups(false).ToList();
+            var branches = await _serviceManager.BranchService.GetAllActiveBranchesAsync(false);
+            ViewBag.AllBranches = branches.ToList();
+            var ageGroups = await _serviceManager.AgeGroupService.GetAllAgeGroupsAsync(false);
+            ViewBag.AllAgeGroups = ageGroups.ToList();
         }
     }
 }

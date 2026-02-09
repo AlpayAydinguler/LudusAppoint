@@ -4,7 +4,7 @@ namespace Repositories.Contracts
 {
     public interface IBranchRepository : IRepositoryBase<Branch>
     {
-        void CreateBranch(Branch branch);
-        int GetReservationInAdvanceDayLimit(int branchId);
+        Task CreateBranchAsync(Branch branch);
+        Task<int> GetReservationInAdvanceDayLimitAsync(int branchId);
     }
 }

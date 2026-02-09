@@ -11,7 +11,7 @@
         IApplicationSettingService ApplicationSettingService { get; }
         IAccountService AccountService { get; }
         IAuthService AuthService { get; }
-        IUserService UserService { get; }
+        IApplicationUserService UserService { get; }
         ITenantService TenantService { get; }
         IBookingFlowConfigService BookingFlowConfigService { get; }
     }

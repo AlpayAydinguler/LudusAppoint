@@ -36,7 +36,7 @@ namespace LudusAppoint.Controllers
         {
             if (ModelState.IsValid)
             {
-                var userStatusResult = await _serviceManager.UserService.IsUserActive(model.PhoneNumber);
+                var userStatusResult = await _serviceManager.UserService.IsUserActiveAsync(model.PhoneNumber);
                 if (userStatusResult == "Inactive")
                 {
                     // Redirect to email OTP page

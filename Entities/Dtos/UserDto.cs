@@ -11,10 +11,7 @@ namespace Entities.Dtos
     public record UserDto
     {
         public string UserId { get; init; }
-        [Required(ErrorMessageResourceType = typeof(Resources.SharedResources),
-                  ErrorMessageResourceName = "MissingKeyOrValueAccessor")]
-        [ForeignKey("Tenant")]
-        public Guid TenantId { get; init; }
+
         [Phone]
         [Required(ErrorMessageResourceType = typeof(Resources.SharedResources),
                   ErrorMessageResourceName = "MissingKeyOrValueAccessor")]
@@ -42,7 +39,5 @@ namespace Entities.Dtos
         public string Email { get; init; }
         public bool EmailConfirmed { get; init; }
         public bool IsActive { get; init; }
-
-        public TenantDto? Tenant { get; init; }
     }
 }

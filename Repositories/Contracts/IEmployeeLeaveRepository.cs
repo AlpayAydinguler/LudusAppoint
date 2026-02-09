@@ -1,14 +1,17 @@
 ﻿using Entities.Dtos;
 using Entities.Models;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Repositories.Contracts
 {
     public interface IEmployeeLeaveRepository : IRepositoryBase<EmployeeLeave>
     {
-        public ICollection<EmployeeLeave> GetAllEmployeeLeaves(bool trackChanges);
-        void CreateEmployeeLeave(EmployeeLeave model);
-        object GetLeaveTimes(int employeeId, int reservationInAdvanceDayLimit);
-        bool HasOverlappingAppointments(int employeeId, DateTime leaveStart, DateTime leaveEnd);
-        bool HasOverlappingLeaves(int employeeId, DateTime leaveStart, DateTime leaveEnd, int? employeeLeaveId);
+        Task<ICollection<EmployeeLeave>> GetAllEmployeeLeavesAsync(Guid tenantId, bool trackChanges);
+        Task CreateEmployeeLeaveAsync(EmployeeLeave model);
+        Task<object> GetLeaveTimesAsync(Guid tenantId, int employeeId, int reservationInAdvanceDayLimit);
+        Task<bool> HasOverlappingAppointmentsAsync(Guid tenantId, int employeeId, DateTime leaveStart, DateTime leaveEnd);
+        Task<bool> HasOverlappingLeavesAsync(Guid tenantId, int employeeId, DateTime leaveStart, DateTime leaveEnd, int? employeeLeaveId);
     }
 }

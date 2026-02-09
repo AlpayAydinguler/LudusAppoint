@@ -17,9 +17,10 @@ namespace LudusAppoint.Areas.Admin.Controllers
             _serviceManager = serviceManager;
             _localizer = localizer;
         }
-        public IActionResult Index()
+
+        public async Task<IActionResult> Index()
         {
-            var model = _serviceManager.BranchService.GetAllBranches(false);
+            var model = await _serviceManager.BranchService.GetAllBranchesAsync(false);
             return View(model);
         }
 
@@ -31,7 +32,7 @@ namespace LudusAppoint.Areas.Admin.Controllers
 
         [HttpPost]
         [AutoValidateAntiforgeryToken]
-        public IActionResult Create([FromForm] BranchDtoForInsert branchDtoForInsert)
+        public async Task<IActionResult> Create([FromForm] BranchDtoForInsert branchDtoForInsert)
         {
             if (!ModelState.IsValid)
             {
@@ -39,7 +40,7 @@ namespace LudusAppoint.Areas.Admin.Controllers
             }
             try
             {
-                _serviceManager.BranchService.CreateBranch(branchDtoForInsert);
+                await _serviceManager.BranchService.CreateBranchAsync(branchDtoForInsert);
                 TempData["OperationSuccessfull"] = true;
                 TempData["OperationMessage"] = _localizer["BranchCreatedSuccessfully"].ToString() + ".";
                 return RedirectToAction("Index");
@@ -54,15 +55,15 @@ namespace LudusAppoint.Areas.Admin.Controllers
             }
         }
 
-        public IActionResult Update([FromRoute] int id)
+        public async Task<IActionResult> Update([FromRoute] int id)
         {
-            var model = _serviceManager.BranchService.GetBranchForUpdate(id, false);
+            var model = await _serviceManager.BranchService.GetBranchForUpdateAsync(id, false);
             return View(model);
         }
 
         [HttpPost]
         [AutoValidateAntiforgeryToken]
-        public IActionResult Update([FromForm] BranchDtoForUpdate branchDtoForUpdate)
+        public async Task<IActionResult> Update([FromForm] BranchDtoForUpdate branchDtoForUpdate)
         {
             if (!ModelState.IsValid)
             {
@@ -70,7 +71,7 @@ namespace LudusAppoint.Areas.Admin.Controllers
             }
             try
             {
-                _serviceManager.BranchService.UpdateBranch(branchDtoForUpdate);
+                await _serviceManager.BranchService.UpdateBranchAsync(branchDtoForUpdate);
                 TempData["OperationSuccessfull"] = true;
                 TempData["OperationMessage"] = _localizer["BranchUpdatedSuccessfully"].ToString() + ".";
                 return RedirectToAction("Index");
@@ -84,13 +85,14 @@ namespace LudusAppoint.Areas.Admin.Controllers
                 return View(branchDtoForUpdate);
             }
         }
+
         [HttpGet]
         [AutoValidateAntiforgeryToken]
-        public IActionResult Delete([FromRoute] int id)
+        public async Task<IActionResult> Delete([FromRoute] int id)
         {
             try
             {
-                _serviceManager.BranchService.DeleteBranch(id);
+                await _serviceManager.BranchService.DeleteBranchAsync(id);
                 TempData["OperationSuccessfull"] = true;
                 TempData["OperationMessage"] = _localizer["BranchDeletedSuccessfully"].ToString() + ".";
                 return RedirectToAction("Index");

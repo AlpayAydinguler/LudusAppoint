@@ -9,8 +9,8 @@ namespace Services.Contracts
 {
     public interface IBookingFlowConfigService
     {
-        Task<BookingFlowConfigDto?> GetBookingFlowConfigForBranchAsync(Guid tenantId, int branchId);
-        Task<IEnumerable<BookingFlowConfigDto>> GetAllBookingFlowConfigsByTenantIdAsync(Guid tenantId);
+        Task<BookingFlowConfigDto?> GetBookingFlowConfigForBranchAsync(int branchId);
+        Task<IEnumerable<BookingFlowConfigDto>> GetAllBookingFlowConfigsAsync();
         Task UpdateBookingFlowConfigAsync(BookingFlowConfigDtoForUpdate configDto);
     }
 }

@@ -13,10 +13,7 @@ namespace Entities.Dtos
 
         [ValidateNever]
         public String? IdentityUserId { get; init; }
-        [Required(ErrorMessageResourceType = typeof(Resources.SharedResources),
-                  ErrorMessageResourceName = "MissingKeyOrValueAccessor")]
-        [ForeignKey("Tenant")]
-        public Guid TenantId { get; init; }
+
         [ForeignKey("Branch")]
         [Required(ErrorMessageResourceType = typeof(Resources.SharedResources),
                   ErrorMessageResourceName = "MissingKeyOrValueAccessor")]
@@ -72,6 +69,5 @@ namespace Entities.Dtos
 
         [ValidateNever]
         public ICollection<EmployeeLeave>? EmployeesLeaves { get; init; }
-        public TenantDto? Tenant { get; init; }
     }
 }

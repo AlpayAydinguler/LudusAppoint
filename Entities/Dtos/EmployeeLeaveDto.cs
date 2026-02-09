@@ -8,8 +8,6 @@ namespace Entities.Dtos
     public record EmployeeLeaveDto
     {
         public int EmployeeLeaveId { get; init; }
-        [ForeignKey("Tenant")]
-        public Guid TenantId { get; init; }
 
         [Required(ErrorMessageResourceType = typeof(Resources.SharedResources),
                 ErrorMessageResourceName = "MissingKeyOrValueAccessor")]
@@ -30,6 +28,5 @@ namespace Entities.Dtos
 
         [ValidateNever]
         public Employee Employee { get; init; }
-        public TenantDto? Tenant { get; init; }
     }
 }

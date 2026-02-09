@@ -1,15 +1,17 @@
 ﻿using Entities.Dtos;
 using Entities.Models;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Services.Contracts
 {
     public interface IEmployeeService
     {
-        void CreateEmployee(EmployeeDtoForInsert employeeDtoForInsert);
-        void DeleteEmployee(int id);
-        IEnumerable<EmployeeDto> GetAllEmployees(bool trackChanges);
-        IEnumerable<Employee> GetEmployeesForCustomerAppointment(int branchId, List<int> offeredServiceIds, bool trackChanges);
-        EmployeeDtoForUpdate GetOneEmployeeForUpdate(int id, bool trackChanges, string language);
-        void UpdateEmployee(EmployeeDtoForUpdate employeeDtoForUpdate);
+        Task CreateEmployeeAsync(EmployeeDtoForInsert employeeDtoForInsert);
+        Task DeleteEmployeeAsync(int id);
+        Task<IEnumerable<EmployeeDto>> GetAllEmployeesAsync(bool trackChanges);
+        Task<IEnumerable<Employee>> GetEmployeesForCustomerAppointmentAsync(int branchId, List<int> offeredServiceIds, bool trackChanges);
+        Task<EmployeeDtoForUpdate> GetOneEmployeeForUpdateAsync(int id, bool trackChanges, string language);
+        Task UpdateEmployeeAsync(EmployeeDtoForUpdate employeeDtoForUpdate);
     }
 }

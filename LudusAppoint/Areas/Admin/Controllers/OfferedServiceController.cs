@@ -21,26 +21,27 @@ namespace LudusAppoint.Areas.Admin.Controllers
             _localizationOptions = localizationOptions.Value;
             _localizer = localizer;
         }
-        public IActionResult Index()
+
+        public async Task<IActionResult> Index()
         {
-            var model = _serviceManager.OfferedServiceService.GetAllOfferedServices(false, System.Globalization.CultureInfo.CurrentCulture.Name);
+            var model = await _serviceManager.OfferedServiceService.GetAllOfferedServicesAsync(false, System.Globalization.CultureInfo.CurrentCulture.Name);
             return View(model);
         }
-        public IActionResult Create()
+
+        public async Task<IActionResult> Create()
         {
             PopulateAgeGroups();
             PopulateSupportedCultures();
-            var model = new OfferedServiceDtoForInsert(); // Ensure a valid model is created
+            var model = new OfferedServiceDtoForInsert();
             return View(model);
         }
 
         [HttpPost]
         [AutoValidateAntiforgeryToken]
-        public IActionResult Create([FromForm] OfferedServiceDtoForInsert offeredServiceDtoForInsert)
+        public async Task<IActionResult> Create([FromForm] OfferedServiceDtoForInsert offeredServiceDtoForInsert)
         {
             if (!ModelState.IsValid)
             {
-                // Repopulate dropdowns/ViewBag data for the form
                 PopulateAgeGroups();
                 PopulateSupportedCultures();
                 return View(offeredServiceDtoForInsert);
@@ -48,14 +49,13 @@ namespace LudusAppoint.Areas.Admin.Controllers
 
             try
             {
-                _serviceManager.OfferedServiceService.CreateOfferedService(offeredServiceDtoForInsert);
+                await _serviceManager.OfferedServiceService.CreateOfferedServiceAsync(offeredServiceDtoForInsert);
                 TempData["OperationSuccessfull"] = true;
                 TempData["OperationMessage"] = _localizer["OfferedServiceCreatedSuccessfully"].ToString() + ".";
                 return RedirectToAction("Index");
             }
             catch (AggregateException exceptions)
             {
-                // Handle validation/domain errors
                 foreach (var exception in exceptions.InnerExceptions)
                 {
                     ModelState.AddModelError(exception.InnerException?.Source ?? "General", exception.Message);
@@ -66,9 +66,9 @@ namespace LudusAppoint.Areas.Admin.Controllers
             }
         }
 
-        public IActionResult Update([FromRoute] int id)
+        public async Task<IActionResult> Update([FromRoute] int id)
         {
-            var model = _serviceManager.OfferedServiceService.GetOfferedServiceForUpdate(id, false);
+            var model = await _serviceManager.OfferedServiceService.GetOfferedServiceForUpdateAsync(id, false);
             PopulateAgeGroups();
             PopulateSupportedCultures();
             return View(model);
@@ -76,7 +76,7 @@ namespace LudusAppoint.Areas.Admin.Controllers
 
         [HttpPost]
         [AutoValidateAntiforgeryToken]
-        public IActionResult Update([FromForm] OfferedServiceDtoForUpdate offeredServiceDtoForUpdate)
+        public async Task<IActionResult> Update([FromForm] OfferedServiceDtoForUpdate offeredServiceDtoForUpdate)
         {
             if (!ModelState.IsValid)
             {
@@ -86,7 +86,7 @@ namespace LudusAppoint.Areas.Admin.Controllers
             }
             try
             {
-                _serviceManager.OfferedServiceService.UpdateOfferedService(offeredServiceDtoForUpdate);
+                await _serviceManager.OfferedServiceService.UpdateOfferedServiceAsync(offeredServiceDtoForUpdate);
                 TempData["OperationSuccessfull"] = true;
                 TempData["OperationMessage"] = _localizer["OfferedServiceUpdatedSuccessfully"].ToString() + ".";
                 return RedirectToAction("Index");
@@ -102,13 +102,14 @@ namespace LudusAppoint.Areas.Admin.Controllers
                 return View(offeredServiceDtoForUpdate);
             }
         }
+
         [HttpGet]
         [AutoValidateAntiforgeryToken]
-        public IActionResult Delete([FromRoute] int id)
+        public async Task<IActionResult> Delete([FromRoute] int id)
         {
             try
             {
-                _serviceManager.OfferedServiceService.DeleteOfferedService(id);
+                await _serviceManager.OfferedServiceService.DeleteOfferedServiceAsync(id);
                 TempData["OperationSuccessfull"] = true;
                 TempData["OperationMessage"] = _localizer["OfferedServiceDeletedSuccessfully"].ToString() + ".";
                 return RedirectToAction("Index");
@@ -126,10 +127,10 @@ namespace LudusAppoint.Areas.Admin.Controllers
             ViewBag.SupportedCultures = _localizationOptions.SupportedCultures.Select(c => c.Name).ToList();
         }
 
-        private void PopulateAgeGroups()
+        private async void PopulateAgeGroups()
         {
-            var ageGroups = _serviceManager.AgeGroupService.GetAllAgeGroups(false).ToList();
-            ViewBag.AllAgeGroups = ageGroups;
+            var ageGroups = await _serviceManager.AgeGroupService.GetAllAgeGroupsAsync(false);
+            ViewBag.AllAgeGroups = ageGroups.ToList();
         }
     }
 }

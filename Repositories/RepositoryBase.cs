@@ -14,17 +14,6 @@ namespace Repositories
             _repositoryContext = repositoryContext;
         }
 
-        public void Create(T entity)
-        {
-            _repositoryContext.Set<T>().Add(entity);
-        }
-
-        public T? FindByCondition(Expression<Func<T, bool>> expression, bool trackChanges)
-        {
-            return trackChanges ? _repositoryContext.Set<T>().Where(expression).SingleOrDefault() :
-                                  _repositoryContext.Set<T>().Where(expression).AsNoTracking().SingleOrDefault();
-        }
-
         public IQueryable<T> GetAll(bool trackChanges)
         {
             return trackChanges ? _repositoryContext.Set<T>() :
@@ -37,20 +26,10 @@ namespace Repositories
                                   _repositoryContext.Set<T>().Where(expression).AsNoTracking();
         }
 
-        public void Update(T entity)
-        {
-            _repositoryContext.Set<T>().Update(entity);
-        }
-        public void Delete(T entity)
-        {
-            _repositoryContext.Set<T>().Remove(entity);
-        }
-
         public async Task<T?> FindByConditionAsync(Expression<Func<T, bool>> expression, 
                                                    bool trackChanges,
                                                    Func<IQueryable<T>, 
                                                    IIncludableQueryable<T, object>>? include = null)
-    
         {
             IQueryable<T> query = _repositoryContext.Set<T>();
 
@@ -67,6 +46,13 @@ namespace Repositories
         {
             await _repositoryContext.Set<T>().AddAsync(entity);
         }
+
+        public Task UpdateAsync(T entity)
+        {
+            _repositoryContext.Set<T>().Update(entity);
+            return Task.CompletedTask;
+        }
+
         public async Task DeleteAsync(T entity)
         {
             await Task.Run(() => _repositoryContext.Set<T>().Remove(entity));

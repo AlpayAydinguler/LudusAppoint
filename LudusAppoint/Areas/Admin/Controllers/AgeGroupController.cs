@@ -17,9 +17,9 @@ namespace LudusAppoint.Areas.Admin.Controllers
             _localizer = localizer;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var model = _serviceManager.AgeGroupService.GetAllAgeGroups(false);
+            var model = await _serviceManager.AgeGroupService.GetAllAgeGroupsAsync(false);
             return View(model);
         }
 
@@ -31,7 +31,7 @@ namespace LudusAppoint.Areas.Admin.Controllers
 
         [HttpPost]
         [AutoValidateAntiforgeryToken]
-        public IActionResult Create([FromForm] AgeGroupDtoForInsert ageGroupDtoForInsert)
+        public async Task<IActionResult> Create([FromForm] AgeGroupDtoForInsert ageGroupDtoForInsert)
         {
             if (!ModelState.IsValid)
             {
@@ -39,7 +39,7 @@ namespace LudusAppoint.Areas.Admin.Controllers
             }
             try
             {
-                _serviceManager.AgeGroupService.CreateAgeGroup(ageGroupDtoForInsert);
+                await _serviceManager.AgeGroupService.CreateAgeGroupAsync(ageGroupDtoForInsert);
                 TempData["OperationSuccessfull"] = true;
                 TempData["OperationMessage"] = _localizer["AgeGroupCreatedSuccessfully"].ToString() + ".";
                 return RedirectToAction("Index");
@@ -54,15 +54,15 @@ namespace LudusAppoint.Areas.Admin.Controllers
             }
         }
 
-        public IActionResult Update([FromRoute] int id)
+        public async Task<IActionResult> Update([FromRoute] int id)
         {
-            var model = _serviceManager.AgeGroupService.GetAgeGroupForUpdate(id, false);
+            var model = await _serviceManager.AgeGroupService.GetAgeGroupForUpdateAsync(id, false);
             return View(model);
         }
 
         [HttpPost]
         [AutoValidateAntiforgeryToken]
-        public IActionResult Update([FromForm] AgeGroupDtoForUpdate ageGroupDtoForUpdate)
+        public async Task<IActionResult> Update([FromForm] AgeGroupDtoForUpdate ageGroupDtoForUpdate)
         {
             if (!ModelState.IsValid)
             {
@@ -70,7 +70,7 @@ namespace LudusAppoint.Areas.Admin.Controllers
             }
             try
             {
-                _serviceManager.AgeGroupService.UpdateAgeGroup(ageGroupDtoForUpdate);
+                await _serviceManager.AgeGroupService.UpdateAgeGroupAsync(ageGroupDtoForUpdate);
                 TempData["OperationSuccessfull"] = true;
                 TempData["OperationMessage"] = _localizer["AgeGroupUpdatedSuccessfully"].ToString() + ".";
                 return RedirectToAction("Index");
@@ -87,11 +87,11 @@ namespace LudusAppoint.Areas.Admin.Controllers
 
         [HttpGet]
         [AutoValidateAntiforgeryToken]
-        public IActionResult Delete([FromRoute] int id)
+        public async Task<IActionResult> Delete([FromRoute] int id)
         {
             try
             {
-                _serviceManager.AgeGroupService.DeleteAgeGroup(id);
+                await _serviceManager.AgeGroupService.DeleteAgeGroupAsync(id);
                 TempData["OperationSuccessfull"] = true;
                 TempData["OperationMessage"] = _localizer["AgeGroupDeletedSuccessfully"].ToString() + ".";
                 return RedirectToAction("Index");

@@ -90,7 +90,7 @@ namespace LudusAppoint.Infrastructure.Extensions
             services.AddScoped<IApplicationSettingService, ApplicationSettingManager>();
             services.AddScoped<IAccountService, AccountManager>();
             services.AddScoped<IAuthService, AuthManager>();
-            services.AddScoped<IUserService, UserManager>();
+            services.AddScoped<IApplicationUserService, ApplicationUserManager>();
             services.AddScoped<ITenantService, TenantManager>();
             services.Configure<RazorViewEngineOptions>(options =>
             {

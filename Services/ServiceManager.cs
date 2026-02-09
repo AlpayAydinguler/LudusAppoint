@@ -13,7 +13,7 @@ namespace Services
         private readonly IApplicationSettingService _applicationSettingService;
         private readonly IAccountService _accountService;
         private readonly IAuthService _authService;
-        private readonly IUserService _userService;
+        private readonly IApplicationUserService _userService;
         private readonly ITenantService _tenantService;
         private readonly IBookingFlowConfigService _bookingFlowConfigService;
 
@@ -26,7 +26,7 @@ namespace Services
                               IApplicationSettingService applicationSettingService,
                               IAccountService accountService,
                               IAuthService authService,
-                              IUserService userService,
+                              IApplicationUserService userService,
                               ITenantService tenantService,
                               IBookingFlowConfigService bookingFlowConfigService)
         {
@@ -53,7 +53,7 @@ namespace Services
         public IApplicationSettingService ApplicationSettingService => _applicationSettingService;
         public IAccountService AccountService => _accountService;
         public IAuthService AuthService => _authService;
-        public IUserService UserService => _userService;
+        public IApplicationUserService UserService => _userService;
         public ITenantService TenantService => _tenantService;
         public IBookingFlowConfigService BookingFlowConfigService => _bookingFlowConfigService;
     }

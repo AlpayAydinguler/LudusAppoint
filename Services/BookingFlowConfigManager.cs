@@ -19,28 +19,36 @@ namespace Services
         private readonly IMapper _mapper;
         private readonly IRepositoryManager _repositoryManager;
         private readonly IStringLocalizer<BookingFlowConfigManager> _localizer;
+        private readonly ITenantService _tenantService;
 
         public BookingFlowConfigManager(
             IMapper mapper,
             IRepositoryManager repositoryManager,
-            IStringLocalizer<BookingFlowConfigManager> localizer)
+            IStringLocalizer<BookingFlowConfigManager> localizer,
+            ITenantService tenantService)
         {
             _mapper = mapper;
             _repositoryManager = repositoryManager;
             _localizer = localizer;
+            _tenantService = tenantService;
         }
 
-        public async Task<BookingFlowConfigDto> GetBookingFlowConfigForBranchAsync(Guid tenantId, int branchId)
+        public async Task<BookingFlowConfigDto> GetBookingFlowConfigForBranchAsync(int branchId)
         {
+            var currentTenant = await _tenantService.GetCurrentTenantAsync();
+            if (currentTenant == null)
+            {
+                return null;
+            }
+
             var config = await _repositoryManager.BookingFlowConfigRepository
-                .GetBookingFlowConfigByBranchIdForUpdateAsync(tenantId, branchId, false);
+                .GetBookingFlowConfigByBranchIdForUpdateAsync(currentTenant.Id, branchId, false);
 
             if (config == null)
             {
-                // Return default configuration
+                // Return default configuration for current tenant
                 return new BookingFlowConfigDto
                 {
-                    TenantId = tenantId,
                     BranchId = branchId,
                     AllStepsInOrder = "[\"Services\", \"DateTime\", \"RoomSelection\", \"Employee\"]",
                     EnabledStepsInOrder = "[\"Services\", \"DateTime\", \"RoomSelection\", \"Employee\"]",
@@ -51,16 +59,28 @@ namespace Services
             return _mapper.Map<BookingFlowConfigDto>(config);
         }
 
-        public async Task<IEnumerable<BookingFlowConfigDto>> GetAllBookingFlowConfigsByTenantIdAsync(Guid tenantId)
+        public async Task<IEnumerable<BookingFlowConfigDto>> GetAllBookingFlowConfigsAsync()
         {
+            var currentTenant = await _tenantService.GetCurrentTenantAsync();
+            if (currentTenant == null)
+            {
+                return Enumerable.Empty<BookingFlowConfigDto>();
+            }
+
             var configs = await _repositoryManager.BookingFlowConfigRepository
-                .GetAllBookingFlowConfigByTenantIdAsync(tenantId, false);
+                .GetAllBookingFlowConfigByTenantIdAsync(currentTenant.Id, false);
 
             return _mapper.Map<IEnumerable<BookingFlowConfigDto>>(configs);
         }
 
         public async Task UpdateBookingFlowConfigAsync(BookingFlowConfigDtoForUpdate configDto)
         {
+            var currentTenant = await _tenantService.GetCurrentTenantAsync();
+            if (currentTenant == null)
+            {
+                throw new ValidationException(_localizer["NoTenantContextAvailable"]);
+            }
+
             var validationException = new List<ValidationException>();
 
             // Validate AllStepsInOrder JSON format
@@ -88,19 +108,26 @@ namespace Services
             }
 
             var config = await _repositoryManager.BookingFlowConfigRepository
-                .GetBookingFlowConfigByBranchIdForUpdateAsync(configDto.TenantId, configDto.BranchId, true);
+                .GetBookingFlowConfigByBranchIdForUpdateAsync(currentTenant.Id, configDto.BranchId, true);
 
             if (config == null)
             {
                 // Create if doesn't exist
                 config = _mapper.Map<BookingFlowConfig>(configDto);
+                config.TenantId = currentTenant.Id;
                 await _repositoryManager.BookingFlowConfigRepository.CreateAsync(config);
             }
             else
             {
+                // Security check - ensure config belongs to current tenant
+                if (config.TenantId != currentTenant.Id)
+                {
+                    throw new ValidationException(_localizer["CannotUpdateConfigFromAnotherTenant"]);
+                }
+
                 _mapper.Map(configDto, config);
                 config.UpdatedAt = DateTime.UtcNow;
-                _repositoryManager.BookingFlowConfigRepository.Update(config);
+                await _repositoryManager.BookingFlowConfigRepository.UpdateAsync(config);
             }
 
             await _repositoryManager.BookingFlowConfigRepository.SaveAsync();

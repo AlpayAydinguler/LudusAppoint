@@ -48,7 +48,7 @@ namespace Services
             {
                 var tenant = _mapper.Map<Tenant>(tenantDto);
                 await _repositoryManager.TenantRepository.CreateAsync(tenant);
-                // await _repositoryManager.TenantRepository.SaveAsync();
+                await _repositoryManager.SaveAsync();
             }
 
             if (validationException.Count != 0)
@@ -70,7 +70,7 @@ namespace Services
             else
             {
                 await _repositoryManager.TenantRepository.DeleteAsync(tenant);
-                //await _repositoryManager.TenantRepository.SaveAsync();
+                await _repositoryManager.SaveAsync();
             }
 
             if (validationException.Count != 0)
@@ -103,8 +103,8 @@ namespace Services
                 {
                     _mapper.Map(tenantDto, tenant);
                     tenant.UpdatedAt = DateTime.UtcNow;
-                    // _repositoryManager.TenantRepository.Update(tenant);
-                    await _repositoryManager.TenantRepository.SaveAsync();
+                    await _repositoryManager.TenantRepository.UpdateAsync(tenant);
+                    await _repositoryManager.SaveAsync();
                 }
             }
 

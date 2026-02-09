@@ -19,19 +19,14 @@ namespace LudusAppoint.Controllers
             _localizer = localizer;
             _serviceManager = serviceManager;
         }
-        /*
-        public async Task<IActionResult> Index()
-        {
-            var model = _serviceManager.CustomerAppointmentService.GetCustomersAppointments(false);
-            return View(model);
-        }
-        */
+
         public async Task<IActionResult> Create()
         {
             var model = HttpContext.Session.GetJson<SessionCustomerAppointmentDtoForInsert>("CustomerAppointment") ?? new SessionCustomerAppointmentDtoForInsert();
             await PopulateBranchesAndAgeGroupsAsync();
             return View(model);
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([FromForm] SessionCustomerAppointmentDtoForInsert sessionCustomerAppointmentDtoForInsert)
@@ -64,9 +59,10 @@ namespace LudusAppoint.Controllers
         {
             var supportedGendersSetting = await _serviceManager.ApplicationSettingService.GetSettingEntityAsync("SupportedGenders", false);
             ViewBag.SupportedGenders = supportedGendersSetting.Value;
-            ViewBag.AllBranches = _serviceManager.BranchService.GetAllActiveBranches(false).ToList();
-            ViewBag.AllAgeGroups = _serviceManager.AgeGroupService.GetAllAgeGroups(false).ToList();
+            var branches = await _serviceManager.BranchService.GetAllActiveBranchesAsync(false);
+            ViewBag.AllBranches = branches.ToList();
+            var ageGroups = await _serviceManager.AgeGroupService.GetAllAgeGroupsAsync(false);
+            ViewBag.AllAgeGroups = ageGroups.ToList();
         }
-
     }
 }

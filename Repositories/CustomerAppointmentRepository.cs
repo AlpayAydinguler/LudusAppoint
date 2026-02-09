@@ -11,9 +11,10 @@ namespace Repositories
         public CustomerAppointmentRepository(RepositoryContext repositoryContext) : base(repositoryContext)
         {
         }
-        public List<CustomerAppointment> GetAllCustomerAppointments(bool trackChanges, string language)
+
+        public async Task<List<CustomerAppointment>> GetAllCustomerAppointmentsAsync(bool trackChanges, string language)
         {
-            var customerAppointments = _repositoryContext.CustomerAppointments.Include(ca => ca.Employee)
+            var customerAppointments = await _repositoryContext.CustomerAppointments.Include(ca => ca.Employee)
                                                                               .Include(ca => ca.AgeGroup)
                                                                               .Include(ca => ca.OfferedServices)
                                                                               .ThenInclude(hs => hs.OfferedServiceLocalizations)
@@ -37,31 +38,30 @@ namespace Repositories
                                                                                   {
                                                                                       OfferedServiceId = hs.OfferedServiceId,
                                                                                       OfferedServiceName = hs.OfferedServiceLocalizations.FirstOrDefault(l => l.Language == language).OfferedServiceLocalizationName ?? hs.OfferedServiceName
-                                                                                  }).ToList() // Get the localized names or fallback to default
+                                                                                  }).ToList()
                                                                               })
-                                                                              .ToList();
+                                                                              .ToListAsync();
             return customerAppointments;
         }
 
-        public bool EmployeeHaveAppointment(EmployeeLeave employeeLeave)
+        public async Task<bool> EmployeeHaveAppointmentAsync(EmployeeLeave employeeLeave)
         {
-            var employeesAppointments = _repositoryContext.CustomerAppointments.Where(ca => ca.EmployeeId == employeeLeave.EmployeeId &&
+            var employeesAppointments = await _repositoryContext.CustomerAppointments.Where(ca => ca.EmployeeId == employeeLeave.EmployeeId &&
                                                                                          (ca.Status == CustomerAppointmentStatus.CustomerConfirmed ||
-                                                                                          ca.Status == CustomerAppointmentStatus.Confirmed)) // Filter by status
+                                                                                          ca.Status == CustomerAppointmentStatus.Confirmed))
                                                                                   .AsNoTracking()
-                                                                                  .AsEnumerable() // Switch to client-side evaluation for ApproximateDuration
-                                                                                  .Any(ca =>
-                                                                                  {
-                                                                                      var appointmentEndTime = ca.StartDateTime.Add(ca.ApproximateDuration);
-                                                                                      return (ca.StartDateTime < employeeLeave.LeaveEndDateTime && appointmentEndTime > employeeLeave.LeaveStartDateTime);
-                                                                                  });
-            return employeesAppointments;
-
+                                                                                  .ToListAsync();
+            
+            return employeesAppointments.AsEnumerable().Any(ca =>
+            {
+                var appointmentEndTime = ca.StartDateTime.Add(ca.ApproximateDuration);
+                return (ca.StartDateTime < employeeLeave.LeaveEndDateTime && appointmentEndTime > employeeLeave.LeaveStartDateTime);
+            });
         }
 
-        public IEnumerable<CustomerAppointment> GetPendingCustomerAppointments(bool trackChanges, string language)
+        public async Task<IEnumerable<CustomerAppointment>> GetPendingCustomerAppointmentsAsync(bool trackChanges, string language)
         {
-            var customerAppointments = _repositoryContext.CustomerAppointments.Include(ca => ca.Employee)
+            var customerAppointments = await _repositoryContext.CustomerAppointments.Include(ca => ca.Employee)
                                                                               .Include(ca => ca.AgeGroup)
                                                                               .Include(ca => ca.OfferedServices)
                                                                               .ThenInclude(hs => hs.OfferedServiceLocalizations)
@@ -88,13 +88,13 @@ namespace Repositories
                                                                                       OfferedServiceName = hs.OfferedServiceLocalizations.FirstOrDefault(l => l.Language == language).OfferedServiceLocalizationName ?? hs.OfferedServiceName
                                                                                   }).ToList()
                                                                               })
-                                                                              .ToList();
+                                                                              .ToListAsync();
             return customerAppointments;
         }
 
         public object GetReservedDaysTimes(int employeeId, int reservationInAdvanceDayLimit)
         {
-            var maxDate = DateTime.Today.AddDays(reservationInAdvanceDayLimit + 1); // Includes the entire day of the last allowed day
+            var maxDate = DateTime.Today.AddDays(reservationInAdvanceDayLimit + 1);
 
             var reservedDaysTimes = _repositoryContext.CustomerAppointments
                 .Where(ca => ca.EmployeeId == employeeId &&
@@ -109,9 +109,9 @@ namespace Repositories
             return reservedDaysTimes;
         }
 
-        public Task<CustomerAppointment> GetCustomerAppointmentForUpdateAsync(int id, bool trackChanges, string language)
+        public async Task<CustomerAppointment> GetCustomerAppointmentForUpdateAsync(int id, bool trackChanges, string language)
         {
-            var customerAppointment = _repositoryContext.CustomerAppointments.Include(ca => ca.Employee)
+            var customerAppointment = await _repositoryContext.CustomerAppointments.Include(ca => ca.Employee)
                                                                              .Include(ca => ca.AgeGroup)
                                                                              .Include(ca => ca.OfferedServices)
                                                                              .ThenInclude(hs => hs.OfferedServiceLocalizations.Where(loc => loc.Language == language))
@@ -119,7 +119,7 @@ namespace Repositories
                                                                              .FirstOrDefaultAsync();
             if (customerAppointment != null)
             {
-                foreach (var offeredService in customerAppointment.Result.OfferedServices ?? Enumerable.Empty<OfferedService>())
+                foreach (var offeredService in customerAppointment.OfferedServices ?? Enumerable.Empty<OfferedService>())
                 {
                     var localization = offeredService.OfferedServiceLocalizations.FirstOrDefault();
                     offeredService.OfferedServiceName = localization?.OfferedServiceLocalizationName ?? offeredService.OfferedServiceName;

@@ -20,30 +20,31 @@ namespace LudusAppoint.Areas.Admin.Controllers
             _localizer = localizer;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var model = _serviceManager.EmployeeService.GetAllEmployees(false);
+            var model = await _serviceManager.EmployeeService.GetAllEmployeesAsync(false);
             return View(model);
         }
-        public IActionResult Update([FromRoute] int id)
+
+        public async Task<IActionResult> Update([FromRoute] int id)
         {
-            var model = _serviceManager.EmployeeService.GetOneEmployeeForUpdate(id, false, System.Globalization.CultureInfo.CurrentCulture.Name);
-            PopulatePageData();
+            var model = await _serviceManager.EmployeeService.GetOneEmployeeForUpdateAsync(id, false, System.Globalization.CultureInfo.CurrentCulture.Name);
+            await PopulatePageDataAsync();
             return View(model);
         }
 
         [HttpPost]
         [AutoValidateAntiforgeryToken]
-        public IActionResult Update([FromForm] EmployeeDtoForUpdate employeeDtoForUpdate)
+        public async Task<IActionResult> Update([FromForm] EmployeeDtoForUpdate employeeDtoForUpdate)
         {
             if (!ModelState.IsValid)
             {
-                PopulatePageData();
+                await PopulatePageDataAsync();
                 return View(employeeDtoForUpdate);
             }
             try
             {
-                _serviceManager.EmployeeService.UpdateEmployee(employeeDtoForUpdate);
+                await _serviceManager.EmployeeService.UpdateEmployeeAsync(employeeDtoForUpdate);
                 TempData["OperationSuccessfull"] = true;
                 TempData["OperationMessage"] = _localizer["OfferedServiceUpdatedSuccessfully"].ToString() + ".";
                 return RedirectToAction("Index");
@@ -54,52 +55,53 @@ namespace LudusAppoint.Areas.Admin.Controllers
                 {
                     ModelState.AddModelError(exception?.InnerException?.Source?.ToString() ?? string.Empty, exception?.Message ?? string.Empty);
                 }
-                PopulatePageData();
+                await PopulatePageDataAsync();
                 return View(employeeDtoForUpdate);
             }
         }
-        public IActionResult Create()
+
+        public async Task<IActionResult> Create()
         {
             var model = new EmployeeDtoForInsert();
-            PopulatePageData();
+            await PopulatePageDataAsync();
             return View(model);
         }
 
         [HttpPost]
         [AutoValidateAntiforgeryToken]
-        public IActionResult Create([FromForm] EmployeeDtoForInsert employeeDtoForInsert)
+        public async Task<IActionResult> Create([FromForm] EmployeeDtoForInsert employeeDtoForInsert)
         {
             if (!ModelState.IsValid)
             {
-                PopulatePageData();
+                await PopulatePageDataAsync();
                 return View(employeeDtoForInsert);
             }
 
             try
             {
-                _serviceManager.EmployeeService.CreateEmployee(employeeDtoForInsert);
+                await _serviceManager.EmployeeService.CreateEmployeeAsync(employeeDtoForInsert);
                 TempData["OperationSuccessfull"] = true;
                 TempData["OperationMessage"] = _localizer["OfferedServiceCreatedSuccessfully"].ToString() + ".";
                 return RedirectToAction("Index");
             }
             catch (AggregateException exceptions)
             {
-                // Handle validation/domain errors
                 foreach (var exception in exceptions.InnerExceptions)
                 {
                     ModelState.AddModelError(exception.InnerException?.Source ?? "General", exception.Message);
                 }
+                await PopulatePageDataAsync();
                 return View(employeeDtoForInsert);
             }
         }
 
         [HttpGet]
         [AutoValidateAntiforgeryToken]
-        public IActionResult Delete([FromRoute] int id)
+        public async Task<IActionResult> Delete([FromRoute] int id)
         {
             try
             {
-                _serviceManager.EmployeeService.DeleteEmployee(id);
+                await _serviceManager.EmployeeService.DeleteEmployeeAsync(id);
                 TempData["OperationSuccessfull"] = true;
                 TempData["OperationMessage"] = _localizer["EmployeeDeletedSuccessfully"].ToString() + ".";
                 return RedirectToAction("Index");
@@ -112,12 +114,12 @@ namespace LudusAppoint.Areas.Admin.Controllers
             }
         }
 
-        private void PopulatePageData()
+        private async Task PopulatePageDataAsync()
         {
-            var offeredServices = _serviceManager.OfferedServiceService.GetActiveOfferedServices(false, System.Globalization.CultureInfo.CurrentCulture.Name);
+            var offeredServices = await _serviceManager.OfferedServiceService.GetActiveOfferedServicesAsync(false, System.Globalization.CultureInfo.CurrentCulture.Name);
             ViewBag.AllOfferedServices = offeredServices;
-            ViewBag.AllBranches = _serviceManager.BranchService.GetAllActiveBranches(false).ToList();
-            //ViewBag.AllBranches = _serviceManager.BranchService.GetAllBranches(false).ToList();
+            var branches = await _serviceManager.BranchService.GetAllActiveBranchesAsync(false);
+            ViewBag.AllBranches = branches.ToList();
         }
     }
 }

@@ -1,9 +1,6 @@
 ﻿using Entities.Dtos;
 using Entities.Models;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Services.Contracts
@@ -16,5 +13,9 @@ namespace Services.Contracts
         Task UpdateApplicationSettingAsync(ApplicationSettingDtoForUpdate dto);
         Task DeleteApplicationSettingAsync(string key);
         Task<ApplicationSetting> GetSettingEntityAsync(string key, bool trackChanges);
+
+        // Optional: Add tenant-specific methods
+        Task<ApplicationSetting?> GetSettingByKeyAndTenantAsync(string key, Guid tenantId, bool trackChanges);
+        Task<IEnumerable<ApplicationSetting>> GetAllSettingsForTenantAsync(Guid tenantId, bool trackChanges);
     }
 }

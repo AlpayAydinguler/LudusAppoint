@@ -3,6 +3,9 @@ using Entities.Models;
 using Entities.Models.Enums;
 using Microsoft.EntityFrameworkCore;
 using Repositories.Contracts;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Repositories
 {
@@ -12,67 +15,74 @@ namespace Repositories
         {
         }
 
-        public ICollection<EmployeeLeave> GetAllEmployeeLeaves(bool trackChanges)
+        public async Task<ICollection<EmployeeLeave>> GetAllEmployeeLeavesAsync(Guid tenantId, bool trackChanges)
         {
-            var employeeLeaves = _repositoryContext.EmployeeLeaves.Include(h => h.Employee);
-            return trackChanges ? employeeLeaves.ToList() : employeeLeaves.AsNoTracking().ToList();
-        }
-        public void CreateEmployeeLeave(EmployeeLeave model)
-        {
-            Create(model);
+            var employeeLeaves = _repositoryContext.EmployeeLeaves
+                .Include(h => h.Employee)
+                .Where(h => h.TenantId == tenantId); // Tenant filter
+
+            return trackChanges ?
+                await employeeLeaves.ToListAsync() :
+                await employeeLeaves.AsNoTracking().ToListAsync();
         }
 
-        public object GetLeaveTimes(int employeeId, int reservationInAdvanceDayLimit)
+        public async Task CreateEmployeeLeaveAsync(EmployeeLeave model)
         {
-            var maxDate = DateTime.Today.AddDays(reservationInAdvanceDayLimit + 1); // Includes the entire day of the last allowed day
+            await CreateAsync(model);
+        }
 
-            var leaveTimes = _repositoryContext.EmployeeLeaves.Where(hl => hl.EmployeeId == employeeId &&
-                                                                     hl.LeaveStartDateTime >= DateTime.Today &&
-                                                                     hl.LeaveStartDateTime < maxDate)
-                                                              .Select(hl => new
-                                                              {
-                                                                  hl.LeaveStartDateTime,
-                                                                  hl.LeaveEndDateTime
-                                                              })
-                                                              .AsNoTracking()
-                                                              .ToList();
+        public async Task<object> GetLeaveTimesAsync(Guid tenantId, int employeeId, int reservationInAdvanceDayLimit)
+        {
+            var maxDate = DateTime.Today.AddDays(reservationInAdvanceDayLimit + 1);
+
+            var leaveTimes = await _repositoryContext.EmployeeLeaves
+                .Where(hl => hl.EmployeeId == employeeId
+                          && hl.TenantId == tenantId // Tenant filter
+                          && hl.LeaveStartDateTime >= DateTime.Today
+                          && hl.LeaveStartDateTime < maxDate)
+                .Select(hl => new
+                {
+                    hl.LeaveStartDateTime,
+                    hl.LeaveEndDateTime
+                })
+                .AsNoTracking()
+                .ToListAsync();
 
             return leaveTimes;
         }
 
-        public bool HasOverlappingAppointments(int employeeId, DateTime leaveStart, DateTime leaveEnd)
+        public async Task<bool> HasOverlappingAppointmentsAsync(Guid tenantId, int employeeId, DateTime leaveStart, DateTime leaveEnd)
         {
-            var hasActiveAppointments = _repositoryContext.CustomerAppointments.AsEnumerable() // Switch to client-side evaluation
-                                                                               .Any(h =>
-                                                                                   h.EmployeeId == employeeId &&
-                                                                                   h.StartDateTime < leaveEnd &&
-                                                                                   h.StartDateTime + h.ApproximateDuration > leaveStart &&
-                                                                                   h.Status != CustomerAppointmentStatus.Completed &&
-                                                                                   h.Status != CustomerAppointmentStatus.Cancelled
-                                                                               );
+            var hasActiveAppointments = await _repositoryContext.CustomerAppointments
+                .AsNoTracking()
+                .AnyAsync(h =>
+                    h.EmployeeId == employeeId
+                    && h.TenantId == tenantId // Tenant filter
+                    && h.StartDateTime < leaveEnd
+                    && h.StartDateTime + h.ApproximateDuration > leaveStart
+                    && h.Status != CustomerAppointmentStatus.Completed
+                    && h.Status != CustomerAppointmentStatus.Cancelled
+                );
             return hasActiveAppointments;
         }
 
-        public bool HasOverlappingLeaves(int employeeId, DateTime leaveStart, DateTime leaveEnd, int? employeeLeaveId)
+        public async Task<bool> HasOverlappingLeavesAsync(Guid tenantId, int employeeId, DateTime leaveStart, DateTime leaveEnd, int? employeeLeaveId)
         {
             bool hasOverlappingLeaves;
+            var query = _repositoryContext.EmployeeLeaves
+                .Where(h =>
+                    h.EmployeeId == employeeId
+                    && h.TenantId == tenantId // Tenant filter
+                    && h.LeaveStartDateTime < leaveEnd
+                    && h.LeaveEndDateTime > leaveStart
+                );
+
             if (employeeLeaveId != null)
             {
-                hasOverlappingLeaves = _repositoryContext.EmployeeLeaves.Any(h =>
-                    h.EmployeeId == employeeId &&
-                    h.LeaveStartDateTime < leaveEnd &&
-                    h.LeaveEndDateTime > leaveStart &&
-                    h.EmployeeLeaveId != employeeLeaveId
-                );
+                query = query.Where(h => h.EmployeeLeaveId != employeeLeaveId);
             }
-            else
-            {
-                hasOverlappingLeaves = _repositoryContext.EmployeeLeaves.Any(h =>
-                h.EmployeeId == employeeId &&
-                h.LeaveStartDateTime < leaveEnd &&
-                h.LeaveEndDateTime > leaveStart
-            );
-            }
+
+            hasOverlappingLeaves = await query.AnyAsync();
             return hasOverlappingLeaves;
         }
     }

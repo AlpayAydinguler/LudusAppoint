@@ -12,17 +12,13 @@ namespace Repositories
         {
         }
 
-        public void AttachAsUnchanged(OfferedService offeredService)
+        public async Task AttachAsUnchangedAsync(OfferedService offeredService)
         {
             _repositoryContext.Entry(offeredService).State = EntityState.Unchanged;
+            await Task.CompletedTask;
         }
 
-        public void CreateofferedService(OfferedService offeredService)
-        {
-            Create(offeredService);
-        }
-
-        public IEnumerable<OfferedService> GetActiveOfferedServices(bool trackChanges, string language)
+        public async Task<IEnumerable<OfferedService>> GetActiveOfferedServicesAsync(bool trackChanges, string language)
         {
             var offeredServices = _repositoryContext.OfferedServices
                 .Include(h => h.AgeGroups)
@@ -34,7 +30,7 @@ namespace Repositories
                 offeredServices = offeredServices.AsNoTracking();
             }
 
-            return offeredServices
+            return await offeredServices
                 .Select(h => new OfferedService
                 {
                     OfferedServiceId = h.OfferedServiceId,
@@ -46,10 +42,10 @@ namespace Repositories
                     AgeGroups = h.AgeGroups
                 })
                 .Where(h => h.Status)
-                .ToList();
+                .ToListAsync();
         }
 
-        public IEnumerable<OfferedService> GetAllForCustomerAppointment(Gender gender, int ageGroupId, bool trackChanges, string language)
+        public async Task<IEnumerable<OfferedService>> GetAllForCustomerAppointmentAsync(Gender gender, int ageGroupId, bool trackChanges, string language)
         {
             var offeredServices = _repositoryContext.OfferedServices
                 .Include(h => h.OfferedServiceLocalizations)
@@ -61,7 +57,7 @@ namespace Repositories
                 offeredServices = offeredServices.AsNoTracking();
             }
 
-            return offeredServices
+            return await offeredServices
                 .Where(h => h.AgeGroups.Any(ag => ag.AgeGroupId == ageGroupId) &&
                                             h.Genders.Contains(gender) &&
                                             h.Status)
@@ -73,10 +69,10 @@ namespace Repositories
                     ApproximateDuration = h.ApproximateDuration,
                     Price = h.Price,
                 })
-                .ToList();
+                .ToListAsync();
         }
 
-        public List<OfferedService> GetAllOfferedServices(bool trackChanges, string language = "en-GB")
+        public async Task<List<OfferedService>> GetAllOfferedServicesAsync(bool trackChanges, string language = "en-GB")
         {
             var offeredServices = _repositoryContext.OfferedServices
                 .Include(h => h.AgeGroups)
@@ -88,7 +84,7 @@ namespace Repositories
                 offeredServices = offeredServices.AsNoTracking();
             }
 
-            return offeredServices
+            return await offeredServices
                 .Select(h => new OfferedService
                 {
                     OfferedServiceId = h.OfferedServiceId,
@@ -99,47 +95,45 @@ namespace Repositories
                     Status = h.Status,
                     AgeGroups = h.AgeGroups
                 })
-                .ToList();
+                .ToListAsync();
         }
 
-        public OfferedService GetofferedService(int id, bool trackChanges)
+        public async Task<OfferedService> GetofferedServiceAsync(int id, bool trackChanges)
         {
-            return FindByCondition(x => x.OfferedServiceId.Equals(id), trackChanges) ?? new OfferedService();
+            return await FindByConditionAsync(x => x.OfferedServiceId.Equals(id), trackChanges) ?? new OfferedService();
         }
 
-        public int GetMinApproximateDuration()
+        public async Task<int> GetMinApproximateDurationAsync()
         {
-            var minDuration = _repositoryContext.OfferedServices.OrderBy(hs => hs.ApproximateDuration)
+            var minDuration = await _repositoryContext.OfferedServices.OrderBy(hs => hs.ApproximateDuration)
                                                                      .AsNoTracking()
                                                                      .Select(hs => hs.ApproximateDuration.TotalMinutes)
-                                                                     .First();
+                                                                     .FirstAsync();
             return (int)minDuration;
-            
         }
 
-        public OfferedService GetOfferedServiceForUpdate(int id, bool trackChanges)
+        public async Task<OfferedService> GetOfferedServiceForUpdateAsync(int id, bool trackChanges)
         {
             var offeredServices = _repositoryContext.OfferedServices.Include(h => h.AgeGroups)
                                                           .Include(h => h.OfferedServiceLocalizations)
-                                                          .Where(h => h.OfferedServiceId == id);  // Add filter by ID
-        
+                                                          .Where(h => h.OfferedServiceId == id);
 
             if (!trackChanges)
             {
                 offeredServices = offeredServices.AsNoTracking();
             }
 
-            return offeredServices.FirstOrDefault();
+            return await offeredServices.FirstOrDefaultAsync();
         }
 
-        public void Update(OfferedService offeredService, List<int> ageGroupIds)
+        public async Task UpdateAsync(OfferedService offeredService, List<int> ageGroupIds)
         {
             offeredService.AgeGroups.Clear();
 
             foreach (var id in ageGroupIds)
             {
-                var ageGroup = _repositoryContext.AgeGroups
-                    .FirstOrDefault(ag => ag.AgeGroupId == id);
+                var ageGroup = await _repositoryContext.AgeGroups
+                    .FirstOrDefaultAsync(ag => ag.AgeGroupId == id);
 
                 offeredService.AgeGroups.Add(ageGroup);
             }

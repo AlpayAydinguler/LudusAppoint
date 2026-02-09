@@ -17,7 +17,7 @@ namespace Repositories
 
         public async Task UpdateAgeGroupByTenantAsync(AgeGroup model)
         {
-            Update(model);
+            await UpdateAsync(model);
             await SaveAsync();
         }
 

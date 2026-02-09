@@ -25,14 +25,83 @@ namespace Services
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IMapper _mapper;
         private readonly IStringLocalizer<AuthManager> _localizer;
+        private readonly ITenantService _tenantService;
 
-        public AuthManager(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, RoleManager<IdentityRole> roleManager, IMapper mapper, IStringLocalizer<AuthManager> localizer)
+        public AuthManager(
+            UserManager<ApplicationUser> userManager,
+            SignInManager<ApplicationUser> signInManager,
+            RoleManager<IdentityRole> roleManager,
+            IMapper mapper,
+            IStringLocalizer<AuthManager> localizer,
+            ITenantService tenantService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _roleManager = roleManager;
             _mapper = mapper;
             _localizer = localizer;
+            _tenantService = tenantService;
+        }
+
+        public async Task<bool> LoginAsync(string phoneNumber, string password)
+        {
+            // In AuthManager's LoginAsync method:
+            var currentTenant = await _tenantService.GetCurrentTenantAsync();
+            if (currentTenant == null)
+            {
+                // Strict: No tenant context means no login
+                return false;
+            }
+
+            // Use the extension method with tenant filtering
+            var userInTenant = await _userManager.FindByPhoneAsync(phoneNumber, currentTenant.Id);
+
+            if (userInTenant == null) return false;
+
+            // Sign in user
+            var result = await _signInManager.PasswordSignInAsync(userInTenant, password, false, false);
+            if (!result.Succeeded) return false;
+
+            // Process permissions and update last login
+            await ProcessUserLoginAsync(userInTenant);
+            return true;
+        }
+
+        private async Task ProcessUserLoginAsync(ApplicationUser user)
+        {
+            // Get user roles
+            var roles = await _userManager.GetRolesAsync(user);
+
+            // Collect permissions from all roles
+            var claims = new List<Claim>();
+            foreach (var roleName in roles)
+            {
+                var role = await _roleManager.FindByNameAsync(roleName);
+                if (role != null)
+                {
+                    var roleClaims = await _roleManager.GetClaimsAsync(role);
+                    claims.AddRange(roleClaims.Where(c => c.Type == "permission"));
+                }
+            }
+
+            // Remove existing permissions to avoid duplicates
+            var existingClaims = await _userManager.GetClaimsAsync(user);
+            await _userManager.RemoveClaimsAsync(user, existingClaims.Where(c => c.Type == "permission"));
+
+            // Add new permissions
+            await _userManager.AddClaimsAsync(user, claims);
+
+            // Refresh authentication cookie
+            await _signInManager.RefreshSignInAsync(user);
+
+            user.LastLogin = DateTime.UtcNow;
+            await _userManager.UpdateAsync(user);
+        }
+
+        public async Task<bool> LogoutAsync()
+        {
+            await _signInManager.SignOutAsync();
+            return true;
         }
 
         public async Task CreateRoleAsync(RoleDtoForInsert roleDtoForInsert)
@@ -120,52 +189,6 @@ namespace Services
             return _mapper.Map<IEnumerable<RoleDto>>(roles);
         }
 
-        public async Task<bool> LoginAsync(string phoneNumber, string password)
-        {
-            var user = await _userManager.FindByPhoneAsync(phoneNumber);
-            if (user == null) return false;
-
-            // Sign in user
-            var result = await _signInManager.PasswordSignInAsync(user, password, false, false);
-            if (!result.Succeeded) return false;
-
-            // Get user roles
-            var roles = await _userManager.GetRolesAsync(user);
-
-            // Collect permissions from all roles
-            var claims = new List<Claim>();
-            foreach (var roleName in roles)
-            {
-                var role = await _roleManager.FindByNameAsync(roleName);
-                if (role != null)
-                {
-                    var roleClaims = await _roleManager.GetClaimsAsync(role);
-                    claims.AddRange(roleClaims.Where(c => c.Type == "permission"));
-                }
-            }
-
-            // Remove existing permissions to avoid duplicates
-            var existingClaims = await _userManager.GetClaimsAsync(user);
-            await _userManager.RemoveClaimsAsync(user, existingClaims.Where(c => c.Type == "permission"));
-
-            // Add new permissions
-            await _userManager.AddClaimsAsync(user, claims);
-
-            // Refresh authentication cookie
-            await _signInManager.RefreshSignInAsync(user);
-
-            user.LastLogin = DateTime.UtcNow;
-            await _userManager.UpdateAsync(user);
-
-            return true;
-        }
-
-        public async Task<bool> LogoutAsync()
-        {
-            await _signInManager.SignOutAsync();
-            return true;
-        }
-
         public async Task UpdateRoleAsync(RoleDtoForUpdate roleDtoForUpdate)
         {
             var validationException = new List<ValidationException>();
@@ -178,7 +201,7 @@ namespace Services
                     new Exception() { Source = "Model" }));
                 throw new AggregateException(validationException);
             }
-            if(role.Name == "Admin")
+            if (role.Name == "Admin")
             {
                 validationException.Add(new ValidationException(
                     _localizer["AdminRoleCannotBeUpdated"],

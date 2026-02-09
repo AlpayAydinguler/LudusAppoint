@@ -11,61 +11,132 @@ namespace Services
     public class EmployeeLeaveManager : IEmployeeLeaveService
     {
         private readonly IRepositoryManager _repositoryManager;
-        private readonly IStringLocalizer<OfferedServiceManager> _localizer;
+        private readonly IStringLocalizer<EmployeeLeaveManager> _localizer;
         private readonly IMapper _mapper;
+        private readonly ITenantService _tenantService;
 
-        public EmployeeLeaveManager(IRepositoryManager repositoryManager, IStringLocalizer<OfferedServiceManager> localizer, IMapper mapper)
+        public EmployeeLeaveManager(
+            IRepositoryManager repositoryManager,
+            IStringLocalizer<EmployeeLeaveManager> localizer,
+            IMapper mapper,
+            ITenantService tenantService)
         {
             _repositoryManager = repositoryManager;
             _localizer = localizer;
             _mapper = mapper;
+            _tenantService = tenantService;
         }
 
-        public void CreateEmployeeLeave(EmployeeLeaveDtoForInsert employeeLeaveDtoForInsert)
+        public async Task CreateEmployeeLeaveAsync(EmployeeLeaveDtoForInsert employeeLeaveDtoForInsert)
         {
-            ValidateEmployeeLeave(employeeLeaveDtoForInsert, null);
+            var currentTenant = await _tenantService.GetCurrentTenantAsync();
+            if (currentTenant == null)
+            {
+                throw new ValidationException(_localizer["NoTenantContextAvailable"]);
+            }
+
+            await ValidateEmployeeLeaveAsync(employeeLeaveDtoForInsert, null, currentTenant.Id);
+
             var employeeLeave = _mapper.Map<EmployeeLeave>(employeeLeaveDtoForInsert);
-            _repositoryManager.EmployeeLeaveRepository.CreateEmployeeLeave(employeeLeave);
-            _repositoryManager.Save();
+            employeeLeave.TenantId = currentTenant.Id;
+
+            await _repositoryManager.EmployeeLeaveRepository.CreateEmployeeLeaveAsync(employeeLeave);
+            await _repositoryManager.SaveAsync();
         }
 
-        public void DeleteEmployeeLeave(int id)
+        public async Task DeleteEmployeeLeaveAsync(int id)
         {
-            var employeeLeave = _repositoryManager.EmployeeLeaveRepository.FindByCondition(
-                    h => h.EmployeeLeaveId == id,
-                    false
-                );
-            _repositoryManager.EmployeeLeaveRepository.Delete(employeeLeave);
-            _repositoryManager.Save();
+            var currentTenant = await _tenantService.GetCurrentTenantAsync();
+            if (currentTenant == null)
+            {
+                throw new ValidationException(_localizer["NoTenantContextAvailable"]);
+            }
+
+            var employeeLeave = await _repositoryManager.EmployeeLeaveRepository.FindByConditionAsync(
+                h => h.EmployeeLeaveId == id && h.TenantId == currentTenant.Id, // Tenant filter
+                false
+            );
+
+            if (employeeLeave == null)
+            {
+                throw new ValidationException(_localizer["EmployeeLeaveNotFound"]);
+            }
+
+            await _repositoryManager.EmployeeLeaveRepository.DeleteAsync(employeeLeave);
+            await _repositoryManager.SaveAsync();
         }
 
-        public ICollection<EmployeeLeaveDto> GetAllEmployeeLeaves(bool trackChanges)
+        public async Task<ICollection<EmployeeLeaveDto>> GetAllEmployeeLeavesAsync(bool trackChanges)
         {
-            var employeeLeaves = _repositoryManager.EmployeeLeaveRepository.GetAllEmployeeLeaves(trackChanges);
+            var currentTenant = await _tenantService.GetCurrentTenantAsync();
+            if (currentTenant == null)
+            {
+                return new List<EmployeeLeaveDto>();
+            }
+
+            // Pass tenantId to repository
+            var employeeLeaves = await _repositoryManager.EmployeeLeaveRepository
+                .GetAllEmployeeLeavesAsync(currentTenant.Id, trackChanges);
+
             var employeeLeavesDto = _mapper.Map<ICollection<EmployeeLeaveDto>>(employeeLeaves);
             return employeeLeavesDto;
         }
 
-        public EmployeeLeaveDtoForUpdate GetEmployeeLeaveForUpdate(int id)
+        public async Task<EmployeeLeaveDtoForUpdate> GetEmployeeLeaveForUpdateAsync(int id)
         {
-            var employeeLeave = _repositoryManager.EmployeeLeaveRepository.FindByCondition(
-                    h => h.EmployeeLeaveId == id,
-                    false
-                );
+            var currentTenant = await _tenantService.GetCurrentTenantAsync();
+            if (currentTenant == null)
+            {
+                throw new ValidationException(_localizer["NoTenantContextAvailable"]);
+            }
+
+            var employeeLeave = await _repositoryManager.EmployeeLeaveRepository.FindByConditionAsync(
+                h => h.EmployeeLeaveId == id && h.TenantId == currentTenant.Id, // Tenant filter
+                false
+            );
+
+            if (employeeLeave == null)
+            {
+                throw new ValidationException(_localizer["EmployeeLeaveNotFound"]);
+            }
+
             var employeeLeaveDto = _mapper.Map<EmployeeLeaveDtoForUpdate>(employeeLeave);
             return employeeLeaveDto;
         }
 
-        public void UpdateEmployeeLeave(EmployeeLeaveDtoForUpdate employeeLeaveDtoForUpdate)
+        public async Task UpdateEmployeeLeaveAsync(EmployeeLeaveDtoForUpdate employeeLeaveDtoForUpdate)
         {
-            ValidateEmployeeLeave(null, employeeLeaveDtoForUpdate);
-            var employeeLeave = _mapper.Map<EmployeeLeave>(employeeLeaveDtoForUpdate);
-            _repositoryManager.EmployeeLeaveRepository.Update(employeeLeave);
-            _repositoryManager.Save();
+            var currentTenant = await _tenantService.GetCurrentTenantAsync();
+            if (currentTenant == null)
+            {
+                throw new ValidationException(_localizer["NoTenantContextAvailable"]);
+            }
+
+            await ValidateEmployeeLeaveAsync(null, employeeLeaveDtoForUpdate, currentTenant.Id);
+
+            // Get existing employee leave with tenant check
+            var existingEmployeeLeave = await _repositoryManager.EmployeeLeaveRepository.FindByConditionAsync(
+                h => h.EmployeeLeaveId == employeeLeaveDtoForUpdate.EmployeeLeaveId
+                  && h.TenantId == currentTenant.Id,
+                true
+            );
+
+            if (existingEmployeeLeave == null)
+            {
+                throw new ValidationException(_localizer["EmployeeLeaveNotFound"]);
+            }
+
+            // Map updates to existing entity
+            _mapper.Map(employeeLeaveDtoForUpdate, existingEmployeeLeave);
+
+            await _repositoryManager.EmployeeLeaveRepository.UpdateAsync(existingEmployeeLeave);
+            await _repositoryManager.SaveAsync();
         }
 
-        private void ValidateEmployeeLeave(EmployeeLeaveDtoForInsert? employeeLeaveDtoForInsert,
-                                  EmployeeLeaveDtoForUpdate? employeeLeaveDtoForUpdate)
+        private async Task ValidateEmployeeLeaveAsync(
+            EmployeeLeaveDtoForInsert? employeeLeaveDtoForInsert,
+            EmployeeLeaveDtoForUpdate? employeeLeaveDtoForUpdate,
+            Guid currentTenantId)
         {
             var model = (object?)employeeLeaveDtoForInsert ?? employeeLeaveDtoForUpdate;
             if (model == null)
@@ -79,31 +150,36 @@ namespace Services
             var leaveEnd = (DateTime)model.GetType().GetProperty("LeaveEndDateTime")!.GetValue(model)!;
             var employeeLeaveId = (int?)model.GetType().GetProperty("EmployeeLeaveId")?.GetValue(model);
 
-            // Check for existing appointments
-            var employee = _repositoryManager.EmployeeRepository.FindByCondition(
-                    h => h.EmployeeId == employeeId,
-                    false
-                );
+            // Check for existing employee (must belong to same tenant)
+            var employee = await _repositoryManager.EmployeeRepository.FindByConditionAsync(
+                h => h.EmployeeId == employeeId && h.TenantId == currentTenantId,
+                false
+            );
 
             if (employee == null)
             {
                 validationException.Add(new ValidationException(
-                        _localizer["EmployeeCouldNotBeFound"] + ".",
-                        new Exception() { Source = "EmployeeId" }
-                    ));
+                    _localizer["EmployeeCouldNotBeFound"] + ".",
+                    new Exception() { Source = "EmployeeId" }
+                ));
             }
             else
             {
-                var hasOverlappingAppointments = _repositoryManager.EmployeeLeaveRepository.HasOverlappingAppointments(employeeId, leaveStart, leaveEnd);
-                if (hasOverlappingAppointments == true)
+                // Check for overlapping appointments for this employee (must be in same tenant)
+                var hasOverlappingAppointments = await _repositoryManager.EmployeeLeaveRepository.HasOverlappingAppointmentsAsync(currentTenantId, employeeId, leaveStart, leaveEnd);
+
+                if (hasOverlappingAppointments)
                 {
                     validationException.Add(new ValidationException(
                         _localizer["EmployeeHasOverlappingAppointments"] + ".",
                         new Exception() { Source = "EmployeeId" }
                     ));
                 }
-                var hasOverlappingLeaves = _repositoryManager.EmployeeLeaveRepository.HasOverlappingLeaves(employeeId, leaveStart, leaveEnd, employeeLeaveId);
-                if (hasOverlappingLeaves == true)
+
+                // Check for overlapping leaves for this employee (must be in same tenant)
+                var hasOverlappingLeaves = await _repositoryManager.EmployeeLeaveRepository.HasOverlappingLeavesAsync(currentTenantId, employeeId, leaveStart, leaveEnd, employeeLeaveId);
+
+                if (hasOverlappingLeaves)
                 {
                     validationException.Add(new ValidationException(
                         _localizer["EmployeeHasOverlappingLeaves"] + ".",
@@ -121,8 +197,9 @@ namespace Services
                 ));
             }
 
+            // Optional: Validate that leave is not in the past
             /*
-            if (leaveStart < DateTime.Now)
+            if (leaveStart < DateTime.UtcNow)
             {
                 validationException.Add(new ValidationException(
                     _localizer["StartDateCannotBeLessThanNow"] + ".",
