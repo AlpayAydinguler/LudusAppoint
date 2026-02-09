@@ -179,7 +179,7 @@ namespace Services
                 throw new AggregateException(validationException);
             }
 
-            if (userDtoForUpdate.PhoneNumber.IsNullOrEmpty() || userDtoForUpdate.Email.IsNullOrEmpty())
+            if (string.IsNullOrEmpty(userDtoForUpdate.PhoneNumber) || string.IsNullOrEmpty(userDtoForUpdate.Email))
             {
                 validationException.Add(new ValidationException(
                     _localizer["PhoneNumberAndEmailIsRequired"] + ".",
